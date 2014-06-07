@@ -41,3 +41,12 @@ Install
     vim +PluginInstall +qall
     ```
 
+6. Link the generic git configurations to your local git
+
+   Add the following at the beginning of your ~/.gitconfig file
+
+    ```
+    [include]
+        path = ~/dotfiles/git/gitconfig
+    ```
+
