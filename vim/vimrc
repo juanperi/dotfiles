@@ -16,7 +16,10 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-fugitive'
-Plugin 'wincent/Command-T'
+Plugin 'kien/ctrlp.vim'
+Plugin 'shawncplus/phpcomplete.vim'
+Plugin 'ervandew/supertab'
+Plugin 'joonty/vim-taggatron'
 
 
 " All of your Plugins must be added before the following line
@@ -227,8 +230,6 @@ autocmd bufwritepost .vimrc source ~/.vimrc
 
 " ========== Plugin Settings =========="
 
-" Mapping to command-t
-nmap <leader>f <ESC>:CommandT<cr>
 " Mapping to NERDTree
 nmap <leader>t <ESC>:NERDTreeToggle<cr>
 let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']

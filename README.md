@@ -27,21 +27,13 @@ Install
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     ```
 
-4. Compile command-t
-
-    ```
-    $ cd ~/dotfiles/vim/vim/bundle/command-t/ruby/command-t
-    $ ruby extconf.rb
-    $ make
-    ```
-
-5. Install the plugins
+4. Install the plugins
 
     ```
     vim +PluginInstall +qall
     ```
 
-6. Link the generic git configurations to your local git
+5. Link the generic git configurations to your local git
 
    Add the following at the beginning of your ~/.gitconfig file
 
