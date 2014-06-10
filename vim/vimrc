@@ -20,6 +20,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'ervandew/supertab'
 Plugin 'joonty/vim-taggatron'
+Plugin 'joonty/vdebug'
 
 
 " All of your Plugins must be added before the following line
@@ -237,5 +238,8 @@ let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
 " Tagbar key bindings."
 nmap <leader>l <ESC>:TagbarToggle<cr>
 imap <leader>l <ESC>:TagbarToggle<cr>i
+
+" VDebug configuration
+let g:vdebug_options = { "break_on_open" : 0 }
 
 " =========== END Plugin Settings =========="
