@@ -10,15 +10,15 @@ Install
 1. Clone this repository
 
     ```
-    git clone https://github.com/Epilgrim/dotfiles.git ~/
+    cd ~
+    git clone https://github.com/Epilgrim/dotfiles.git 
     ```
 
 2. Generate symlinks to the corresponding folders
 
     ```
-    cd
-    ln -s dotfiles/vim-files/vim .vim
-    ln -s dotfiles/vim-files/vim/vimrc .vimrc
+    ln -s dotfiles/vim .vim
+    ln -s dotfiles/vim/vimrc .vimrc
     ```
 
 3. Setup Vundle
