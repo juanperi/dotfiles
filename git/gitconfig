@@ -1,10 +1,12 @@
 [core]
+	editor = vim
 	autocrlf = input
 	excludesfile = ~/.gitignore
 [push]
 	default = simple
 [alias]
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	co = checkout
 [color]
 	ui = true
 
