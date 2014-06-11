@@ -231,6 +231,8 @@ autocmd bufwritepost .vimrc source ~/.vimrc
 
 " ========== Plugin Settings =========="
 
+set tags=tags;
+
 " Mapping to NERDTree
 nmap <leader>t <ESC>:NERDTreeToggle<cr>
 let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
@@ -241,5 +243,10 @@ imap <leader>l <ESC>:TagbarToggle<cr>i
 
 " VDebug configuration
 let g:vdebug_options = { "break_on_open" : 0 }
+
+" Taggatron config
+let g:tagcommands = {
+\    "php" : {"tagfile":"tags","args":"-R"}
+\}
 
 " =========== END Plugin Settings =========="
