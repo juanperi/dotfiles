@@ -21,6 +21,7 @@ Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'ervandew/supertab'
 Plugin 'joonty/vim-taggatron'
 Plugin 'joonty/vdebug'
+Plugin 'Herzult/phpspec-vim'
 
 
 " All of your Plugins must be added before the following line
@@ -231,7 +232,7 @@ autocmd bufwritepost .vimrc source ~/.vimrc
 
 " ========== Plugin Settings =========="
 
-set tags=tags;
+set tags=.php.tags;
 
 " Mapping to NERDTree
 nmap <leader>t <ESC>:NERDTreeToggle<cr>
@@ -242,11 +243,14 @@ nmap <leader>l <ESC>:TagbarToggle<cr>
 imap <leader>l <ESC>:TagbarToggle<cr>i
 
 " VDebug configuration
-let g:vdebug_options = { "break_on_open" : 0 }
+let g:vdebug_options = { 
+            \ "break_on_open" : 0,
+            \ "timeout" : 40
+            \ }
 
 " Taggatron config
 let g:tagcommands = {
-\    "php" : {"tagfile":"tags","args":"-R"}
+\    "php" : {"tagfile":".php.tags","args":"-R"}
 \}
 
 " =========== END Plugin Settings =========="
