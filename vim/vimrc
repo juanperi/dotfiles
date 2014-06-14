@@ -22,6 +22,7 @@ Plugin 'ervandew/supertab'
 Plugin 'joonty/vim-taggatron'
 Plugin 'joonty/vdebug'
 Plugin 'Herzult/phpspec-vim'
+Plugin 'd11wtq/ctrlp_bdelete.vim'
 
 
 " All of your Plugins must be added before the following line
@@ -252,5 +253,7 @@ let g:vdebug_options = {
 let g:tagcommands = {
 \    "php" : {"tagfile":".php.tags","args":"-R"}
 \}
+" ctrlp_bdelete setup
+call ctrlp_bdelete#init()
 
 " =========== END Plugin Settings =========="
