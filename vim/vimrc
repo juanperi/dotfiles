@@ -23,6 +23,8 @@ Plugin 'joonty/vim-taggatron'
 Plugin 'joonty/vdebug'
 Plugin 'Herzult/phpspec-vim'
 Plugin 'd11wtq/ctrlp_bdelete.vim'
+Plugin 'rking/ag.vim'
+Plugin 'ntpeters/vim-better-whitespace'
 
 
 " All of your Plugins must be added before the following line
