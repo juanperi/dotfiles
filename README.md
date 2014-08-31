@@ -41,4 +41,17 @@ Install
     [include]
         path = ~/dotfiles/git/gitconfig
     ```
+6. Enable the .bashrc customizations
+
+   Add the following at the end of your ~/.bashrc file
+
+    ```
+    source $HOME/dotfiles/extended_bashrc
+    ```
+
+    After saving the changes, run
+
+    ```
+    source ~/.bashrc
+    ```
 
