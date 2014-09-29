@@ -1,3 +1,7 @@
+# alias to use when i forget to use sudo
+# ------------------------------------------------
+alias fuck='sudo $(history -p \!\!)'
+
 # Symlinks to quickly navigate to different parts of the filesystem
 # http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
 # ------------------------------------------------
