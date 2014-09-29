@@ -24,6 +24,8 @@ Plugin 'Herzult/phpspec-vim'
 Plugin 'd11wtq/ctrlp_bdelete.vim'
 Plugin 'rking/ag.vim'
 Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'ZoomWin'
+Plugin 'bling/vim-airline'
 
 
 " All of your Plugins must be added before the following line
