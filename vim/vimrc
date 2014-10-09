@@ -18,7 +18,6 @@ Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'ervandew/supertab'
-Plugin 'joonty/vim-taggatron'
 Plugin 'joonty/vdebug'
 Plugin 'Herzult/phpspec-vim'
 Plugin 'd11wtq/ctrlp_bdelete.vim'
@@ -33,6 +32,7 @@ Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-markdown'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'jelera/vim-javascript-syntax'
+Plugin 'arnaud-lb/vim-php-namespace'
 
 
 " All of your Plugins must be added before the following line
@@ -225,6 +225,7 @@ nnoremap <leader>we <c-w>v<c-w>l
 nnoremap <leader>ws <c-w>s<c-w>j
 nnoremap <leader>wq <c-w>v<c-w>h
 nnoremap <leader>w2 <c-w>s<c-w>k
+nnoremap <leader>wc <c-w>c
 nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
@@ -237,7 +238,7 @@ autocmd bufwritepost .vimrc source ~/.vimrc
 
 " ========== Plugin Settings =========="
 
-set tags=.php.tags;
+set tags+=vendor.tags
 
 " Mapping to NERDTree
 nmap <leader>t <ESC>:NERDTreeToggle<cr>
@@ -253,10 +254,6 @@ let g:vdebug_options = {
             \ "timeout" : 40
             \ }
 
-" Taggatron config
-let g:tagcommands = {
-\    "php" : {"tagfile":".php.tags","args":"-R"}
-\}
 " ctrlp config
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 let g:ctrlp_map = '<c-p>'
@@ -286,4 +283,12 @@ nnoremap <leader>ga  :Gwrite<cr>
 nnoremap <leader>gc  :Gcommit --verbose<cr>
 nnoremap <leader>grm :Gremove<cr>
 nnoremap <leader>gmv :Gmove<cr>
+
+" php namespace
+"Import classes (add use statements)
+inoremap <Leader>nu <C-O>:call PhpInsertUse()<CR>
+noremap <Leader>nu :call PhpInsertUse()<CR>
+" Make class names fully qualified
+inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
+noremap <Leader>ne :call PhpExpandClass()<CR>
 " =========== END Plugin Settings =========="
