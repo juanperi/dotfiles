@@ -29,6 +29,10 @@ Plugin 'bling/vim-airline'
 Plugin 'pbrisbin/vim-mkdir'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'mattn/emmet-vim'
+Plugin 'godlygeek/tabular'
+Plugin 'tpope/vim-markdown'
+Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'jelera/vim-javascript-syntax'
 
 
 " All of your Plugins must be added before the following line
@@ -119,7 +123,7 @@ set matchtime=3
 let mapleader = ","
 """"
 " Set title to window
-set title 
+set title
 " Dictionary path, from which the words are being looked up.
 set dictionary=/usr/share/dict/words
 
@@ -142,9 +146,6 @@ set incsearch
 set showmatch
 set hlsearch
 nnoremap <leader><space> :noh<cr>
-"nnoremap <tab> %
-"vnoremap <tab> %
-
 
 " Make Vim to handle long lines nicely.
 set wrap
@@ -162,12 +163,14 @@ nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
 nnoremap <right> <nop>
-"inoremap <up> <nop>
-"inoremap <down> <nop>
-"inoremap <left> <nop>
-"inoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
 nnoremap j gj
 nnoremap k gk
+nnoremap <tab> %
+vnoremap <tab> %
 
 
 " Get Rid of stupid Goddamned help keys
@@ -176,15 +179,13 @@ nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
 " Map : to ; also in command mode.
-"nnoremap ; :
+nnoremap ; :
 
 " Set vim to save the file on focus out.
 au FocusLost * :wa
 
-" Adding More Shorcuts keys using leader kye.
-" Leader Key provide separate namespace for specific commands.
 ",W Command to remove white space from a file.
-""nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 " ,ft Fold tag, helpful for HTML editing.
 nnoremap <leader>ft vatzf
@@ -230,13 +231,24 @@ augroup line_return
         \ endif
 augroup END
 
-nnoremap g; g;zz
-
 " This method uses a command line abbreviation so %% expands to the full path of the directory that contains the current file.
 " while editing file /some/path/myfile.txt, typing :e %%/ on the command line
 " will expand to :e /some/path/
-cabbr <expr> %% expand('%:p:h')
+cabbr <expr> %% expand('%:p')
 
+" two spaces indentation for coffeescript files
+autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
+
+" windows management
+nnoremap <leader>we <c-w>v<c-w>l
+nnoremap <leader>ws <c-w>s<c-w>j
+nnoremap <leader>wq <c-w>v<c-w>h
+nnoremap <leader>w2 <c-w>s<c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+nnoremap <c-x> <c-w>x
 " =========== END Basic Vim Settings ===========
 
 " Source the vimrc file after saving it
@@ -267,10 +279,30 @@ let g:tagcommands = {
 " ctrlp config
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 let g:ctrlp_map = '<c-p>'
-"    Set no max file limit
 let g:ctrlp_max_files = 0
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
+endif
 
 " ctrlp_bdelete setup
 call ctrlp_bdelete#init()
 
+" vim airline
+"let g:airline_section_b = '%{getcwd()}'
+"let g:airline_section_c = '%t'
+let g:airline#extensions#branch#displayed_head_limit = 15
+let g:airline#extensions#tabline#fnamemod = ':p:.'
+
+" tabularize setup
+nmap <Leader>t= :Tabularize /=<CR>
+vmap <Leader>t= :Tabularize /=<CR>
+nmap <Leader>t: :Tabularize /:\zs<CR>
+vmap <Leader>t: :Tabularize /:\zs<CR>
+
+"  FUGITIVE
+nnoremap <leader>gs  :Gstatus<cr>
+nnoremap <leader>ga  :Gwrite<cr>
+nnoremap <leader>gc  :Gcommit --verbose<cr>
+nnoremap <leader>grm :Gremove<cr>
+nnoremap <leader>gmv :Gmove<cr>
 " =========== END Plugin Settings =========="
