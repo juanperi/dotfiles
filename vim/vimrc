@@ -169,9 +169,6 @@ inoremap <left> <nop>
 inoremap <right> <nop>
 nnoremap j gj
 nnoremap k gk
-nnoremap <tab> %
-vnoremap <tab> %
-
 
 " Get Rid of stupid Goddamned help keys
 inoremap <F1> <ESC>
@@ -205,22 +202,6 @@ inoremap jj <ESC>
 " Working with split screen nicely
 " Resize Split When the window is resized"
 au VimResized * :wincmd =
-
-
-" Wildmenu completion "
-set wildmenu
-set wildmode=list:longest
-set wildignore+=.hg,.git,.svn " Version Controls"
-set wildignore+=*.aux,*.out,*.toc "Latex Indermediate files"
-set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg "Binary Imgs"
-set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest "Compiled Object files"
-set wildignore+=*.spl "Compiled speolling world list"
-set wildignore+=*.sw? "Vim swap files"
-set wildignore+=*.DS_Store "OSX SHIT"
-set wildignore+=*.luac "Lua byte code"
-set wildignore+=migrations "Django migrations"
-set wildignore+=*.pyc "Python Object codes"
-set wildignore+=*.orig "Merge resolution files"
 
 "Make Sure that Vim returns to the same line when we reopen a file"
 augroup line_return
