@@ -33,6 +33,9 @@ Plugin 'tpope/vim-markdown'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'arnaud-lb/vim-php-namespace'
+Plugin 'StanAngeloff/php.vim.git'
+Plugin 'evidens/vim-twig.git'
+Plugin '2072/PHP-Indenting-for-VIm'
 
 
 " All of your Plugins must be added before the following line
@@ -232,9 +235,6 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 nnoremap <c-x> <c-w>x
 " =========== END Basic Vim Settings ===========
-
-" Source the vimrc file after saving it
-autocmd bufwritepost .vimrc source ~/.vimrc
 
 " ========== Plugin Settings =========="
 
