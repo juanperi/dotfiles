@@ -36,6 +36,8 @@ Plugin 'arnaud-lb/vim-php-namespace'
 Plugin 'StanAngeloff/php.vim.git'
 Plugin 'evidens/vim-twig.git'
 Plugin '2072/PHP-Indenting-for-VIm'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'duff/vim-bufonly'
 
 
 " All of your Plugins must be added before the following line
@@ -234,6 +236,13 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 nnoremap <c-x> <c-w>x
+
+"This allows for change paste motion cp{motion}
+nmap <silent> cp :set opfunc=ChangePaste<CR>g@
+function! ChangePaste(type, ...)
+   silent exe "normal! `[v`]\"_c"
+   silent exe "normal! p"
+endfunction
 " =========== END Basic Vim Settings ===========
 
 " ========== Plugin Settings =========="
@@ -291,4 +300,7 @@ noremap <Leader>nu :call PhpInsertUse()<CR>
 " Make class names fully qualified
 inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
 noremap <Leader>ne :call PhpExpandClass()<CR>
+
+" Ag config
+let g:agprg="ag --skip-vcs-ignores --column"
 " =========== END Plugin Settings =========="
