@@ -1,3 +1,7 @@
+# disable Software Flow Control
+# http://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
+stty -ixon
+
 # alias to use when i forget to use sudo
 # ------------------------------------------------
 alias fuck='sudo $(history -p \!\!)'
