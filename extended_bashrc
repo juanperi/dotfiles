@@ -6,6 +6,10 @@ stty -ixon
 # ------------------------------------------------
 alias fuck='sudo $(history -p \!\!)'
 
+# alias setting tmux in 265 colors
+# ------------------------------------------------
+alias tmux='tmux -2'
+
 # Symlinks to quickly navigate to different parts of the filesystem
 # http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
 # ------------------------------------------------
