@@ -11,7 +11,7 @@ Install
 
     ```
     cd ~
-    git clone https://github.com/Epilgrim/dotfiles.git 
+    git clone https://github.com/Epilgrim/dotfiles.git
     ```
 
 2. Generate symlinks to the corresponding folders
@@ -19,6 +19,7 @@ Install
     ```
     ln -s dotfiles/vim .vim
     ln -s dotfiles/vim/vimrc .vimrc
+    ln -s dotfiles/tmux/tmux.conf .tmux.conf
     ```
 
 3. Setup Vundle
