@@ -38,6 +38,7 @@ Plugin 'evidens/vim-twig.git'
 Plugin '2072/PHP-Indenting-for-VIm'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'duff/vim-bufonly'
+Plugin 'altercation/vim-colors-solarized'
 
 
 " All of your Plugins must be added before the following line
@@ -243,6 +244,11 @@ function! ChangePaste(type, ...)
    silent exe "normal! `[v`]\"_c"
    silent exe "normal! p"
 endfunction
+
+" colors
+let g:solarized_termcolors=256
+set background=dark
+colorscheme solarized
 " =========== END Basic Vim Settings ===========
 
 " ========== Plugin Settings =========="
