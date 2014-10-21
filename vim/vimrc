@@ -39,6 +39,7 @@ Plugin '2072/PHP-Indenting-for-VIm'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'duff/vim-bufonly'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'christoomey/vim-tmux-navigator'
 
 
 " All of your Plugins must be added before the following line
@@ -232,10 +233,11 @@ nnoremap <leader>ws <c-w>s<c-w>j
 nnoremap <leader>wq <c-w>v<c-w>h
 nnoremap <leader>w2 <c-w>s<c-w>k
 nnoremap <leader>wc <c-w>c
-nnoremap <c-h> <c-w>h
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-l> <c-w>l
+" commented out because now the vim-tmux-navigator handles it"
+"nnoremap <c-h> <c-w>h
+"nnoremap <c-j> <c-w>j
+"nnoremap <c-k> <c-w>k
+"nnoremap <c-l> <c-w>l
 nnoremap <c-x> <c-w>x
 
 "This allows for change paste motion cp{motion}
