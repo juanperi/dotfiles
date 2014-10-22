@@ -2,13 +2,17 @@
 # http://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
 stty -ixon
 
-# alias to use when i forget to use sudo
+# to use when i forget to use sudo
 # ------------------------------------------------
 alias fuck='sudo $(history -p \!\!)'
 
-# alias setting tmux in 265 colors
+# setting tmux in 265 colors
 # ------------------------------------------------
 alias tmux='tmux -2'
+
+# kill all the tmux sessions
+# ------------------------------------------------
+alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
 # Symlinks to quickly navigate to different parts of the filesystem
 # http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
