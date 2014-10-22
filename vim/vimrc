@@ -250,7 +250,8 @@ endfunction
 set tags+=vendor.tags
 
 " Mapping to NERDTree
-nmap <leader>t <ESC>:NERDTreeToggle<cr>
+nmap <leader>n <ESC>:NERDTreeToggle<cr>
+nmap <leader>nf <ESC>:NERDTreeFind<cr>
 let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
 
 " Tagbar key bindings."
