@@ -55,4 +55,8 @@ Install
     ```
     source ~/.bashrc
     ```
-
+7. If you want all the plugins to work, don't forget to install
+    ```
+    sudo apt-get install silversearcher-ag
+    sudo apt-get install exuberant-ctags
+    ```
