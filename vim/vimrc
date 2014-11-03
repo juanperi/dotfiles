@@ -19,7 +19,6 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'joonty/vdebug'
-Plugin 'Herzult/phpspec-vim'
 Plugin 'd11wtq/ctrlp_bdelete.vim'
 Plugin 'rking/ag.vim'
 Plugin 'ntpeters/vim-better-whitespace'
@@ -40,6 +39,10 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'duff/vim-bufonly'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'groenewege/vim-less'
+Plugin 'benmills/vimux'
+Plugin 'kagux/vim-test-runner'
+Plugin 'embear/vim-localvimrc'
 
 
 " All of your Plugins must be added before the following line
@@ -267,7 +270,7 @@ nmap <leader>l <ESC>:TagbarToggle<cr>
 imap <leader>l <ESC>:TagbarToggle<cr>i
 
 " VDebug configuration
-let g:vdebug_options = { 
+let g:vdebug_options = {
             \ "break_on_open" : 0,
             \ "timeout" : 40
             \ }
@@ -290,8 +293,8 @@ let g:airline#extensions#branch#displayed_head_limit = 15
 let g:airline#extensions#tabline#fnamemod = ':p:.'
 
 " tabularize setup
-nmap <Leader>t= :Tabularize /=<CR>
-vmap <Leader>t= :Tabularize /=<CR>
+nmap <Leader>t= :Tabularize /=/l1l0<CR>
+vmap <Leader>t= :Tabularize /=/l1l0<CR>
 nmap <Leader>t: :Tabularize /:\zs<CR>
 vmap <Leader>t: :Tabularize /:\zs<CR>
 
@@ -312,4 +315,18 @@ noremap <Leader>ne :call PhpExpandClass()<CR>
 
 " Ag config
 let g:agprg="ag --skip-vcs-ignores --column"
+
+" vimux config
+let g:VimuxUseNearest = 1 "use nearest pane for output
+let g:VimuxOrientation = 'h'
+let g:VimuxHeight = "30"
+" test-runner
+let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
+let g:test_runner_phpspec_command = 'php -dextension=timecop.so bin/phpspec run -f dot {tests_path}'
+let g:test_runner_phpunit_command = 'php -dextension=timecop.so bin/phpunit {tests_path}'
+let g:test_runner_rspec_command = 'spring rspec {tests_path}'
+
+map <Leader>tt :call RunCurrentTestFile()<CR>
+map <Leader>tl :call RunLastTest()<CR>
+map <Leader>ta :call RunAllTests()<CR>
 " =========== END Plugin Settings =========="
