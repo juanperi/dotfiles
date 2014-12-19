@@ -29,6 +29,10 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'mattn/emmet-vim'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-markdown'
+"Realtime preview Markdown, reStructuredText, textile
+Plugin 'kannokanno/previm'
+"Open URI with your favorite browser
+Bundle 'tyru/open-browser.vim'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'arnaud-lb/vim-php-namespace'
@@ -304,6 +308,7 @@ nnoremap <leader>ga  :Gwrite<cr>
 nnoremap <leader>gc  :Gcommit --verbose<cr>
 nnoremap <leader>grm :Gremove<cr>
 nnoremap <leader>gmv :Gmove<cr>
+nnoremap <leader>gp  :Gpush<cr>
 
 " php namespace
 "Import classes (add use statements)
@@ -329,4 +334,7 @@ let g:test_runner_rspec_command = 'spring rspec {tests_path}'
 map <Leader>tt :call RunCurrentTestFile()<CR>
 map <Leader>tl :call RunLastTest()<CR>
 map <Leader>ta :call RunAllTests()<CR>
+
+" previm - Realtime preview
+let g:previm_enable_realtime = 1
 " =========== END Plugin Settings =========="
