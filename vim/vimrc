@@ -327,8 +327,8 @@ let g:VimuxOrientation = 'h'
 let g:VimuxHeight = "30"
 " test-runner
 let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
-let g:test_runner_phpspec_command = 'php -dextension=timecop.so bin/phpspec run -f dot {tests_path}'
-let g:test_runner_phpunit_command = 'php -dextension=timecop.so bin/phpunit {tests_path}'
+let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
+let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
 let g:test_runner_rspec_command = 'spring rspec {tests_path}'
 
 map <Leader>tt :call RunCurrentTestFile()<CR>
@@ -337,4 +337,7 @@ map <Leader>ta :call RunAllTests()<CR>
 
 " previm - Realtime preview
 let g:previm_enable_realtime = 1
+
+" Syntastic disable style checkers
+let g:syntastic_quiet_messages = { "type": "style" }
 " =========== END Plugin Settings =========="
