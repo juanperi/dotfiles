@@ -60,32 +60,16 @@ filetype plugin indent on    " required
 " :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
 " Put your non-Plugin stuff after this line
 
-" Save your backups to a less annoying place than the current directory.
-" If you have .vim-backup in the current directory, it'll use that.
-" Otherwise it saves it to ~/.vim/tmp/backup or . if all else fails.
-if isdirectory($HOME . '/.vim/tmp/backup') == 0
-  :silent !mkdir -p ~/.vim/tmp/backup >/dev/null 2>&1
-endif
-set backupdir-=.
-set backupdir+=.
-set backupdir-=~/
-set backupdir^=~/.vim/tmp/backup/
-set backupdir^=./.vim-backup/
-set backup
-
-" Save your swp files to a less annoying place than the current directory.
-" If you have .vim-swap in the current directory, it'll use that.
-" Otherwise it saves it to ~/.vim/tmp/swap, ~/tmp or .
-if isdirectory($HOME . '/.vim/tmp/swap') == 0
-  :silent !mkdir -p ~/.vim/tmp/swap >/dev/null 2>&1
-endif
-set directory=./.vim-swap//
-set directory+=~/.vim/tmp/swap//
-set directory+=~/tmp//
-set directory+=.
-
 " viminfo stores the the state of your previous editing session
+if isdirectory($HOME . '/.vim/tmp') == 0
+  :silent !mkdir -p ~/.vim/tmp >/dev/null 2>&1
+endif
 set viminfo+=n~/.vim/tmp/viminfo
+
+"disable backups and swapfile
+set nobackup
+set nowritebackup
+set noswapfile
 
 if exists("+undofile")
   " undofile - This allows you to use undos after exiting and restarting
@@ -166,6 +150,8 @@ set wrap
 set textwidth=79
 set formatoptions=qrn1
 "set colorcolumn=79
+" Long lines in diff mode also handled nicely
+autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
 " To  show special characters in Vim
 "set list
