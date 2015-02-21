@@ -274,10 +274,11 @@ nmap <leader>l <ESC>:TagbarToggle<cr>
 imap <leader>l <ESC>:TagbarToggle<cr>i
 
 " VDebug configuration
-let g:vdebug_options = {
-            \ "break_on_open" : 0,
-            \ "timeout" : 40
-            \ }
+if !exists("g:vdebug_options")
+    let g:vdebug_options={}
+endif
+let g:vdebug_options['break_on_open'] = 0
+let g:vdebug_options['timeout'] = 40
 
 " ctrlp config
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
