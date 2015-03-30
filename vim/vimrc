@@ -177,6 +177,8 @@ vnoremap <F1> <ESC>
 
 " Map : to ; also in command mode.
 nnoremap ; :
+" Insert ; at the end of the line
+inoremap ;; <End>;<Esc>
 
 " Set vim to save the file on focus out.
 au FocusLost * :wa
@@ -271,6 +273,7 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_max_files = 0
 if executable('ag')
   let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
+  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor"'
 endif
 
 " ctrlp_bdelete setup
