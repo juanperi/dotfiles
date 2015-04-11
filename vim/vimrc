@@ -1,64 +1,187 @@
+" Juan Peri
+" Start Setup {{{
 " Make vim incompatbile to vi.
 set nocompatible              " required
 set modelines=0
 filetype off                  " required
 set t_Co=256
+set modelines=1
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'vim-scripts/simple-pairs'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
-Plugin 'majutsushi/tagbar'
-Plugin 'tpope/vim-fugitive'
+" }}}
+
+" Plugins {{{
+" CtrlP {{{
 Plugin 'kien/ctrlp.vim'
-Plugin 'ervandew/supertab'
-Plugin 'joonty/vdebug'
 Plugin 'd11wtq/ctrlp_bdelete.vim'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_max_files = 0
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
+endif
+" }}}
+" Ag {{{
 Plugin 'rking/ag.vim'
+if executable('ag')
+  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor"'
+endif
+" }}}
+" NerdTree {{{
+Plugin 'scrooloose/nerdtree'
+nmap <leader>n <ESC>:NERDTreeToggle<cr>
+nmap <leader>nf <ESC>:NERDTreeFind<cr>
+let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
+" }}}
+" SimplePairs {{{
+Plugin 'vim-scripts/simple-pairs'
+" }}}
+" NerdCommenter {{{
+Plugin 'scrooloose/nerdcommenter'
+" }}}
+" Syntastic {{{
+Plugin 'scrooloose/syntastic'
+" Syntastic disable style checkers
+let g:syntastic_quiet_messages = { "type": "style" }
+" }}}
+" Tagbar {{{
+Plugin 'majutsushi/tagbar'
+nmap <leader>l <ESC>:TagbarToggle<cr>
+imap <leader>l <ESC>:TagbarToggle<cr>i
+" }}}
+" Fugitive {{{
+Plugin 'tpope/vim-fugitive'
+nnoremap <leader>gs  :Gstatus<cr>
+nnoremap <leader>ga  :Gwrite<cr>
+nnoremap <leader>gc  :Gcommit --verbose<cr>
+nnoremap <leader>grm :Gremove<cr>
+nnoremap <leader>gmv :Gmove<cr>
+nnoremap <leader>gp  :Gpush<cr>
+" }}}
+" Supertab {{{
+Plugin 'ervandew/supertab'
+" }}}
+" Vdebug {{{
+Plugin 'joonty/vdebug'
+if !exists("g:vdebug_options")
+    let g:vdebug_options={}
+endif
+let g:vdebug_options['break_on_open'] = 0
+let g:vdebug_options['timeout'] = 40
+" }}}
+" Better Whitespace {{{
 Plugin 'ntpeters/vim-better-whitespace'
+" }}}
+" ZoomWin {{{
 Plugin 'ZoomWin'
+" }}}
+" Airline {{{
 Plugin 'bling/vim-airline'
+"let g:airline_section_b = '%{getcwd()}'
+"let g:airline_section_c = '%t'
+let g:airline#extensions#branch#displayed_head_limit = 15
+let g:airline#extensions#tabline#fnamemod = ':p:.'
+" }}}
+" Mkdir {{{
 Plugin 'pbrisbin/vim-mkdir'
+" }}}
+" CoffeeScript {{{
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'mattn/emmet-vim'
-Plugin 'godlygeek/tabular'
-Plugin 'tpope/vim-markdown'
-"Realtime preview Markdown, reStructuredText, textile
-Plugin 'kannokanno/previm'
-"Open URI with your favorite browser
-Bundle 'tyru/open-browser.vim'
 Plugin 'mustache/vim-mustache-handlebars'
+autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab "two spaces indentation for coffeescript files
+" }}}
+" Emmet {{{
+Plugin 'mattn/emmet-vim'
+" }}}
+" Tabular {{{
+Plugin 'godlygeek/tabular'
+nmap <Leader>t= :Tabularize /=/l1l0<CR>
+vmap <Leader>t= :Tabularize /=/l1l0<CR>
+nmap <Leader>t: :Tabularize /:\zs<CR>
+vmap <Leader>t: :Tabularize /:\zs<CR>
+" }}}
+" Markdown {{{
+Plugin 'tpope/vim-markdown'
+Plugin 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
+let g:previm_enable_realtime = 1
+" }}}
+" Open In Browser {{{
+Plugin 'tyru/open-browser.vim' "Open URI with your favorite browser
+" }}}
+" Javascript Sintax {{{
 Plugin 'jelera/vim-javascript-syntax'
+" }}}
+" Php Namespaces {{{
 Plugin 'arnaud-lb/vim-php-namespace'
+
+"Import classes (add use statements)
+inoremap <Leader>nu <C-O>:call PhpInsertUse()<CR>
+noremap <Leader>nu :call PhpInsertUse()<CR>
+" Make class names fully qualified
+inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
+noremap <Leader>ne :call PhpExpandClass()<CR>
+" }}}
+" PHP Vim {{{
 Plugin 'StanAngeloff/php.vim.git'
-Plugin 'evidens/vim-twig.git'
 Plugin '2072/PHP-Indenting-for-VIm'
+" }}}
+" Twig {{{
+Plugin 'evidens/vim-twig.git'
+" }}}
+" Git Gutter {{{
 Plugin 'airblade/vim-gitgutter'
+" }}}
+" BufOnly {{{
 Plugin 'duff/vim-bufonly'
+" }}}
+" Solarized Colors {{{
 Plugin 'altercation/vim-colors-solarized'
+let g:solarized_termcolors=256
+set background=dark
+" }}}
+" Tmux {{{
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'groenewege/vim-less'
 Plugin 'benmills/vimux'
+let g:VimuxUseNearest = 1 "use nearest pane for output
+let g:VimuxOrientation = 'h'
+let g:VimuxHeight = "30"
+" }}}
+" Css - less {{{
+Plugin 'groenewege/vim-less'
+" }}}
+" Tests Runner {{{
 Plugin 'kagux/vim-test-runner'
+let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
+let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
+let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
+let g:test_runner_rspec_command = 'spring rspec {tests_path}'
+map <Leader>tt :call RunCurrentTestFile()<CR>
+map <Leader>tl :call RunLastTest()<CR>
+map <Leader>ta :call RunAllTests()<CR>
+" }}}
+" Local Vimrc {{{
 Plugin 'embear/vim-localvimrc'
+" }}}
 
+" }}}
 
+" End Setup {{{
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-"
-" Brief help
-" :PluginList          - list configured plugins
-" :PluginInstall(!)    - install (update) plugins
-" :PluginSearch(!) foo - search (or refresh cache first) for foo
-" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
-" Put your non-Plugin stuff after this line
+" }}}
+
+" Settings {{{
+" Vim Environment {{{
+let mapleader = ","
+
+set shell=/bin/bash
+set lazyredraw
+set matchtime=3
 
 " viminfo stores the the state of your previous editing session
 if isdirectory($HOME . '/.vim/tmp') == 0
@@ -70,6 +193,9 @@ set viminfo+=n~/.vim/tmp/viminfo
 set nobackup
 set nowritebackup
 set noswapfile
+
+" ,ev Shortcut to edit .vimrc file on the fly on a vertical window.
+nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 
 if exists("+undofile")
   " undofile - This allows you to use undos after exiting and restarting
@@ -83,6 +209,50 @@ if exists("+undofile")
   set undodir+=~/.vim/tmp/undo//
   set undofile
 endif
+
+" Working with split screen nicely resize Split When the window is resized"
+au VimResized * :wincmd =
+
+"Make Sure that Vim returns to the same line when we reopen a file"
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \ execute 'normal! g`"zvzz' |
+        \ endif
+augroup END
+
+" }}}
+
+" Vim Moving Around {{{
+" Disabling default keys
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+nnoremap j gj
+nnoremap k gk
+
+" windows management
+nnoremap <leader>we <c-w>v<c-w>l
+nnoremap <leader>ws <c-w>s<c-w>j
+nnoremap <leader>wq <c-w>v<c-w>h
+nnoremap <leader>w2 <c-w>s<c-w>k
+nnoremap <leader>wc <c-w>c
+nnoremap <c-x> <c-w>x
+" }}}
+
+" Vim Editing {{{
+set tags+=vendor.tags
+
+set title " Set title to window
+set dictionary=/usr/share/dict/words " Dictionary path, from which the words are being looked up.
+set pastetoggle=<F3> " Make pasting done without any indentation break.
+set mouse=a " Enable Mouse
 
 "TAB settings.
 set tabstop=4
@@ -112,28 +282,6 @@ set laststatus=2
 set number
 set norelativenumber
 
-"set undofile
-set shell=/bin/bash
-set lazyredraw
-set matchtime=3
-
-"Changing Leader Key
-let mapleader = ","
-""""
-" Set title to window
-set title
-" Dictionary path, from which the words are being looked up.
-set dictionary=/usr/share/dict/words
-
-" Make pasting done without any indentation break."
-set pastetoggle=<F3>
-
-" Make Vim able to edit corntab fiels again.
-set backupskip=/tmp/*,/private/tmp/*"
-
-" Enable Mouse
-set mouse=a
-
 "Settings for Searching and Moving
 nnoremap / /\v
 vnoremap / /\v
@@ -149,28 +297,13 @@ nnoremap <leader><space> :noh<cr>
 set wrap
 set textwidth=79
 set formatoptions=qrn1
-"set colorcolumn=79
 " Long lines in diff mode also handled nicely
 autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
 " To  show special characters in Vim
-"set list
 set listchars=tab:▸\ ,eol:¬
 
-" Naviagations using keys up/down/left/right
-" Disabling default keys to learn the hjkl
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-nnoremap j gj
-nnoremap k gk
-
-" Get Rid of stupid Goddamned help keys
+" Get Rid of help keys
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
@@ -179,9 +312,6 @@ vnoremap <F1> <ESC>
 nnoremap ; :
 " Insert ; at the end of the line
 inoremap ;; <End>;<Esc>
-
-" Set vim to save the file on focus out.
-au FocusLost * :wa
 
 ",W Command to remove white space from a file.
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
@@ -195,45 +325,14 @@ nnoremap <leader>q gqip
 " ,v Select just pasted text.
 nnoremap <leader>v V`]
 
-" ,ev Shortcut to edit .vimrc file on the fly on a vertical window.
-nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 
 " jj For Qicker Escaping between normal and editing mode.
 inoremap jj <ESC>
-
-" Working with split screen nicely
-" Resize Split When the window is resized"
-au VimResized * :wincmd =
-
-"Make Sure that Vim returns to the same line when we reopen a file"
-augroup line_return
-    au!
-    au BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \ execute 'normal! g`"zvzz' |
-        \ endif
-augroup END
 
 " This method uses a command line abbreviation so %% expands to the full path of the directory that contains the current file.
 " while editing file /some/path/myfile.txt, typing :e %%/ on the command line
 " will expand to :e /some/path/
 cabbr <expr> %% expand('%:p')
-
-" two spaces indentation for coffeescript files
-autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
-
-" windows management
-nnoremap <leader>we <c-w>v<c-w>l
-nnoremap <leader>ws <c-w>s<c-w>j
-nnoremap <leader>wq <c-w>v<c-w>h
-nnoremap <leader>w2 <c-w>s<c-w>k
-nnoremap <leader>wc <c-w>c
-" commented out because now the vim-tmux-navigator handles it"
-"nnoremap <c-h> <c-w>h
-"nnoremap <c-j> <c-w>j
-"nnoremap <c-k> <c-w>k
-"nnoremap <c-l> <c-w>l
-nnoremap <c-x> <c-w>x
 
 "This allows for change paste motion cp{motion}
 nmap <silent> cp :set opfunc=ChangePaste<CR>g@
@@ -242,92 +341,19 @@ function! ChangePaste(type, ...)
    silent exe "normal! p"
 endfunction
 
-" colors
-let g:solarized_termcolors=256
-set background=dark
-colorscheme solarized
-" =========== END Basic Vim Settings ===========
+" }}}
 
-" ========== Plugin Settings =========="
+" }}}
 
-set tags+=vendor.tags
-
-" Mapping to NERDTree
-nmap <leader>n <ESC>:NERDTreeToggle<cr>
-nmap <leader>nf <ESC>:NERDTreeFind<cr>
-let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
-
-" Tagbar key bindings."
-nmap <leader>l <ESC>:TagbarToggle<cr>
-imap <leader>l <ESC>:TagbarToggle<cr>i
-
-" VDebug configuration
-if !exists("g:vdebug_options")
-    let g:vdebug_options={}
-endif
-let g:vdebug_options['break_on_open'] = 0
-let g:vdebug_options['timeout'] = 40
-
-" ctrlp config
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_max_files = 0
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
-  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor"'
-endif
-
+" StartUp {{{
+" CtrlP {{{
 " ctrlp_bdelete setup
 call ctrlp_bdelete#init()
+" }}}
+" Solarized {{{
+colorscheme solarized
+" }}}
 
-" vim airline
-"let g:airline_section_b = '%{getcwd()}'
-"let g:airline_section_c = '%t'
-let g:airline#extensions#branch#displayed_head_limit = 15
-let g:airline#extensions#tabline#fnamemod = ':p:.'
+" }}}
 
-" tabularize setup
-nmap <Leader>t= :Tabularize /=/l1l0<CR>
-vmap <Leader>t= :Tabularize /=/l1l0<CR>
-nmap <Leader>t: :Tabularize /:\zs<CR>
-vmap <Leader>t: :Tabularize /:\zs<CR>
-
-"  FUGITIVE
-nnoremap <leader>gs  :Gstatus<cr>
-nnoremap <leader>ga  :Gwrite<cr>
-nnoremap <leader>gc  :Gcommit --verbose<cr>
-nnoremap <leader>grm :Gremove<cr>
-nnoremap <leader>gmv :Gmove<cr>
-nnoremap <leader>gp  :Gpush<cr>
-
-" php namespace
-"Import classes (add use statements)
-inoremap <Leader>nu <C-O>:call PhpInsertUse()<CR>
-noremap <Leader>nu :call PhpInsertUse()<CR>
-" Make class names fully qualified
-inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
-noremap <Leader>ne :call PhpExpandClass()<CR>
-
-" Ag config
-let g:agprg="ag --skip-vcs-ignores --column"
-
-" vimux config
-let g:VimuxUseNearest = 1 "use nearest pane for output
-let g:VimuxOrientation = 'h'
-let g:VimuxHeight = "30"
-" test-runner
-let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
-let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
-let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
-let g:test_runner_rspec_command = 'spring rspec {tests_path}'
-
-map <Leader>tt :call RunCurrentTestFile()<CR>
-map <Leader>tl :call RunLastTest()<CR>
-map <Leader>ta :call RunAllTests()<CR>
-
-" previm - Realtime preview
-let g:previm_enable_realtime = 1
-
-" Syntastic disable style checkers
-let g:syntastic_quiet_messages = { "type": "style" }
-" =========== END Plugin Settings =========="
+" vim:foldmethod=marker:foldlevel=0
