@@ -1,182 +1,13 @@
 " Juan Peri
-" Start Setup {{{
-" Make vim incompatbile to vi.
+
+" Settings {{{
+" Vim Environment {{{
 set nocompatible              " required
 set modelines=0
 filetype off                  " required
 set t_Co=256
 set modelines=1
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-" }}}
-
-" Plugins {{{
-" CtrlP {{{
-Plugin 'kien/ctrlp.vim'
-Plugin 'd11wtq/ctrlp_bdelete.vim'
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_max_files = 0
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
-endif
-" }}}
-" Ag {{{
-Plugin 'rking/ag.vim'
-if executable('ag')
-  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor"'
-endif
-" }}}
-" NerdTree {{{
-Plugin 'scrooloose/nerdtree'
-nmap <leader>n <ESC>:NERDTreeToggle<cr>
-nmap <leader>nf <ESC>:NERDTreeFind<cr>
-let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
-" }}}
-" SimplePairs {{{
-Plugin 'vim-scripts/simple-pairs'
-" }}}
-" NerdCommenter {{{
-Plugin 'scrooloose/nerdcommenter'
-" }}}
-" Syntastic {{{
-Plugin 'scrooloose/syntastic'
-" Syntastic disable style checkers
-let g:syntastic_quiet_messages = { "type": "style" }
-" }}}
-" Tagbar {{{
-Plugin 'majutsushi/tagbar'
-nmap <leader>l <ESC>:TagbarToggle<cr>
-imap <leader>l <ESC>:TagbarToggle<cr>i
-" }}}
-" Fugitive {{{
-Plugin 'tpope/vim-fugitive'
-nnoremap <leader>gs  :Gstatus<cr>
-nnoremap <leader>ga  :Gwrite<cr>
-nnoremap <leader>gc  :Gcommit --verbose<cr>
-nnoremap <leader>grm :Gremove<cr>
-nnoremap <leader>gmv :Gmove<cr>
-nnoremap <leader>gp  :Gpush<cr>
-" }}}
-" Supertab {{{
-Plugin 'ervandew/supertab'
-" }}}
-" Vdebug {{{
-Plugin 'joonty/vdebug'
-if !exists("g:vdebug_options")
-    let g:vdebug_options={}
-endif
-let g:vdebug_options['break_on_open'] = 0
-let g:vdebug_options['timeout'] = 40
-" }}}
-" Better Whitespace {{{
-Plugin 'ntpeters/vim-better-whitespace'
-" }}}
-" ZoomWin {{{
-Plugin 'ZoomWin'
-" }}}
-" Airline {{{
-Plugin 'bling/vim-airline'
-"let g:airline_section_b = '%{getcwd()}'
-"let g:airline_section_c = '%t'
-let g:airline#extensions#branch#displayed_head_limit = 15
-let g:airline#extensions#tabline#fnamemod = ':p:.'
-" }}}
-" Mkdir {{{
-Plugin 'pbrisbin/vim-mkdir'
-" }}}
-" CoffeeScript {{{
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'mustache/vim-mustache-handlebars'
-autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab "two spaces indentation for coffeescript files
-" }}}
-" Emmet {{{
-Plugin 'mattn/emmet-vim'
-" }}}
-" Tabular {{{
-Plugin 'godlygeek/tabular'
-nmap <Leader>t= :Tabularize /=/l1l0<CR>
-vmap <Leader>t= :Tabularize /=/l1l0<CR>
-nmap <Leader>t: :Tabularize /:\zs<CR>
-vmap <Leader>t: :Tabularize /:\zs<CR>
-" }}}
-" Markdown {{{
-Plugin 'tpope/vim-markdown'
-Plugin 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
-let g:previm_enable_realtime = 1
-" }}}
-" Open In Browser {{{
-Plugin 'tyru/open-browser.vim' "Open URI with your favorite browser
-" }}}
-" Javascript Sintax {{{
-Plugin 'jelera/vim-javascript-syntax'
-" }}}
-" Php Namespaces {{{
-Plugin 'arnaud-lb/vim-php-namespace'
-
-"Import classes (add use statements)
-inoremap <Leader>nu <C-O>:call PhpInsertUse()<CR>
-noremap <Leader>nu :call PhpInsertUse()<CR>
-" Make class names fully qualified
-inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
-noremap <Leader>ne :call PhpExpandClass()<CR>
-" }}}
-" PHP Vim {{{
-Plugin 'StanAngeloff/php.vim.git'
-Plugin '2072/PHP-Indenting-for-VIm'
-" }}}
-" Twig {{{
-Plugin 'evidens/vim-twig.git'
-" }}}
-" Git Gutter {{{
-Plugin 'airblade/vim-gitgutter'
-" }}}
-" BufOnly {{{
-Plugin 'duff/vim-bufonly'
-" }}}
-" Solarized Colors {{{
-Plugin 'altercation/vim-colors-solarized'
-let g:solarized_termcolors=256
-set background=dark
-" }}}
-" Tmux {{{
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'benmills/vimux'
-let g:VimuxUseNearest = 1 "use nearest pane for output
-let g:VimuxOrientation = 'h'
-let g:VimuxHeight = "30"
-" }}}
-" Css - less {{{
-Plugin 'groenewege/vim-less'
-" }}}
-" Tests Runner {{{
-Plugin 'kagux/vim-test-runner'
-let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
-let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
-let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
-let g:test_runner_rspec_command = 'spring rspec {tests_path}'
-map <Leader>tt :call RunCurrentTestFile()<CR>
-map <Leader>tl :call RunLastTest()<CR>
-map <Leader>ta :call RunAllTests()<CR>
-" }}}
-" Local Vimrc {{{
-Plugin 'embear/vim-localvimrc'
-" }}}
-
-" }}}
-
-" End Setup {{{
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" }}}
-
-" Settings {{{
-" Vim Environment {{{
 let mapleader = ","
 
 set shell=/bin/bash
@@ -343,6 +174,178 @@ endfunction
 
 " }}}
 
+" }}}
+
+" Start Setup Plugins{{{
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+" }}}
+
+" Plugins {{{
+" CtrlP {{{
+Plugin 'kien/ctrlp.vim'
+Plugin 'd11wtq/ctrlp_bdelete.vim'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_max_files = 0
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
+endif
+" }}}
+" Ag {{{
+Plugin 'rking/ag.vim'
+if executable('ag')
+  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor"'
+endif
+" }}}
+" NerdTree {{{
+Plugin 'scrooloose/nerdtree'
+nmap <leader>n <ESC>:NERDTreeToggle<cr>
+nmap <leader>nf <ESC>:NERDTreeFind<cr>
+let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
+" }}}
+" SimplePairs {{{
+Plugin 'vim-scripts/simple-pairs'
+" }}}
+" NerdCommenter {{{
+Plugin 'scrooloose/nerdcommenter'
+" }}}
+" Syntastic {{{
+Plugin 'scrooloose/syntastic'
+" Syntastic disable style checkers
+let g:syntastic_quiet_messages = { "type": "style" }
+" }}}
+" Tagbar {{{
+Plugin 'majutsushi/tagbar'
+nmap <leader>l <ESC>:TagbarToggle<cr>
+imap <leader>l <ESC>:TagbarToggle<cr>i
+" }}}
+" Fugitive {{{
+Plugin 'tpope/vim-fugitive'
+nnoremap <leader>gs  :Gstatus<cr>
+nnoremap <leader>ga  :Gwrite<cr>
+nnoremap <leader>gc  :Gcommit --verbose<cr>
+nnoremap <leader>grm :Gremove<cr>
+nnoremap <leader>gmv :Gmove<cr>
+nnoremap <leader>gp  :Gpush<cr>
+" }}}
+" Supertab {{{
+Plugin 'ervandew/supertab'
+" }}}
+" Vdebug {{{
+Plugin 'joonty/vdebug'
+if !exists("g:vdebug_options")
+    let g:vdebug_options={}
+endif
+let g:vdebug_options['break_on_open'] = 0
+let g:vdebug_options['timeout'] = 40
+" }}}
+" Better Whitespace {{{
+Plugin 'ntpeters/vim-better-whitespace'
+" }}}
+" ZoomWin {{{
+Plugin 'ZoomWin'
+" }}}
+" Airline {{{
+Plugin 'bling/vim-airline'
+"let g:airline_section_b = '%{getcwd()}'
+"let g:airline_section_c = '%t'
+let g:airline#extensions#branch#displayed_head_limit = 15
+let g:airline#extensions#tabline#fnamemod = ':p:.'
+" }}}
+" Mkdir {{{
+Plugin 'pbrisbin/vim-mkdir'
+" }}}
+" CoffeeScript {{{
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'mustache/vim-mustache-handlebars'
+autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab "two spaces indentation for coffeescript files
+au BufRead,BufNewFile *.coffee setfiletype coffee
+autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
+" }}}
+" Emmet {{{
+Plugin 'mattn/emmet-vim'
+" }}}
+" Tabular {{{
+Plugin 'godlygeek/tabular'
+nmap <Leader>t= :Tabularize /=/l1l0<CR>
+vmap <Leader>t= :Tabularize /=/l1l0<CR>
+nmap <Leader>t: :Tabularize /:\zs<CR>
+vmap <Leader>t: :Tabularize /:\zs<CR>
+" }}}
+" Markdown {{{
+Plugin 'tpope/vim-markdown'
+Plugin 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
+let g:previm_enable_realtime = 1
+" }}}
+" Open In Browser {{{
+Plugin 'tyru/open-browser.vim' "Open URI with your favorite browser
+" }}}
+" Javascript Sintax {{{
+Plugin 'jelera/vim-javascript-syntax'
+" }}}
+" Php Namespaces {{{
+Plugin 'arnaud-lb/vim-php-namespace'
+
+"Import classes (add use statements)
+inoremap <Leader>nu <C-O>:call PhpInsertUse()<CR>
+noremap <Leader>nu :call PhpInsertUse()<CR>
+" Make class names fully qualified
+inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
+noremap <Leader>ne :call PhpExpandClass()<CR>
+" }}}
+" PHP Vim {{{
+Plugin 'StanAngeloff/php.vim.git'
+Plugin '2072/PHP-Indenting-for-VIm'
+" }}}
+" Twig {{{
+Plugin 'evidens/vim-twig.git'
+" }}}
+" Git Gutter {{{
+Plugin 'airblade/vim-gitgutter'
+" }}}
+" BufOnly {{{
+Plugin 'duff/vim-bufonly'
+" }}}
+" Solarized Colors {{{
+Plugin 'altercation/vim-colors-solarized'
+let g:solarized_termcolors=256
+set background=dark
+" }}}
+" Tmux {{{
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'benmills/vimux'
+let g:VimuxUseNearest = 1 "use nearest pane for output
+let g:VimuxOrientation = 'h'
+let g:VimuxHeight = "30"
+" }}}
+" Css - less {{{
+Plugin 'groenewege/vim-less'
+" }}}
+" Tests Runner {{{
+Plugin 'kagux/vim-test-runner'
+let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
+let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
+let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
+let g:test_runner_rspec_command = 'spring rspec {tests_path}'
+map <Leader>tt :call RunCurrentTestFile()<CR>
+map <Leader>tl :call RunLastTest()<CR>
+map <Leader>ta :call RunAllTests()<CR>
+" }}}
+" Local Vimrc {{{
+Plugin 'embear/vim-localvimrc'
+" }}}
+
+" }}}
+
+" End Setup Plugins {{{
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+syntax enable
+filetype plugin indent on    " required
 " }}}
 
 " StartUp {{{
