@@ -300,6 +300,7 @@ if !exists("g:vdebug_options")
 endif
 let g:vdebug_options['break_on_open'] = 0
 let g:vdebug_options['timeout'] = 40
+let g:vdebug_options['server'] = "0.0.0.0"
 " }}}
 " Tests Runner {{{
 Plugin 'kagux/vim-test-runner'
