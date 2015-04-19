@@ -246,9 +246,6 @@ let g:vdebug_options['timeout'] = 40
 " Better Whitespace {{{
 Plugin 'ntpeters/vim-better-whitespace'
 " }}}
-" ZoomWin {{{
-Plugin 'ZoomWin'
-" }}}
 " Airline {{{
 Plugin 'bling/vim-airline'
 "let g:airline_section_b = '%{getcwd()}'
@@ -265,9 +262,6 @@ Plugin 'mustache/vim-mustache-handlebars'
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab "two spaces indentation for coffeescript files
 au BufRead,BufNewFile *.coffee setfiletype coffee
 autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-" }}}
-" Emmet {{{
-Plugin 'mattn/emmet-vim'
 " }}}
 " Tabular {{{
 Plugin 'godlygeek/tabular'
