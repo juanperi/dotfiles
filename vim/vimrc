@@ -232,16 +232,11 @@ nnoremap <leader>grm :Gremove<cr>
 nnoremap <leader>gmv :Gmove<cr>
 nnoremap <leader>gp  :Gpush<cr>
 " }}}
+" Git Gutter {{{
+Plugin 'airblade/vim-gitgutter'
+" }}}
 " Supertab {{{
 Plugin 'ervandew/supertab'
-" }}}
-" Vdebug {{{
-Plugin 'joonty/vdebug'
-if !exists("g:vdebug_options")
-    let g:vdebug_options={}
-endif
-let g:vdebug_options['break_on_open'] = 0
-let g:vdebug_options['timeout'] = 40
 " }}}
 " Better Whitespace {{{
 Plugin 'ntpeters/vim-better-whitespace'
@@ -298,8 +293,23 @@ Plugin '2072/PHP-Indenting-for-VIm'
 " Twig {{{
 Plugin 'evidens/vim-twig.git'
 " }}}
-" Git Gutter {{{
-Plugin 'airblade/vim-gitgutter'
+" Vdebug {{{
+Plugin 'joonty/vdebug'
+if !exists("g:vdebug_options")
+    let g:vdebug_options={}
+endif
+let g:vdebug_options['break_on_open'] = 0
+let g:vdebug_options['timeout'] = 40
+" }}}
+" Tests Runner {{{
+Plugin 'kagux/vim-test-runner'
+let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
+let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
+let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
+let g:test_runner_rspec_command = 'spring rspec {tests_path}'
+map <Leader>tt :call RunCurrentTestFile()<CR>
+map <Leader>tl :call RunLastTest()<CR>
+map <Leader>ta :call RunAllTests()<CR>
 " }}}
 " BufOnly {{{
 Plugin 'duff/vim-bufonly'
@@ -318,16 +328,6 @@ let g:VimuxHeight = "30"
 " }}}
 " Css - less {{{
 Plugin 'groenewege/vim-less'
-" }}}
-" Tests Runner {{{
-Plugin 'kagux/vim-test-runner'
-let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
-let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
-let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
-let g:test_runner_rspec_command = 'spring rspec {tests_path}'
-map <Leader>tt :call RunCurrentTestFile()<CR>
-map <Leader>tl :call RunLastTest()<CR>
-map <Leader>ta :call RunAllTests()<CR>
 " }}}
 " Local Vimrc {{{
 Plugin 'embear/vim-localvimrc'
