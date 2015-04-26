@@ -331,6 +331,7 @@ Plugin 'groenewege/vim-less'
 " }}}
 " Local Vimrc {{{
 Plugin 'embear/vim-localvimrc'
+let g:localvimrc_persistent=2
 " }}}
 
 " }}}
