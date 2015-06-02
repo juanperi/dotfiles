@@ -197,7 +197,7 @@ endif
 " Ag {{{
 Plugin 'rking/ag.vim'
 if executable('ag')
-  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor"'
+  let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
 " }}}
 " NerdTree {{{
@@ -269,6 +269,9 @@ Plugin 'tpope/vim-markdown'
 Plugin 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
 let g:previm_enable_realtime = 1
 " }}}
+" Yaml {{{
+Plugin 'stephpy/vim-yaml'
+" }}}
 " Open In Browser {{{
 Plugin 'tyru/open-browser.vim' "Open URI with your favorite browser
 " }}}
@@ -289,6 +292,10 @@ noremap <Leader>ne :call PhpExpandClass()<CR>
 Plugin 'StanAngeloff/php.vim.git'
 Plugin '2072/PHP-Indenting-for-VIm'
 " }}}
+" PHP Refactor {{{
+Plugin 'vim-php/vim-php-refactoring'
+let g:php_refactor_command='php /usr/local/bin/refactor.phar'
+" }}}
 " Twig {{{
 Plugin 'evidens/vim-twig.git'
 " }}}
@@ -307,6 +314,7 @@ let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
 let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
 let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
 let g:test_runner_rspec_command = 'spring rspec {tests_path}'
+let g:test_runner_default_mappings = 0
 map <Leader>tt :call RunCurrentTestFile()<CR>
 map <Leader>tl :call RunLastTest()<CR>
 map <Leader>ta :call RunAllTests()<CR>
