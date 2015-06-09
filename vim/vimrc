@@ -8,7 +8,7 @@ filetype off                  " required
 set t_Co=256
 set modelines=1
 
-let mapleader = ","
+let mapleader = "\<space>"
 
 set shell=/bin/bash
 set lazyredraw
@@ -220,7 +220,6 @@ let g:syntastic_quiet_messages = { "type": "style" }
 " Tagbar {{{
 Plugin 'majutsushi/tagbar'
 nmap <leader>l <ESC>:TagbarToggle<cr>
-imap <leader>l <ESC>:TagbarToggle<cr>i
 " }}}
 " Fugitive {{{
 Plugin 'tpope/vim-fugitive'
@@ -282,10 +281,8 @@ Plugin 'jelera/vim-javascript-syntax'
 Plugin 'arnaud-lb/vim-php-namespace'
 
 "Import classes (add use statements)
-inoremap <Leader>nu <C-O>:call PhpInsertUse()<CR>
 noremap <Leader>nu :call PhpInsertUse()<CR>
 " Make class names fully qualified
-inoremap <Leader>ne <C-O>:call PhpExpandClass()<CR>
 noremap <Leader>ne :call PhpExpandClass()<CR>
 " }}}
 " PHP Vim {{{
