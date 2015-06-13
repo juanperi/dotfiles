@@ -1,0 +1,19 @@
+snippet construct "__construct()" b
+${1/([\w\\]+ )*\$(\w+)( = [\w'"]+)?(, )*/    private $$2;\n/g}
+/**${1/([\w\\]+ )*\$(\w+)( = [\w'"]+)?(, )*/\n     * \@param $1$$2/g}
+ */
+public function __construct($1)
+{${1/([\w\\]+ )*\$(\w+)( = [\w'"]+)?(, )*/\n        $this->$2 = $$2;/g}
+}
+endsnippet
+
+snippet pubf "Public function" b
+/**${2/([\w\\]+ )*\$(\w+)( = [\w'"]+)?(, )*/\n     * \@param $1$$2/g}
+ *
+ * @return ${4:void}
+ */
+public function ${1:name}(${2:$param})
+{
+	${VISUAL}${5:return null;}
+}
+endsnippet

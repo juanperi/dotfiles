@@ -236,6 +236,13 @@ Plugin 'airblade/vim-gitgutter'
 " Supertab {{{
 Plugin 'ervandew/supertab'
 " }}}
+" UltiSnips {{{
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+" }}}
 " Better Whitespace {{{
 Plugin 'ntpeters/vim-better-whitespace'
 " }}}
