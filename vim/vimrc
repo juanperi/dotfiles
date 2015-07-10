@@ -259,9 +259,6 @@ Plugin 'pbrisbin/vim-mkdir'
 " CoffeeScript {{{
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'mustache/vim-mustache-handlebars'
-autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab "two spaces indentation for coffeescript files
-au BufRead,BufNewFile *.coffee setfiletype coffee
-autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 " }}}
 " Tabular {{{
 Plugin 'godlygeek/tabular'
@@ -328,8 +325,6 @@ Plugin 'duff/vim-bufonly'
 " }}}
 " Solarized Colors {{{
 Plugin 'altercation/vim-colors-solarized'
-let g:solarized_termcolors=256
-set background=dark
 " }}}
 " Tmux {{{
 Plugin 'christoomey/vim-tmux-navigator'
@@ -356,14 +351,24 @@ filetype plugin indent on    " required
 " }}}
 
 " StartUp {{{
+" FileTypes Config {{{
+" Yaml {{{
+autocmd FileType yaml setlocal autoindent shiftwidth=4 tabstop=4 expandtab
+" }}}
+" CoffeeScript {{{
+autocmd BufRead,BufNewFile *.coffee setfiletype coffee
+autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
+" }}}
+" }}}
 " CtrlP {{{
 " ctrlp_bdelete setup
 call ctrlp_bdelete#init()
 " }}}
-" Solarized {{{
+" Solarized Colors {{{
+let g:solarized_termcolors=256
+set background=dark
 colorscheme solarized
 " }}}
-
 " }}}
 
 " vim:foldmethod=marker:foldlevel=0
