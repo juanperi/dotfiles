@@ -110,7 +110,9 @@ set laststatus=2
 
 "set relativenumber
 set number
-set norelativenumber
+if v:version >= 730
+    set norelativenumber
+endif
 
 "Settings for Searching and Moving
 nnoremap / /\v
@@ -237,11 +239,13 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'ervandew/supertab'
 " }}}
 " UltiSnips {{{
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+if v:version >= 740
+    Plugin 'SirVer/ultisnips'
+    Plugin 'honza/vim-snippets'
+    let g:UltiSnipsExpandTrigger="<tab>"
+    let g:UltiSnipsJumpForwardTrigger="<c-j>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+endif
 " }}}
 " Better Whitespace {{{
 Plugin 'ntpeters/vim-better-whitespace'
