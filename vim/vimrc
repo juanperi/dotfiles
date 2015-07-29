@@ -110,7 +110,7 @@ set laststatus=2
 
 "set relativenumber
 set number
-if v:version >= 730
+if v:version >= 703
     set norelativenumber
 endif
 
@@ -239,7 +239,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'ervandew/supertab'
 " }}}
 " UltiSnips {{{
-if v:version >= 740
+if v:version >= 704
     Plugin 'SirVer/ultisnips'
     Plugin 'honza/vim-snippets'
     let g:UltiSnipsExpandTrigger="<tab>"
