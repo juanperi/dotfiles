@@ -187,8 +187,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " Plugins {{{
 " CtrlP {{{
-Plugin 'kien/ctrlp.vim'
-Plugin 'd11wtq/ctrlp_bdelete.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_max_files = 0
@@ -363,10 +362,6 @@ autocmd FileType yaml setlocal autoindent shiftwidth=4 tabstop=4 expandtab
 autocmd BufRead,BufNewFile *.coffee setfiletype coffee
 autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
 " }}}
-" }}}
-" CtrlP {{{
-" ctrlp_bdelete setup
-call ctrlp_bdelete#init()
 " }}}
 " Solarized Colors {{{
 let g:solarized_termcolors=256
