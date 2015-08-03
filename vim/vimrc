@@ -41,6 +41,10 @@ if exists("+undofile")
   set undofile
 endif
 
+if exists("+clipboard")
+  set clipboard=unnamedplus
+endif
+
 " Working with split screen nicely resize Split When the window is resized"
 au VimResized * :wincmd =
 
