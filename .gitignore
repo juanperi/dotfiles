@@ -1,2 +1,4 @@
+vim/autoload/plug.vim
+vim/plugged/*
 vim/bundle/*
 vim/tmp/*

@@ -182,16 +182,12 @@ endfunction
 " }}}
 
 " Start Setup Plugins{{{
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 " }}}
 
-" Plugins {{{
+" Plugs {{{
 " CtrlP {{{
-Plugin 'ctrlpvim/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_max_files = 0
@@ -200,34 +196,34 @@ if executable('ag')
 endif
 " }}}
 " Ag {{{
-Plugin 'rking/ag.vim'
+Plug 'rking/ag.vim'
 if executable('ag')
   let g:agprg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
 " }}}
 " NerdTree {{{
-Plugin 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 nmap <leader>n <ESC>:NERDTreeToggle<cr>
 nmap <leader>nf <ESC>:NERDTreeFind<cr>
 let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
 " }}}
 " SimplePairs {{{
-Plugin 'vim-scripts/simple-pairs'
+Plug 'vim-scripts/simple-pairs'
 " }}}
 " NerdCommenter {{{
-Plugin 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdcommenter'
 " }}}
 " Syntastic {{{
-Plugin 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 " Syntastic disable style checkers
 let g:syntastic_quiet_messages = { "type": "style" }
 " }}}
 " Tagbar {{{
-Plugin 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 nmap <leader>l <ESC>:TagbarToggle<cr>
 " }}}
 " Fugitive {{{
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 nnoremap <leader>gs  :Gstatus<cr>
 nnoremap <leader>ga  :Gwrite<cr>
 nnoremap <leader>gc  :Gcommit --verbose<cr>
@@ -236,60 +232,60 @@ nnoremap <leader>gmv :Gmove<cr>
 nnoremap <leader>gp  :Gpush<cr>
 " }}}
 " Git Gutter {{{
-Plugin 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 " }}}
 " Supertab {{{
-Plugin 'ervandew/supertab'
+Plug 'ervandew/supertab'
 " }}}
 " UltiSnips {{{
 if v:version >= 704
-    Plugin 'SirVer/ultisnips'
-    Plugin 'honza/vim-snippets'
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
     let g:UltiSnipsExpandTrigger="<tab>"
     let g:UltiSnipsJumpForwardTrigger="<c-j>"
     let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 endif
 " }}}
 " Better Whitespace {{{
-Plugin 'ntpeters/vim-better-whitespace'
+Plug 'ntpeters/vim-better-whitespace'
 " }}}
 " Airline {{{
-Plugin 'bling/vim-airline'
+Plug 'bling/vim-airline'
 "let g:airline_section_b = '%{getcwd()}'
 "let g:airline_section_c = '%t'
 let g:airline#extensions#branch#displayed_head_limit = 15
 let g:airline#extensions#tabline#fnamemod = ':p:.'
 " }}}
 " Mkdir {{{
-Plugin 'pbrisbin/vim-mkdir'
+Plug 'pbrisbin/vim-mkdir'
 " }}}
 " CoffeeScript {{{
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'mustache/vim-mustache-handlebars'
+Plug 'kchmck/vim-coffee-script'
+Plug 'mustache/vim-mustache-handlebars'
 " }}}
 " Tabular {{{
-Plugin 'godlygeek/tabular'
+Plug 'godlygeek/tabular'
 nmap <Leader>t= :Tabularize /=/l1l0<CR>
 vmap <Leader>t= :Tabularize /=/l1l0<CR>
 nmap <Leader>t: :Tabularize /:\zs<CR>
 vmap <Leader>t: :Tabularize /:\zs<CR>
 " }}}
 " Markdown {{{
-Plugin 'tpope/vim-markdown'
-Plugin 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
+Plug 'tpope/vim-markdown'
+Plug 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
 let g:previm_enable_realtime = 1
 " }}}
 " Yaml {{{
-Plugin 'stephpy/vim-yaml'
+Plug 'stephpy/vim-yaml'
 " }}}
 " Open In Browser {{{
-Plugin 'tyru/open-browser.vim' "Open URI with your favorite browser
+Plug 'tyru/open-browser.vim' "Open URI with your favorite browser
 " }}}
-" Javascript Sintax {{{
-Plugin 'jelera/vim-javascript-syntax'
+" Javascript Syntax {{{
+Plug 'jelera/vim-javascript-syntax'
 " }}}
 " Php Namespaces {{{
-Plugin 'arnaud-lb/vim-php-namespace'
+Plug 'arnaud-lb/vim-php-namespace'
 
 "Import classes (add use statements)
 noremap <Leader>nu :call PhpInsertUse()<CR>
@@ -297,18 +293,18 @@ noremap <Leader>nu :call PhpInsertUse()<CR>
 noremap <Leader>ne :call PhpExpandClass()<CR>
 " }}}
 " PHP Vim {{{
-Plugin 'StanAngeloff/php.vim.git'
-Plugin '2072/PHP-Indenting-for-VIm'
+Plug 'StanAngeloff/php.vim'
+Plug '2072/PHP-Indenting-for-VIm'
 " }}}
 " PHP Refactor {{{
-Plugin 'vim-php/vim-php-refactoring'
+Plug 'vim-php/vim-php-refactoring'
 let g:php_refactor_command='php /usr/local/bin/refactor.phar'
 " }}}
 " Twig {{{
-Plugin 'evidens/vim-twig.git'
+Plug 'evidens/vim-twig'
 " }}}
 " Vdebug {{{
-Plugin 'joonty/vdebug'
+Plug 'joonty/vdebug'
 if !exists("g:vdebug_options")
     let g:vdebug_options={}
 endif
@@ -317,7 +313,7 @@ let g:vdebug_options['timeout'] = 40
 let g:vdebug_options['server'] = "0.0.0.0"
 " }}}
 " Tests Runner {{{
-Plugin 'kagux/vim-test-runner'
+Plug 'kagux/vim-test-runner'
 let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
 let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
 let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
@@ -328,33 +324,31 @@ map <Leader>tl :call RunLastTest()<CR>
 map <Leader>ta :call RunAllTests()<CR>
 " }}}
 " BufOnly {{{
-Plugin 'duff/vim-bufonly'
+Plug 'duff/vim-bufonly'
 " }}}
 " Solarized Colors {{{
-Plugin 'altercation/vim-colors-solarized'
+Plug 'altercation/vim-colors-solarized'
 " }}}
 " Tmux {{{
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'benmills/vimux'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'benmills/vimux'
 let g:VimuxUseNearest = 1 "use nearest pane for output
 let g:VimuxOrientation = 'h'
 let g:VimuxHeight = "30"
 " }}}
 " Css - less {{{
-Plugin 'groenewege/vim-less'
+Plug 'groenewege/vim-less'
 " }}}
 " Local Vimrc {{{
-Plugin 'embear/vim-localvimrc'
+Plug 'embear/vim-localvimrc'
 let g:localvimrc_persistent=2
 " }}}
 
 " }}}
 
 " End Setup Plugins {{{
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-syntax enable
-filetype plugin indent on    " required
+" Add plugins to &runtimepath
+call plug#end()
 " }}}
 
 " StartUp {{{
