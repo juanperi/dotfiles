@@ -205,7 +205,11 @@ endif
 Plug 'scrooloose/nerdtree'
 nmap <leader>n <ESC>:NERDTreeToggle<cr>
 nmap <leader>nf <ESC>:NERDTreeFind<cr>
-let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
+let NERDTreeIgnore=['\^.vim$', '\~$', '\.pyc$']
+" }}}
+" UndoTree {{{
+Plug 'mbbill/undotree'
+nnoremap <leader>u :UndotreeToggle<cr>
 " }}}
 " SimplePairs {{{
 Plug 'vim-scripts/simple-pairs'
