@@ -22,16 +22,17 @@ Install
     ln -s dotfiles/tmux/tmux.conf .tmux.conf
     ```
 
-3. Setup Vundle
+3. Setup Vim Plug (vim plugins manager)
 
     ```
-    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     ```
 
 4. Install the plugins
 
     ```
-    vim +PluginInstall +qall
+    vim +PlugInstall
     ```
 
 5. Link the generic git configurations to your local git
@@ -56,6 +57,7 @@ Install
     source ~/.bashrc
     ```
 7. If you want all the plugins to work, don't forget to install
+
     ```
     sudo apt-get install silversearcher-ag
     sudo apt-get install exuberant-ctags

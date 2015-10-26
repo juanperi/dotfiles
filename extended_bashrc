@@ -1,3 +1,8 @@
+# Add git status to the prompt
+# https://github.com/magicmonty/bash-git-prompt
+GIT_PROMPT_ONLY_IN_REPO=1
+source ~/dotfiles/bash-git-prompt/gitprompt.sh
+
 # disable Software Flow Control
 # http://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
 stty -ixon
