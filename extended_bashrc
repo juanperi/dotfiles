@@ -6,6 +6,9 @@ if [ -e ~/dotfiles/bash-git-prompt/gitprompt.sh ]; then
     source ~/dotfiles/bash-git-prompt/gitprompt.sh;
 fi
 
+#set vim as default editor
+export EDITOR=vim
+
 # disable Software Flow Control
 # http://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
 stty -ixon
