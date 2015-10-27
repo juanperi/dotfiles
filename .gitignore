@@ -1,5 +1,5 @@
 vim/autoload/plug.vim
-vim/plugged/*
-vim/bundle/*
-vim/tmp/*
-bash-git-prompt/*
+vim/plugged/
+vim/bundle/
+vim/tmp/
+bash-git-prompt/
