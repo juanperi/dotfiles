@@ -29,7 +29,7 @@ Install
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     ```
 
-4. Install the plugins
+4. Install vim plugins
 
     ```
     vim +PlugInstall
@@ -43,6 +43,7 @@ Install
     [include]
         path = ~/dotfiles/git/gitconfig
     ```
+
 6. Enable the .bashrc customizations
 
    Add the following at the end of your ~/.bashrc file
@@ -61,4 +62,10 @@ Install
     ```
     sudo apt-get install silversearcher-ag
     sudo apt-get install exuberant-ctags
+    ```
+
+7. If you want git information in your prompt, then clone
+
+    ```
+    git clone https://github.com/magicmonty/bash-git-prompt.git dotfiles/bash-git-prompt
     ```
