@@ -181,11 +181,11 @@ endfunction
 
 " }}}
 
+" Plugins {{{
 " Start Setup Plugins{{{
 call plug#begin('~/.vim/plugged')
 " }}}
 
-" Plugs {{{
 " CtrlP {{{
 Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
@@ -352,11 +352,10 @@ Plug 'embear/vim-localvimrc'
 let g:localvimrc_persistent=2
 " }}}
 
-" }}}
-
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
 call plug#end()
+" }}}
 " }}}
 
 " StartUp {{{
@@ -376,4 +375,4 @@ colorscheme solarized
 " }}}
 " }}}
 
-" vim:foldmethod=marker:foldlevel=0
+" vim:foldmethod=marker:foldlevel=1
