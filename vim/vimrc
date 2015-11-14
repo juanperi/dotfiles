@@ -351,6 +351,9 @@ Plug 'groenewege/vim-less'
 Plug 'embear/vim-localvimrc'
 let g:localvimrc_persistent=2
 " }}}
+" Local Escape Ansi Colors {{{
+Plug 'Improved-AnsiEsc'
+" }}}
 
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
