@@ -203,6 +203,7 @@ endif
 " }}}
 " NerdTree {{{
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 nmap <leader>n <ESC>:NERDTreeToggle<cr>
 nmap <leader>nf <ESC>:NERDTreeFind<cr>
 let NERDTreeIgnore=['\^.vim$', '\~$', '\.pyc$']
