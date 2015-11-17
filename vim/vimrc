@@ -375,7 +375,7 @@ autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=ind
 " Solarized Colors {{{
 let g:solarized_termcolors=256
 set background=dark
-colorscheme solarized
+silent! colorscheme solarized
 " }}}
 " }}}
 
