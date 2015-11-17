@@ -6,6 +6,12 @@ if [ -e ~/dotfiles/shell/bash-git-prompt/gitprompt.sh ]; then
     source ~/dotfiles/shell/bash-git-prompt/gitprompt.sh;
 fi
 
+# Move around using z plugin
+# https://github.com/rupa/z
+if [ -e ~/dotfiles/shell/z/z.sh ]; then
+    . ~/dotfiles/shell/z/z.sh
+fi
+
 #set vim as default editor
 export EDITOR=vim
 

@@ -1,5 +1,8 @@
 vim/autoload/plug.vim
+vim/autoload/plug.vim.old
 vim/plugged/
 vim/bundle/
 vim/tmp/
-bash-git-prompt/
+shell/bash-git-prompt/
+shell/z/
+

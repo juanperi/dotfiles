@@ -77,3 +77,9 @@ Install
     ```
     git clone https://github.com/magicmonty/bash-git-prompt.git dotfiles/shell/bash-git-prompt
     ```
+
+1. If you want to move around using z
+
+    ```
+    git clone https://github.com/rupa/z.git dotfiles/shell/z
+    ```
