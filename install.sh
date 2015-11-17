@@ -57,14 +57,8 @@ fi
 
 # Setup Tmux plugins
 if hash tmux 2>/dev/null; then
-  if [ ! -e .tmux/plugins/tpm ]; then
-    echo 'Clonning Tmux Plugins'
-    git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm
-  fi
   echo 'Linking Tmux configuration'
   ln -sf dotfiles/tmux/tmux.conf .tmux.conf
-  echo 'Reloading Tmux configuration'
-  tmux source ~/.tmux.conf
 else
   echo 'Ignoring Tmux setup'
 fi
