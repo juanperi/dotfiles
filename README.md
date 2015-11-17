@@ -57,7 +57,7 @@ Install
    Add the following at the end of your ~/.bashrc file
 
     ```
-    source $HOME/dotfiles/extended_bashrc
+    source $HOME/dotfiles/shell/extended_bashrc
     ```
 
     After saving the changes, run
@@ -75,5 +75,5 @@ Install
 1. If you want git information in your prompt, then clone
 
     ```
-    git clone https://github.com/magicmonty/bash-git-prompt.git dotfiles/bash-git-prompt
+    git clone https://github.com/magicmonty/bash-git-prompt.git dotfiles/shell/bash-git-prompt
     ```

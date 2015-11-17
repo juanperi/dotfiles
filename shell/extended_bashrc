@@ -1,9 +1,9 @@
 # Add git status to the prompt
 # https://github.com/magicmonty/bash-git-prompt
-if [ -e ~/dotfiles/bash-git-prompt/gitprompt.sh ]; then
+if [ -e ~/dotfiles/shell/bash-git-prompt/gitprompt.sh ]; then
     GIT_PROMPT_ONLY_IN_REPO=1;
     GIT_PROMPT_START='\u:\W';
-    source ~/dotfiles/bash-git-prompt/gitprompt.sh;
+    source ~/dotfiles/shell/bash-git-prompt/gitprompt.sh;
 fi
 
 #set vim as default editor
