@@ -212,8 +212,8 @@ let NERDTreeIgnore=['\^.vim$', '\~$', '\.pyc$']
 Plug 'mbbill/undotree'
 nnoremap <leader>u :UndotreeToggle<cr>
 " }}}
-" AutoPairs {{{
-Plug 'jiangmiao/auto-pairs'
+" SimplePairs {{{
+Plug 'vim-scripts/simple-pairs'
 " }}}
 " NerdCommenter {{{
 Plug 'scrooloose/nerdcommenter'
