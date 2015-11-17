@@ -11,20 +11,21 @@ Install
 
     ```
     cd ~
-    git clone https://github.com/Epilgrim/dotfiles.git
+    git clone https://github.com/Epilgrim/dotfiles.git dotfiles
     ```
 
 1. Run the Install script
 
     ```
-    . .dotfiles/install.sh
+    . ./dotfiles/install.sh
     ```
 
 1. Install tmux plugins
 
-    Inside a Tmux session execute `CTRL+a I` to install the plugins
+    Inside a tmux session execute `CTRL+a I` to install the plugins
 
-1. If you want all the plugins to work, don't forget to install
+1. Don't forget to install the following dependencies for extended
+   functionality
 
     ```
     sudo apt-get install silversearcher-ag
