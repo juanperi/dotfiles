@@ -1,12 +1,16 @@
+[user]
+  name = Juan Peri
+  email = eternoperegrino@gmail.com
 [core]
-	editor = vim
-	autocrlf = input
-	excludesfile = ~/.gitignore
+  excludesfile = ~/.global_gitignore
+[core]
+  editor = vim
+  autocrlf = input
+  excludesfile = ~/.gitignore
 [push]
-	default = simple
+  default = simple
 [alias]
-	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
-	co = checkout
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  co = checkout
 [color]
-	ui = true
-
+  ui = true
