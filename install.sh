@@ -69,5 +69,15 @@ else
   echo 'Ignoring Tmux setup'
 fi
 
+if ! hash ag 2>/dev/null; then
+    echo "Don't forget to install silversearcher-ag"
+    echo "  sudo apt-get install silversearcher-ag"
+fi
+
+if ! hash ctags 2>/dev/null; then
+    echo "Don't forget to install ctags"
+    echo "  sudo apt-get install exuberant-ctags"
+fi
+
 # back to the original directory
 cd $pwd
