@@ -65,6 +65,13 @@ if hash tmux 2>/dev/null; then
 else
   echo 'Ignoring Tmux setup'
 fi
+# Setup tmuxinator
+if hash mux 2>/dev/null; then
+  echo 'Linking tmuxinator configuration'
+  ln -sf dotfiles/tmuxinator .tmuxinator
+else
+  echo 'Ignoring tmuxinator setup'
+fi
 
 if ! hash ag 2>/dev/null; then
     echo "Don't forget to install silversearcher-ag"

@@ -1,0 +1,25 @@
+name: getapp
+root: ~/workspace/getapp
+pre: vagrant up
+
+windows:
+  - editor:
+      layout: a7fc,178x48,0,0{115x48,0,0,0,62x48,116,0,2}
+      panes:
+        - vim
+        - shell:
+            - vagrant ssh
+            - cd /vagrant
+
+  - local_servers:
+      layout: tiled
+      panes:
+        - shell:
+            - sleep 10
+            - vagrant ssh
+            - cd /vagrant
+        - server:
+            - sleep 20
+            - vagrant ssh
+            - cd /vagrant
+            - bundle exec foreman start
