@@ -34,6 +34,9 @@ if [ ! -e dotfiles/shell/z ]; then
 fi
 
 # Add extended_bashrc at the end of .bashrc
+echo 'Sourcing .bashrc inside .profile'
+sed -i '/source.*\.bashrc/d' .profile
+echo 'source $HOME/dotfiles/shell/profile' >> .profile
 echo 'Adding extended_bashrc to .bashrc'
 sed -i '/dotfiles.*extended_bashrc/d' .bashrc
 echo 'source $HOME/dotfiles/shell/extended_bashrc' >> .bashrc
