@@ -41,7 +41,7 @@ if exists("+undofile")
   set undofile
 endif
 
-if exists("+clipboard")
+if !has('mac') && exists("+clipboard")
   set clipboard=unnamedplus
 endif
 
