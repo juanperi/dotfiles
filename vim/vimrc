@@ -322,15 +322,12 @@ let g:vdebug_options['timeout'] = 40
 let g:vdebug_options['server'] = "0.0.0.0"
 " }}}
 " Tests Runner {{{
-Plug 'kagux/vim-test-runner'
-let g:test_runner_run_command = 'call VimuxRunCommand("{test_command}")'
-let g:test_runner_phpspec_command = 'php bin/phpspec run -f dot {tests_path}'
-let g:test_runner_phpunit_command = 'php bin/phpunit {tests_path}'
-let g:test_runner_rspec_command = 'spring rspec {tests_path}'
-let g:test_runner_default_mappings = 0
-map <Leader>tt :call RunCurrentTestFile()<CR>
-map <Leader>tl :call RunLastTest()<CR>
-map <Leader>ta :call RunAllTests()<CR>
+Plug 'janko-m/vim-test'
+let g:test#strategy = 'vimux'
+nmap <silent> <leader>tt :TestNearest<CR>
+nmap <silent> <leader>tT :TestFile<CR>
+nmap <silent> <leader>ta :TestSuite<CR>
+nmap <silent> <leader>tl :TestLast<CR>
 " }}}
 " BufOnly {{{
 Plug 'duff/vim-bufonly'
