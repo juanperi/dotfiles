@@ -309,8 +309,11 @@ let g:php_refactor_command='php /usr/local/bin/refactor.phar'
 Plug 'vim-ruby/vim-ruby'
 autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
 " }}}
-" Twig {{{
+" Twig Templates {{{
 Plug 'evidens/vim-twig'
+" }}}
+" Slim Templates {{{
+Plug 'slim-template/vim-slim'
 " }}}
 " Vdebug {{{
 Plug 'joonty/vdebug'
