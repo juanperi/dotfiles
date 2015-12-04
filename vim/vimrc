@@ -177,6 +177,8 @@ function! ChangePaste(type, ...)
    silent exe "normal! p"
 endfunction
 
+filetype plugin indent on
+
 " }}}
 
 " }}}
@@ -253,6 +255,14 @@ endif
 " }}}
 " Better Whitespace {{{
 Plug 'ntpeters/vim-better-whitespace'
+" }}}
+" Indent guides {{{
+Plug 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=235
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 " }}}
 " Airline {{{
 Plug 'bling/vim-airline'
@@ -370,6 +380,9 @@ autocmd FileType yaml setlocal autoindent shiftwidth=4 tabstop=4 expandtab
 " CoffeeScript {{{
 autocmd BufRead,BufNewFile *.coffee setfiletype coffee
 autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
+" }}}
+" Javascript {{{
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
 " }}}
 " }}}
 " Solarized Colors {{{
