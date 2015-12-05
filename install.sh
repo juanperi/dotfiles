@@ -46,5 +46,9 @@ if ! hash ctags 2>/dev/null; then
   echo "  sudo apt-get install exuberant-ctags"
 fi
 
+if [ -e /bin/zsh ]; then
+  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
+
 # back to the original directory
 cd $pwd

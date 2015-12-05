@@ -11,7 +11,7 @@ Install
 
     ```
     cd ~
-    bash <(https://raw.githubusercontent.com/epilgrim/dotfiles/master/install.sh)
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/epilgrim/dotfiles/master/install.sh)"
     ```
 
 1. Install tmux plugins
