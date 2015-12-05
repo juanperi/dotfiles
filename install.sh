@@ -28,26 +28,28 @@ source $HOME/.homesick/repos/homeshick/homeshick.sh
 homeshick clone git@github.com:epilgrim/dotfiles
 homeshick link dotfiles
 
+#Installing zsh
+if [ -e /bin/zsh ]; then
+  if [ ! -e ~/.oh-my-zsh ]; then
+    git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
+  fi
+  if [ ! "$SHELL" = '/bin/zsh' ]; then
+    echo "Setting zsh as default shell"
+    chsh -s /bin/zsh
+  fi
+fi
+
 # Setup Vim
 if hash vim 2>/dev/null; then
-  # Update VimPlug and Plugins
   vim +PlugUpgrade +PlugUpdate +qall
-else
-  echo 'Ignoring Vim setup'
 fi
 
 if ! hash ag 2>/dev/null; then
   echo "Don't forget to install silversearcher-ag"
-  echo "  sudo apt-get install silversearcher-ag"
 fi
 
 if ! hash ctags 2>/dev/null; then
   echo "Don't forget to install ctags"
-  echo "  sudo apt-get install exuberant-ctags"
-fi
-
-if [ -e /bin/zsh ]; then
-  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
 # back to the original directory
