@@ -7,17 +7,11 @@ people
 Install
 =======
 
-1. Clone this repository
+1. Run the Install command:
 
     ```
     cd ~
-    git clone https://github.com/Epilgrim/dotfiles.git dotfiles
-    ```
-
-1. Run the Install script
-
-    ```
-    . ./dotfiles/install.sh
+    bash <(https://raw.githubusercontent.com/epilgrim/dotfiles/master/install.sh)
     ```
 
 1. Install tmux plugins

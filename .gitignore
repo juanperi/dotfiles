@@ -1,8 +1,6 @@
-vim/autoload/plug.vim
-vim/autoload/plug.vim.old
-vim/plugged/
-vim/bundle/
-vim/tmp/
+home/.vim/autoload/plug.vim.old
+home/.vim/plugged/
+home/.vim/bundle/
+home/.vim/tmp/
 shell/bash-git-prompt/
 shell/z/
-
