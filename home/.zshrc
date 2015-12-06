@@ -1,6 +1,6 @@
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="ys"
-plugins=(git)
+plugins=(git z)
 
 function load_source(){
   [[ -s "$1" ]] && source "$1"
