@@ -25,8 +25,13 @@ fi
 source $HOME/.homesick/repos/homeshick/homeshick.sh
 
 # Getting the dotfiles
-homeshick clone git@github.com:epilgrim/dotfiles
+if [ ! -e $HOME/.homesick/repos/dotfiles ]; then
+    homeshick clone git@github.com:epilgrim/dotfiles
+else
+    homeshick pull dotfiles
+fi
 homeshick link dotfiles
+
 
 #Installing zsh
 if [ -e /bin/zsh ]; then
