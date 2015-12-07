@@ -17,7 +17,7 @@ pwd=$(pwd)
 cd $HOME
 
 # Installing homeshick to manage dotfiles
-if [ ! -e $HOME/.homesick/repost/homeshick ]; then
+if [ ! -e $HOME/.homesick/repos/homeshick ]; then
   git clone git@github.com:andsens/homeshick $HOME/.homesick/repos/homeshick
 fi
 
