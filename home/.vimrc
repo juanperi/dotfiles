@@ -200,7 +200,7 @@ endif
 " Ag {{{
 Plug 'rking/ag.vim'
 if executable('ag')
-  let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs" --ignore "./solr/server/logs"'
+  let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
 " }}}
 " NerdTree {{{
