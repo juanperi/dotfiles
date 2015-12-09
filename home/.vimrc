@@ -200,7 +200,7 @@ endif
 " Ag {{{
 Plug 'rking/ag.vim'
 if executable('ag')
-  let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
+  let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs" --ignore "./solr/server/logs"'
 endif
 " }}}
 " NerdTree {{{
@@ -364,6 +364,9 @@ let g:localvimrc_persistent=2
 " }}}
 " Local Escape Ansi Colors {{{
 Plug 'Improved-AnsiEsc'
+" }}}
+" Convert from/to snake and camel case {{{
+Plug 'tpope/vim-abolish'
 " }}}
 
 " End Setup Plugins {{{
