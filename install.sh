@@ -34,13 +34,14 @@ homeshick link dotfiles
 
 
 #Installing zsh
-if [ -e /bin/zsh ]; then
+ZSH_BIN=`which zsh`
+if [ -n $ZSH_BIN ]; then
   if [ ! -e ~/.oh-my-zsh ]; then
     git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
   fi
-  if [ ! "$SHELL" = '/bin/zsh' ]; then
+  if [ ! "$SHELL" = "$ZSH_BIN" ]; then
     echo "Setting zsh as default shell"
-    chsh -s /bin/zsh
+    chsh -s $ZSH_BIN
   fi
 fi
 
