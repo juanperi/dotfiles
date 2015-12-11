@@ -32,6 +32,10 @@ else
 fi
 homeshick link dotfiles
 
+# Setup Vim
+if hash vim 2>/dev/null; then
+  vim +PlugUpgrade +PlugUpdate +qall
+fi
 
 #Installing zsh
 ZSH_BIN=`which zsh`
@@ -40,14 +44,8 @@ if [ -n $ZSH_BIN ]; then
     git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
   fi
   if [ ! "$SHELL" = "$ZSH_BIN" ]; then
-    echo "Setting zsh as default shell"
-    chsh -s $ZSH_BIN
+    echo "Dont forget to set $ZSH_BIN as your default shell"
   fi
-fi
-
-# Setup Vim
-if hash vim 2>/dev/null; then
-  vim +PlugUpgrade +PlugUpdate +qall
 fi
 
 if ! hash ag 2>/dev/null; then
