@@ -28,9 +28,9 @@ source $HOME/.homesick/repos/homeshick/homeshick.sh
 if [ ! -e $HOME/.homesick/repos/dotfiles ]; then
     homeshick clone git@github.com:epilgrim/dotfiles
 else
-    homeshick pull dotfiles
+    homeshick -f pull dotfiles
 fi
-homeshick link dotfiles
+homeshick -f link dotfiles
 
 # Setup Vim
 if hash vim 2>/dev/null; then
