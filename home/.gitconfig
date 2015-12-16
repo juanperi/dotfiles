@@ -3,7 +3,6 @@
   email = eternoperegrino@gmail.com
 [core]
   excludesfile = ~/.global_gitignore
-[core]
   editor = vim
   autocrlf = input
   excludesfile = ~/.gitignore
@@ -14,3 +13,5 @@
   co = checkout
 [color]
   ui = true
+[include]
+  path = ./.gitconfig.local
