@@ -23,6 +23,8 @@ windows:
             - sleep 10
             - vagrant ssh
             - cd /vagrant
+            - bundle exec foreman start -f Procfile.dev.frontend
+
         - backend_services:
             - sleep 20
             - vagrant ssh
