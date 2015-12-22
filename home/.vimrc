@@ -215,15 +215,25 @@ Plug 'mbbill/undotree'
 nnoremap <leader>u :UndotreeToggle<cr>
 " }}}
 " SimplePairs {{{
-Plug 'vim-scripts/simple-pairs'
+if !has('nvim')
+  Plug 'vim-scripts/simple-pairs'
+endif
 " }}}
 " NerdCommenter {{{
 Plug 'scrooloose/nerdcommenter'
 " }}}
 " Syntastic {{{
-Plug 'scrooloose/syntastic'
-" Syntastic disable style checkers
-let g:syntastic_quiet_messages = { "type": "style" }
+if !has('nvim')
+  Plug 'scrooloose/syntastic'
+  " Syntastic disable style checkers
+  let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+endif
+" }}}
+" Neomake {{{
+if has('nvim')
+  Plug 'benekastah/neomake'
+  autocmd! BufWritePost * Neomake
+endif
 " }}}
 " Tagbar {{{
 Plug 'majutsushi/tagbar'
@@ -245,7 +255,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'ervandew/supertab'
 " }}}
 " UltiSnips {{{
-if v:version >= 704
+if v:version >= 704 && exists(':python2')
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
     let g:UltiSnipsExpandTrigger="<tab>"
@@ -318,6 +328,9 @@ let g:php_refactor_command='php /usr/local/bin/refactor.phar'
 " Ruby {{{
 Plug 'vim-ruby/vim-ruby'
 autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
+" }}}
+" Rubocop {{{
+Plug 'kagux/vim-rubocop-autocorrect'
 " }}}
 " Twig Templates {{{
 Plug 'evidens/vim-twig'
