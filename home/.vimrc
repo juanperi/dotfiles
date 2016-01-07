@@ -255,7 +255,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'ervandew/supertab'
 " }}}
 " UltiSnips {{{
-if v:version >= 704 && exists(':python2')
+if v:version >= 704 && (exists(':python2') || exists(':python3'))
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
     let g:UltiSnipsExpandTrigger="<tab>"
