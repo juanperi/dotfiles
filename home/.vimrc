@@ -96,7 +96,9 @@ set softtabstop=4
 set expandtab
 
 " More Common Settings.
-set encoding=utf-8
+if !has('nvim')
+    set encoding=utf-8
+endif
 set scrolloff=3
 set autoindent
 set showmode
@@ -161,6 +163,8 @@ nnoremap <leader>q gqip
 " ,v Select just pasted text.
 nnoremap <leader>v V`]
 
+" faster save
+nnoremap <leader>w :w<CR>
 
 " jj For Qicker Escaping between normal and editing mode.
 inoremap jj <ESC>
@@ -202,6 +206,9 @@ Plug 'rking/ag.vim'
 if executable('ag')
   let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
+" }}}
+" Execute commands on quickfix files {{{
+Plug 'henrik/vim-qargs'
 " }}}
 " NerdTree {{{
 Plug 'scrooloose/nerdtree'
@@ -250,6 +257,9 @@ nnoremap <leader>gp  :Gpush<cr>
 " }}}
 " Git Gutter {{{
 Plug 'airblade/vim-gitgutter'
+" }}}
+" Git Log {{{
+Plug 'junegunn/gv.vim'
 " }}}
 " Supertab {{{
 Plug 'ervandew/supertab'
@@ -399,6 +409,9 @@ autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=ind
 " }}}
 " Javascript {{{
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
+" }}}
+" SCSS {{{
+autocmd FileType scss setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
 " }}}
 " }}}
 " Solarized Colors {{{

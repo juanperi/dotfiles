@@ -6,6 +6,7 @@
   editor = vim
   autocrlf = input
   excludesfile = ~/.gitignore
+  preloadindex = true
 [push]
   default = simple
 [alias]
