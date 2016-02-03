@@ -35,9 +35,9 @@ homeshick -f link dotfiles
 # Setup Vim
 mkdir -p ${XDG_CONFIG_HOME:=$HOME/.config}
 ln -s ~/.vim $XDG_CONFIG_HOME/nvim
-ln -s ~/.vimrc $XDG_CONFIG_HOME/nvim/init.vimim
+ln -s ~/.vimrc $XDG_CONFIG_HOME/nvim/init.vim
 if hash vim 2>/dev/null; then
-  vim +PlugUpgrade +PlugUpdate +qall
+  nvim +PlugUpgrade +PlugUpdate +qall
 fi
 
 #Installing zsh
