@@ -203,6 +203,8 @@ endif
 " }}}
 " Ag {{{
 Plug 'rking/ag.vim'
+" Search word under cursor
+nnoremap K :Ag<CR>
 if executable('ag')
   let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
@@ -249,11 +251,9 @@ nmap <leader>l <ESC>:TagbarToggle<cr>
 " Fugitive {{{
 Plug 'tpope/vim-fugitive'
 nnoremap <leader>gs  :Gstatus<cr>
-nnoremap <leader>ga  :Gwrite<cr>
 nnoremap <leader>gc  :Gcommit --verbose<cr>
-nnoremap <leader>grm :Gremove<cr>
-nnoremap <leader>gmv :Gmove<cr>
 nnoremap <leader>gp  :Gpush<cr>
+autocmd BufReadPost fugitive://* set bufhidden=delete
 " }}}
 " Git Gutter {{{
 Plug 'airblade/vim-gitgutter'
@@ -390,6 +390,14 @@ Plug 'Improved-AnsiEsc'
 " }}}
 " Convert from/to snake and camel case {{{
 Plug 'tpope/vim-abolish'
+" }}}
+" Auto save files {{{
+Plug '907th/vim-auto-save'
+let g:auto_save = 1
+let g:auto_save_in_insert_mode = 0
+" }}}
+" Auto read files {{{
+Plug 'djoshea/vim-autoread'
 " }}}
 
 " End Setup Plugins {{{
