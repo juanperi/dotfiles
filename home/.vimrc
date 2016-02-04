@@ -368,8 +368,8 @@ nmap <silent> <leader>tl :TestLast<CR>
 " BufOnly {{{
 Plug 'duff/vim-bufonly'
 " }}}
-" Solarized Colors {{{
-Plug 'altercation/vim-colors-solarized'
+" Color Theme:  gruvbox {{{
+Plug 'morhetz/gruvbox'
 " }}}
 " Tmux {{{
 Plug 'christoomey/vim-tmux-navigator'
@@ -422,10 +422,13 @@ autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab foldmethod
 autocmd FileType scss setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
 " }}}
 " }}}
-" Solarized Colors {{{
-let g:solarized_termcolors=256
+
+" Theme config  {{{
+if !has("gui_running")
+  let g:gruvbox_italic=0
+endif
 set background=dark
-silent! colorscheme solarized
+silent! colorscheme gruvbox
 " }}}
 " }}}
 
