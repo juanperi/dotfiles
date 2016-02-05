@@ -146,8 +146,6 @@ inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
-" Map : to ; also in command mode.
-nnoremap ; :
 " Insert ; at the end of the line
 inoremap ;; <End>;<Esc>
 
@@ -392,12 +390,16 @@ Plug 'Improved-AnsiEsc'
 Plug 'tpope/vim-abolish'
 " }}}
 " Auto save files {{{
+" Neomake is giving problems when saving too fast. commented until they fix
 Plug '907th/vim-auto-save'
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
 " }}}
 " Auto read files {{{
 Plug 'djoshea/vim-autoread'
+" }}}
+" highlight movement targets on line {{{
+Plug 'unblevable/quick-scope'
 " }}}
 
 " End Setup Plugins {{{
