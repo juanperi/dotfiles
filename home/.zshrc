@@ -9,8 +9,9 @@ function load_source(){
 load_source $ZSH/oh-my-zsh.sh
 load_source "$HOME/.tmux/tmuxinator.zsh"
 load_source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+
 # OSX check
-if [["$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
   load_source "/Users/jperi/.vim/plugged/gruvbox/gruvbox_256palette_osx.sh"
 else
   load_source "/Users/jperi/.vim/plugged/gruvbox/gruvbox_256palette.sh"
