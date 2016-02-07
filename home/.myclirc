@@ -54,7 +54,7 @@ wider_completion_menu = False
 # \h - Hostname of the server
 # \d - Database name
 # \n - Newline
-prompt = '\t \u@\h:\d>\n'
+prompt = '\t '
 
 # Custom colors for the completion menu, toolbar, etc.
 [colors]
