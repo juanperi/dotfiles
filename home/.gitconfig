@@ -12,7 +12,10 @@
 [alias]
   lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
   co = checkout
+  st = status -sb
 [color]
   ui = true
 [include]
   path = ./.gitconfig.local
+[branch]
+  autosetuprebase = always
