@@ -1,0 +1,12 @@
+name: workspace
+
+windows:
+  - editor:
+      layout: a7fc,178x48,0,0{115x48,0,0,0,62x48,116,0,2}
+      panes:
+        - shell:
+          - z workspace
+          - vim
+        - shell:
+          - z workspace
+          - clear
