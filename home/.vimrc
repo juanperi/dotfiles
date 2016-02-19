@@ -340,6 +340,9 @@ autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
 " Rubocop {{{
 Plug 'kagux/vim-rubocop-autocorrect'
 " }}}
+" Golang {{{
+Plug 'fatih/vim-go'
+" }}}
 " Twig Templates {{{
 Plug 'evidens/vim-twig'
 " }}}
@@ -400,6 +403,9 @@ Plug 'djoshea/vim-autoread'
 " }}}
 " highlight movement targets on line {{{
 Plug 'unblevable/quick-scope'
+" }}}
+" GoldenRatio for vim windows {{{
+Plug 'roman/golden-ratio'
 " }}}
 
 " End Setup Plugins {{{

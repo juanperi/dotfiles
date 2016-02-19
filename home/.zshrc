@@ -28,9 +28,12 @@ if hash nvim 2>/dev/null; then
   alias vim='nvim'
 fi
 
-# Customize to your needs...
 export TERM=xterm-256color
 export EDITOR='vim'
+
+# Golang configurations
+export GOPATH="$HOME/workspace/go"
+export PATH="$PATH:$GOPATH/bin"
 
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
