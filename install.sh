@@ -34,10 +34,12 @@ homeshick -f link dotfiles
 
 # Setup Vim
 mkdir -p ${XDG_CONFIG_HOME:=$HOME/.config}
-ln -s ~/.vim $XDG_CONFIG_HOME/nvim
-ln -s ~/.vimrc $XDG_CONFIG_HOME/nvim/init.vim
-if hash vim 2>/dev/null; then
+ln -fs ~/.vim $XDG_CONFIG_HOME/nvim
+ln -fs ~/.vimrc $XDG_CONFIG_HOME/nvim/init.vim
+if hash nvim 2>/dev/null; then
   nvim +PlugUpgrade +PlugUpdate +qall
+elif hash vim 2>/dev/null; then
+  vim +PlugUpgrade +PlugUpdate +qall
 fi
 
 #Installing zsh
@@ -47,7 +49,7 @@ if [ -n $ZSH_BIN ]; then
     git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
   fi
   if [ ! "$SHELL" = "$ZSH_BIN" ]; then
-    echo "Dont forget to set $ZSH_BIN as your default shell"
+    echo "Dont forget to set $ZSH_BIN as your default shell (chsh -s" $ZSH_BIN ")"
   fi
 fi
 
