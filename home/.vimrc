@@ -202,7 +202,7 @@ endif
 " Ag {{{
 Plug 'rking/ag.vim'
 " Search word under cursor
-nnoremap K :Ag<CR>
+nnoremap F :Ag<CR>
 if executable('ag')
   let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
