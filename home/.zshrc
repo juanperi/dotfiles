@@ -24,6 +24,14 @@ alias tmux='tmux -2'
 # kill all the tmux sessions
 alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
+# Bunch of ruby aliases
+alias rake='noglob bundle exec rake'
+alias foreman='bundle exec foreman'
+alias rails='bundle exec rails'
+alias unicorn='bundle exec unicorn'
+alias thin='bundle exec thin'
+alias cap='bundle exec cap'
+
 if hash nvim 2>/dev/null; then
   alias vim='nvim'
 fi
