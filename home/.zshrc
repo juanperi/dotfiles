@@ -1,6 +1,6 @@
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
-plugins=(git z)
+plugins=(git z vi-mode)
 
 function load_source(){
   [[ -s "$1" ]] && source "$1"
@@ -42,6 +42,9 @@ export EDITOR='vim'
 # Golang configurations
 export GOPATH="$HOME/workspace/go"
 export PATH="$PATH:$GOPATH/bin"
+
+# Vi mode. Set the transition time between normal and input mode to 0.1
+export KEYTIMEOUT=1
 
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
