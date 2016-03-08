@@ -43,7 +43,9 @@ export EDITOR='vim'
 export GOPATH="$HOME/workspace/go"
 export PATH="$PATH:$GOPATH/bin"
 
-# Vi mode. Set the transition time between normal and input mode to 0.1
+# Vi mode.
+bindkey "^R" history-incremental-search-backward
+# Set the transition time between normal and input mode to 0.1
 export KEYTIMEOUT=1
 
 # Allow to extend in a local basis
