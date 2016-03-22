@@ -191,14 +191,14 @@ filetype plugin indent on
 call plug#begin('~/.vim/plugged')
 " }}}
 
-" CtrlP {{{
-Plug 'ctrlpvim/ctrlp.vim'
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_max_files = 0
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --skip-vcs-ignores --nocolor -g ""'
-endif
+" fzf {{{
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+let g:fzf_action = {
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit'
+      \ }
+nnoremap <c-p> :FZF<cr>
 " }}}
 " Ag {{{
 Plug 'rking/ag.vim'
