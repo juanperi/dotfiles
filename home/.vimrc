@@ -336,6 +336,7 @@ let g:php_refactor_command='php /usr/local/bin/refactor.phar'
 " }}}
 " Ruby {{{
 Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-endwise'
 autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
 " }}}
 " Rubocop {{{
