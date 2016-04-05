@@ -104,8 +104,9 @@ set autoindent
 set showmode
 set showcmd
 set hidden
-set wildmenu
-set wildmode=list:longest
+set completeopt=menuone
+"set wildmenu
+"set wildmode=list:longest
 set visualbell
 
 "set cursorline
@@ -407,7 +408,7 @@ Plug 'djoshea/vim-autoread'
 Plug 'unblevable/quick-scope'
 " }}}
 " GoldenRatio for vim windows {{{
-Plug 'roman/golden-ratio'
+"Plug 'roman/golden-ratio'
 " }}}
 
 " End Setup Plugins {{{
