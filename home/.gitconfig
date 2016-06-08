@@ -2,10 +2,9 @@
   name = Juan Peri
   email = eternoperegrino@gmail.com
 [core]
-  excludesfile = ~/.global_gitignore
+  excludesfile = ~/.gitignore.global
   editor = vim
   autocrlf = input
-  excludesfile = ~/.gitignore
   preloadindex = true
 [push]
   default = simple
@@ -19,3 +18,7 @@
   autosetuprebase = always
 [include]
   path = ./.gitconfig.local
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
