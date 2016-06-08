@@ -18,7 +18,7 @@ else
 fi
 
 # sudo previous command
-alias fuck='sudo $(history -p \!\!)'
+alias fuck='sudo $(fc -ln -1)'
 # setting tmux in 265 colors
 alias tmux='tmux -2'
 # kill all the tmux sessions
