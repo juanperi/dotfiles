@@ -4,3 +4,4 @@ home/.vim/bundle/
 home/.vim/tmp/
 shell/bash-git-prompt/
 shell/z/
+.vagrant-ssh.local
