@@ -48,5 +48,8 @@ bindkey "^R" history-incremental-search-backward
 # Set the transition time between normal and input mode to 0.1
 export KEYTIMEOUT=1
 
+# Add node_modules to path
+export PATH=$PATH:node_modules/.bin
+
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
