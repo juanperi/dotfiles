@@ -53,3 +53,6 @@ export PATH=$PATH:node_modules/.bin
 
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
+
+# load fzf config if it exists
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

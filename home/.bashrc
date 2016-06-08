@@ -23,3 +23,5 @@ highlight () {
 # http://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
 stty -ixon
 
+# load fzf config if it exists
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

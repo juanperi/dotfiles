@@ -193,7 +193,7 @@ call plug#begin('~/.vim/plugged')
 " }}}
 
 " fzf {{{
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 let g:fzf_action = {
       \ 'ctrl-s': 'split',
