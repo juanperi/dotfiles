@@ -24,6 +24,9 @@ alias tmux='tmux -2'
 # kill all the tmux sessions
 alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
+# ssh to vagrant
+alias v="vagrant ssh"
+
 # Bunch of ruby aliases
 alias rake='noglob bundle exec rake'
 alias foreman='bundle exec foreman'
