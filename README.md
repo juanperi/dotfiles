@@ -14,10 +14,6 @@ Install
     source <(curl -fsSL https://raw.githubusercontent.com/epilgrim/dotfiles/master/install.sh)
     ```
 
-1. Install tmux plugins
-
-    Inside a tmux session execute `CTRL+a I` to install the plugins
-
 1. Don't forget to install the following dependencies for extended
    functionality
 
