@@ -145,8 +145,6 @@ nnoremap <silent> <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate'
 " Insert ; at the end of the line
 "inoremap ;; <End>;<Esc>
 
-",W Command to remove white space from a file.
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 " ,ft Fold tag, helpful for HTML editing.
 "nnoremap <leader>ft vatzf
@@ -270,8 +268,10 @@ if v:version >= 704 && (exists(':python2') || exists(':python3'))
     let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 endif
 " }}}
-" Better Whitespace {{{
+" Lint Trailing Whitespace {{{
 Plug 'ntpeters/vim-better-whitespace'
+",W Command to remove white space from a file.
+nnoremap <leader>W :StripWhitespace<CR>
 " }}}
 " Indent guides {{{
 Plug 'nathanaelkane/vim-indent-guides'
