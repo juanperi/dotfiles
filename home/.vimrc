@@ -159,7 +159,7 @@ nnoremap <silent> <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate'
 "nnoremap <leader>w :w<CR>
 
 " jj For Quicker Escaping between normal and editing mode.
-"inoremap jj <ESC>
+inoremap jj <ESC>
 
 " This method uses a command line abbreviation so %% expands to the full path of the directory that contains the current file.
 " while editing file /some/path/myfile.txt, typing :e %%/ on the command line
