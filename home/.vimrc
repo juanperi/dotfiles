@@ -370,6 +370,9 @@ Plug 'tpope/vim-endwise'
 Plug 'slim-template/vim-slim'
 " }}}
 " }}}
+" Elixir {{{
+Plug 'elixir-lang/vim-elixir'
+" }}}
 " Rubocop {{{
 Plug 'kagux/vim-rubocop-autocorrect'
 " }}}
