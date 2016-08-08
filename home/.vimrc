@@ -259,6 +259,17 @@ Plug 'junegunn/gv.vim'
 "" Supertab {{{
 "Plug 'ervandew/supertab'
 "" }}}
+" Deoplete autocomplete {{{
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+let g:deoplete#enable_at_startup = 1
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+" }}}
 " UltiSnips {{{
 if v:version >= 704 && (exists(':python2') || exists(':python3'))
     Plug 'SirVer/ultisnips'
@@ -422,6 +433,19 @@ Plug 'unblevable/quick-scope'
 call plug#end()
 " }}}
 " }}}
+"
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType eco set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+
+" autocomplete to longest common mantch and show even if there is only one option
+set completeopt=menuone,longest
+
+"inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
+inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 
 " StartUp {{{
 " FileTypes Config {{{
