@@ -116,14 +116,14 @@ set number
 "endif
 
 "Settings for Searching and Moving
-"nnoremap / /\v
-"vnoremap / /\v
-"set ignorecase
-"set smartcase
-"set gdefault
-"set incsearch
-"set showmatch
-"set hlsearch
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase
+set smartcase
+set gdefault
+set incsearch
+set showmatch
+set hlsearch
 nnoremap <silent> <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Make Vim to handle long lines nicely.
