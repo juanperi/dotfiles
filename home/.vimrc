@@ -177,6 +177,20 @@ endfunction
 
 " }}}
 
+" Autocomplete {{{
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType eco set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+
+" autocomplete to longest common mantch and show even if there is only one option
+set completeopt=menuone,longest
+
+inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
+inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
+" }}}
+
 " }}}
 
 " Plugins {{{
@@ -260,10 +274,7 @@ Plug 'junegunn/gv.vim'
 "Plug 'ervandew/supertab'
 "" }}}
 " Deoplete autocomplete {{{
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 if !exists('g:deoplete#omni#input_patterns')
   let g:deoplete#omni#input_patterns = {}
@@ -317,64 +328,62 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 " Syntax {{{
 Plug 'tpope/vim-markdown'
 " }}}
-"" Preview {{{
-"Plug 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
-"let g:previm_enable_realtime = 1
-"" }}}
+" Preview {{{
+Plug 'kannokanno/previm' "Realtime preview Markdown, reStructuredText, textile
+let g:previm_enable_realtime = 1
+" }}}
 " }}}
 " Yaml {{{
 Plug 'stephpy/vim-yaml'
 " }}}
-"" Open In Browser {{{
-"Plug 'tyru/open-browser.vim' "Open URI with your favorite browser
-"" }}}
+" Open In Browser {{{
+Plug 'tyru/open-browser.vim' "Open URI with your favorite browser
+" }}}
 "" Javascript Syntax {{{
 "Plug 'jelera/vim-javascript-syntax'
 "" }}}
 " PHP {{{
 "" Namespaces {{{
 "Plug 'arnaud-lb/vim-php-namespace'
-
 ""Import classes (add use statements)
 "noremap <Leader>nu :call PhpInsertUse()<CR>
 "" Make class names fully qualified
 "noremap <Leader>ne :call PhpExpandClass()<CR>
 "" }}}
-"" Sintax {{{
-"Plug 'StanAngeloff/php.vim'
-"Plug '2072/PHP-Indenting-for-VIm'
-"" }}}
+" Sintax {{{
+Plug 'StanAngeloff/php.vim', { 'for': 'php' }
+Plug '2072/PHP-Indenting-for-VIm', { 'for': 'php' }
+" }}}
 "" PHP Refactor {{{
 "Plug 'vim-php/vim-php-refactoring'
 "let g:php_refactor_command='php /usr/local/bin/refactor.phar'
 "" }}}
-"" Vdebug {{{
-"Plug 'joonty/vdebug'
-"if !exists("g:vdebug_options")
-    "let g:vdebug_options={}
-"endif
-"let g:vdebug_options['break_on_open'] = 0
-"let g:vdebug_options['timeout'] = 40
-"let g:vdebug_options['server'] = "0.0.0.0"
-"" }}}
+" Vdebug {{{
+Plug 'joonty/vdebug', { 'for': 'php' }
+if !exists("g:vdebug_options")
+    let g:vdebug_options={}
+endif
+let g:vdebug_options['break_on_open'] = 0
+let g:vdebug_options['timeout'] = 40
+let g:vdebug_options['server'] = "0.0.0.0"
+" }}}
 " }}}
 " Ruby {{{
 " Sintax {{{
-Plug 'vim-ruby/vim-ruby'
-autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
+Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 " }}}
 " End blocks automatically {{{
 Plug 'tpope/vim-endwise'
 " }}}
 " Slim Templates {{{
-Plug 'slim-template/vim-slim'
+Plug 'slim-template/vim-slim', { 'for': 'slim' }
+" }}}
+" Rubocop {{{
+Plug 'kagux/vim-rubocop-autocorrect', { 'for': 'ruby' }
 " }}}
 " }}}
 " Elixir {{{
-Plug 'elixir-lang/vim-elixir'
-" }}}
-" Rubocop {{{
-Plug 'kagux/vim-rubocop-autocorrect'
+Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
 " }}}
 "" Golang {{{
 "Plug 'fatih/vim-go'
@@ -436,19 +445,6 @@ Plug 'unblevable/quick-scope'
 call plug#end()
 " }}}
 " }}}
-"
-autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType eco set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-
-" autocomplete to longest common mantch and show even if there is only one option
-set completeopt=menuone,longest
-
-"inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
-inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 
 " StartUp {{{
 " FileTypes Config {{{
