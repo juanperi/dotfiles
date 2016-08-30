@@ -173,6 +173,9 @@ function! ChangePaste(type, ...)
    silent exe "normal! p"
 endfunction
 
+" make the dash be considered as part of a word. Useful for completions
+set iskeyword+=-
+
 "filetype plugin indent on
 
 " }}}
@@ -279,7 +282,7 @@ let g:deoplete#enable_at_startup = 1
 if !exists('g:deoplete#omni#input_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
-inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
 " }}}
 " UltiSnips {{{
 if v:version >= 704 && (exists(':python2') || exists(':python3'))
