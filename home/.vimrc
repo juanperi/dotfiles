@@ -2,17 +2,10 @@
 
 " Settings {{{
 " Vim Environment {{{
-"set nocompatible              " required
-"set modelines=0
-"filetype off                  " required
-"set t_Co=256
-"set modelines=1
 
 let mapleader = "\<space>"
 
-"set shell=/bin/bash
-"set lazyredraw
-"set matchtime=3
+set lazyredraw
 
 " viminfo stores the the state of your previous editing session
 if isdirectory($HOME . '/.vim/tmp') == 0
@@ -41,22 +34,6 @@ if exists("+undofile")
   set undofile
 endif
 
-"if !has('mac') && exists("+clipboard")
-  "set clipboard=unnamedplus
-"endif
-
-" Working with split screen nicely resize Split When the window is resized"
-"au VimResized * :wincmd =
-
-"Make Sure that Vim returns to the same line when we reopen a file"
-"augroup line_return
-    "au!
-    "au BufReadPost *
-        "\ if line("'\"") > 0 && line("'\"") <= line("$") |
-        "\ execute 'normal! g`"zvzz' |
-        "\ endif
-"augroup END
-
 " }}}
 
 " Vim Moving Around {{{
@@ -82,38 +59,8 @@ nnoremap <c-x> <c-w>x
 " }}}
 
 " Vim Editing {{{
-"set tags+=vendor.tags
-
-"set title " Set title to window
-"set dictionary=/usr/share/dict/words " Dictionary path, from which the words are being looked up.
 set pastetoggle=<F3> " Make pasting done without any indentation break.
-"set mouse=a " Enable Mouse
-
-" More Common Settings.
-"if !has('nvim')
-    "set encoding=utf-8
-"endif
-"set scrolloff=3
-"set autoindent
-"set showmode
-"set showcmd
-"set hidden
-"set completeopt=menu,preview
-"set wildmenu
-"set wildmode=list:longest
-"set visualbell
-
-"set cursorline
-"set ttyfast
-"set ruler
-"set backspace=indent,eol,start
-"set laststatus=2
-
-"set relativenumber
 set number
-"if v:version >= 703
-    "set norelativenumber
-"endif
 
 "Settings for Searching and Moving
 nnoremap / /\v
@@ -135,36 +82,13 @@ nnoremap <silent> <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate'
 "autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
 " To  show special characters in Vim
-"set listchars=tab:▸\ ,eol:¬
-
-" Get Rid of help keys
-"inoremap <F1> <ESC>
-"nnoremap <F1> <ESC>
-"vnoremap <F1> <ESC>
-
-" Insert ; at the end of the line
-"inoremap ;; <End>;<Esc>
-
-
-" ,ft Fold tag, helpful for HTML editing.
-"nnoremap <leader>ft vatzf
-
-" ,q Re-hardwrap Paragraph
-"nnoremap <leader>q gqip
+set listchars=tab:▸\ ,eol:¬
 
 " ,v Select just pasted text.
 "nnoremap <leader>v V`]
 
-" faster save
-"nnoremap <leader>w :w<CR>
-
 " jj For Quicker Escaping between normal and editing mode.
 inoremap jj <ESC>
-
-" This method uses a command line abbreviation so %% expands to the full path of the directory that contains the current file.
-" while editing file /some/path/myfile.txt, typing :e %%/ on the command line
-" will expand to :e /some/path/
-"cabbr <expr> %% expand('%:p')
 
 "This allows for change paste motion cp{motion}
 nmap <silent> cp :set opfunc=ChangePaste<CR>g@
@@ -175,8 +99,6 @@ endfunction
 
 " make the dash be considered as part of a word. Useful for completions
 set iskeyword+=-
-
-"filetype plugin indent on
 
 " }}}
 
@@ -235,20 +157,8 @@ let NERDTreeIgnore=['\^.vim$', '\~$', '\.pyc$']
 Plug 'mbbill/undotree'
 nnoremap <leader>u :UndotreeToggle<cr>
 " }}}
-"" SimplePairs {{{
-"if !has('nvim')
-  "Plug 'vim-scripts/simple-pairs'
-"endif
-"" }}}
-"" NerdCommenter {{{
+" NerdCommenter {{{
 Plug 'scrooloose/nerdcommenter'
-"" }}}
-"" Syntastic {{{
-"if !has('nvim')
-  "Plug 'scrooloose/syntastic'
-  "" Syntastic disable style checkers
-  "let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-"endif
 "" }}}
 " Neomake {{{
 if has('nvim')
@@ -273,9 +183,6 @@ Plug 'airblade/vim-gitgutter'
 " Git Log {{{
 Plug 'junegunn/gv.vim'
 " }}}
-"" Supertab {{{
-"Plug 'ervandew/supertab'
-"" }}}
 " Deoplete autocomplete {{{
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
@@ -319,13 +226,6 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 "" CoffeeScript {{{
 "Plug 'kchmck/vim-coffee-script'
 "Plug 'mustache/vim-mustache-handlebars'
-"" }}}
-"" Tabular {{{
-"Plug 'godlygeek/tabular'
-"nmap <Leader>t= :Tabularize /=/l1l0<CR>
-"vmap <Leader>t= :Tabularize /=/l1l0<CR>
-"nmap <Leader>t: :Tabularize /:\zs<CR>
-"vmap <Leader>t: :Tabularize /:\zs<CR>
 "" }}}
 " Markdown {{{
 " Syntax {{{
@@ -422,9 +322,6 @@ let g:VimuxHeight = "30"
 Plug 'embear/vim-localvimrc'
 let g:localvimrc_persistent=2
 " }}}
-"" Local Escape Ansi Colors {{{
-"Plug 'Improved-AnsiEsc'
-"" }}}
 " Convert from/to snake and camel case {{{
 Plug 'tpope/vim-abolish'
 " }}}
@@ -439,9 +336,6 @@ Plug 'djoshea/vim-autoread'
 " highlight movement targets on line {{{
 Plug 'unblevable/quick-scope'
 " }}}
-"" GoldenRatio for vim windows {{{
-"Plug 'roman/golden-ratio'
-"" }}}
 
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
@@ -456,21 +350,6 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-" }}}
-
-"" Yaml {{{
-"autocmd FileType yaml setlocal autoindent shiftwidth=2 tabstop=2 expandtab
-"" }}}
-"" CoffeeScript {{{
-"autocmd BufRead,BufNewFile *.coffee setfiletype coffee
-"autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
-"" }}}
-"" Javascript {{{
-"autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
-"" }}}
-"" SCSS {{{
-"autocmd FileType scss setlocal shiftwidth=2 tabstop=2 expandtab foldmethod=indent nofoldenable
-"" }}}
 " }}}
 
 " Theme config  {{{
