@@ -189,7 +189,7 @@ let g:deoplete#enable_at_startup = 1
 if !exists('g:deoplete#omni#input_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
-inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
 " }}}
 " UltiSnips {{{
 if v:version >= 704 && (exists(':python2') || exists(':python3'))
