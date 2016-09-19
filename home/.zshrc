@@ -40,7 +40,7 @@ if hash nvim 2>/dev/null; then
 fi
 
 export TERM=xterm-256color
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Golang configurations
 export GOPATH="$HOME/workspace/go"
