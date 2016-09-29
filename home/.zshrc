@@ -35,6 +35,8 @@ alias unicorn='bundle exec unicorn'
 alias thin='bundle exec thin'
 alias cap='bundle exec cap'
 
+alias pushn="git symbolic-ref --short -q HEAD | xargs git push -u origin"
+
 if hash nvim 2>/dev/null; then
   alias vim='nvim'
 fi
