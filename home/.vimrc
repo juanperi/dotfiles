@@ -90,13 +90,6 @@ set listchars=tab:▸\ ,eol:¬
 " jj For Quicker Escaping between normal and editing mode.
 inoremap jj <ESC>
 
-"This allows for change paste motion cp{motion}
-nmap <silent> cp :set opfunc=ChangePaste<CR>g@
-function! ChangePaste(type, ...)
-   silent exe "normal! `[v`]\"_c"
-   silent exe "normal! p"
-endfunction
-
 " make the dash be considered as part of a word. Useful for completions
 set iskeyword+=-
 
@@ -125,6 +118,9 @@ call plug#begin('~/.vim/plugged')
 
 " vim-sensible {{{
 Plug 'tpope/vim-sensible'
+" }}}
+" vim-sensible {{{
+Plug 'vim-scripts/ReplaceWithRegister'
 " }}}
 " fzf {{{
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
