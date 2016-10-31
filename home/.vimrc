@@ -120,8 +120,11 @@ call plug#begin('~/.vim/plugged')
 " vim-sensible {{{
 Plug 'tpope/vim-sensible'
 " }}}
-" vim-sensible {{{
+" Replace text without overwriting register {{{
 Plug 'vim-scripts/ReplaceWithRegister'
+" }}}
+" Toggle single line arguments to multiline {{{
+Plug 'FooSoft/vim-argwrap'
 " }}}
 " fzf {{{
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
