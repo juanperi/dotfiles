@@ -61,6 +61,7 @@ nnoremap <c-x> <c-w>x
 " Vim Editing {{{
 set pastetoggle=<F3> " Make pasting done without any indentation break.
 set number
+set relativenumber
 
 "Settings for Searching and Moving
 nnoremap / /\v
