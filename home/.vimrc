@@ -94,6 +94,9 @@ inoremap jj <ESC>
 " make the dash be considered as part of a word. Useful for completions
 set iskeyword+=-
 
+" Allows you to easily change the current word and all occurrences to something else.
+nnoremap <Leader>cw :%s/\<<C-r><C-w>\>/<C-r><C-w>
+vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
 " }}}
 
 " Autocomplete {{{
