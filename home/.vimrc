@@ -114,9 +114,8 @@ inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 " }}}
 
 " }}}
-
 " Plugins {{{
-" Start Setup Plugins{{{
+" Start Setup Plugins {{{
 call plug#begin('~/.vim/plugged')
 " }}}
 
@@ -128,6 +127,7 @@ Plug 'vim-scripts/ReplaceWithRegister'
 " }}}
 " Toggle single line arguments to multiline {{{
 Plug 'FooSoft/vim-argwrap'
+nnoremap <leader>aw :ArgWrap<cr>
 " }}}
 " fzf {{{
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
