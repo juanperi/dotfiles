@@ -1,1 +1,2 @@
-.vagrant-ssh.local
+/.vagrant-ssh.local
+/local_notes.md
