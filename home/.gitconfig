@@ -9,7 +9,7 @@
 [push]
   default = simple
 [alias]
-  lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  lol = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
   co = checkout
   st = status -sb
 [color]
