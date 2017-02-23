@@ -12,6 +12,7 @@
   lol = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
   co = checkout
   st = status -sb
+  dlog = log --pretty=format:'%h (%an) %s' --graph master...develop
 [color]
   ui = true
 [branch]
