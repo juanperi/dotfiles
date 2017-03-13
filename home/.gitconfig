@@ -3,7 +3,7 @@
   email = eternoperegrino@gmail.com
 [core]
   excludesfile = ~/.gitignore.global
-  editor = vim
+  editor = nvim
   autocrlf = input
   preloadindex = true
 [push]
