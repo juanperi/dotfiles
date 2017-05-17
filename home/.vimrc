@@ -291,7 +291,12 @@ Plug 'kagux/vim-rubocop-autocorrect', { 'for': 'ruby' }
 " }}}
 " }}}
 " Elixir {{{
+" Syntax {{{
 Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
+" }}}
+" Autocompletion {{{
+Plug 'slashmili/alchemist.vim'
+" }}}
 " }}}
 "" Golang {{{
 "Plug 'fatih/vim-go'
@@ -356,7 +361,6 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 " }}}
-
 " Theme config  {{{
 if !has("gui_running")
   let g:gruvbox_italic=0
