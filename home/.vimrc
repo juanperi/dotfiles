@@ -160,9 +160,6 @@ if executable('ag')
   let g:ag_prg='ag -S --nocolor --nogroup --column --ignore "./tags" --ignore "./public/stylesheets/*" --ignore "./tags.vendor" --ignore "./app/cache" --ignore "./app/logs"'
 endif
 " }}}
-" Execute commands on quickfix files {{{
-Plug 'henrik/vim-qargs'
-" }}}
 " NerdTree {{{
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
