@@ -346,6 +346,10 @@ Plug 'djoshea/vim-autoread'
 " highlight movement targets on line {{{
 Plug 'unblevable/quick-scope'
 " }}}
+"" Format SQL {{{
+"Plug 'vim-scripts/SQLUtilities'
+"Plug 'vim-scripts/Align'
+"" }}}
 
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
