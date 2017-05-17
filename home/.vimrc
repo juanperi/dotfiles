@@ -122,6 +122,9 @@ call plug#begin('~/.vim/plugged')
 " vim-sensible {{{
 Plug 'tpope/vim-sensible'
 " }}}
+" highlight tabs and trailing spaces {{{
+Plug 'jpalardy/spacehi.vim'
+" }}}
 " Replace text without overwriting register {{{
 Plug 'vim-scripts/ReplaceWithRegister'
 " }}}
