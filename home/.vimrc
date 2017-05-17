@@ -129,6 +129,11 @@ Plug 'tpope/vim-sensible'
 " highlight tabs and trailing spaces {{{
 Plug 'jpalardy/spacehi.vim'
 " }}}
+" Lint Trailing Whitespace {{{
+Plug 'ntpeters/vim-better-whitespace'
+",W Command to remove white space from a file.
+nnoremap <leader>W :StripWhitespace<CR>
+" }}}
 " Replace text without overwriting register {{{
 Plug 'vim-scripts/ReplaceWithRegister'
 " }}}
@@ -204,11 +209,6 @@ endif
 inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
-" }}}
-" Lint Trailing Whitespace {{{
-Plug 'ntpeters/vim-better-whitespace'
-",W Command to remove white space from a file.
-nnoremap <leader>W :StripWhitespace<CR>
 " }}}
 " Indent guides {{{
 Plug 'nathanaelkane/vim-indent-guides'
