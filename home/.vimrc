@@ -63,6 +63,9 @@ set pastetoggle=<F3> " Make pasting done without any indentation break.
 set number
 set relativenumber
 
+"Faster save
+noremap <leader>s :w<cr>
+
 "Settings for Searching and Moving
 nnoremap / /\v
 vnoremap / /\v
@@ -303,10 +306,10 @@ Plug 'slashmili/alchemist.vim'
 " Tests Runner {{{
 Plug 'janko-m/vim-test'
 let g:test#strategy = 'vimux'
-nmap <silent> <leader>tt :TestNearest<CR>
-nmap <silent> <leader>tT :TestFile<CR>
-nmap <silent> <leader>ta :TestSuite<CR>
-nmap <silent> <leader>tl :TestLast<CR>
+nmap <silent> <leader>tt :w<CR>:TestNearest<CR>
+nmap <silent> <leader>tT :w<CR>:TestFile<CR>
+nmap <silent> <leader>ta :w<CR>:TestSuite<CR>
+nmap <silent> <leader>tl :w<CR>:TestLast<CR>
 " }}}
 " BufOnly {{{
 Plug 'duff/vim-bufonly'
@@ -330,11 +333,6 @@ let g:localvimrc_persistent=2
 " }}}
 " Convert from/to snake and camel case {{{
 Plug 'tpope/vim-abolish'
-" }}}
-" Auto save files {{{
-Plug '907th/vim-auto-save'
-let g:auto_save = 1
-let g:auto_save_in_insert_mode = 0
 " }}}
 " Auto read files {{{
 Plug 'djoshea/vim-autoread'
