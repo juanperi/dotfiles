@@ -86,7 +86,8 @@ nnoremap <silent> <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate'
 "autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
 " To  show special characters in Vim
-set listchars=tab:▸\ ,eol:¬
+set listchars=tab:▸-
+set list!
 
 " ,v Select just pasted text.
 "nnoremap <leader>v V`]
