@@ -81,7 +81,7 @@ nnoremap <silent> <leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate'
 "set wrap
 "set textwidth=79
 "set formatoptions=qrn1
-"set synmaxcol=200 " do not syntax highlight lines longer than 200 chars
+set synmaxcol=200 " do not syntax highlight lines longer than 200 chars
 "" Long lines in diff mode also handled nicely
 "autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
