@@ -126,6 +126,9 @@ call plug#begin('~/.vim/plugged')
 " vim-sensible {{{
 Plug 'tpope/vim-sensible'
 " }}}
+" show ansi colors {{{
+Plug 'powerman/vim-plugin-AnsiEsc'
+" }}}
 " highlight tabs and trailing spaces {{{
 Plug 'jpalardy/spacehi.vim'
 " }}}
