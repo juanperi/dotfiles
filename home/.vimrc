@@ -106,6 +106,8 @@ vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
 " Autocomplete {{{
 " autocomplete to longest common mantch and show even if there is only one option
 set completeopt=menuone,longest
+" when showing the completions, enter selects the current one
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " }}}
 
 " }}}
@@ -194,12 +196,6 @@ Plug 'junegunn/gv.vim'
 " Deoplete autocomplete {{{
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
-if !exists('g:deoplete#omni#input_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
-inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
-inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 " }}}
 " Indent guides {{{
 Plug 'nathanaelkane/vim-indent-guides'
