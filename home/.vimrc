@@ -104,17 +104,8 @@ vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
 " }}}
 
 " Autocomplete {{{
-autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType eco set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-
 " autocomplete to longest common mantch and show even if there is only one option
 set completeopt=menuone,longest
-
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
-inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 " }}}
 
 " }}}
