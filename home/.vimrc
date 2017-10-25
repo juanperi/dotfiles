@@ -106,8 +106,7 @@ vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
 " Autocomplete {{{
 " autocomplete to longest common mantch and show even if there is only one option
 set completeopt=menuone,longest
-" when showing the completions, enter selects the current one
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
 " }}}
 
 " }}}
@@ -194,8 +193,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 " }}}
 " Deoplete autocomplete {{{
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-let g:deoplete#enable_at_startup = 1
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  let g:deoplete#enable_at_startup = 1
+endif
 " }}}
 " Indent guides {{{
 Plug 'nathanaelkane/vim-indent-guides'
@@ -205,13 +206,13 @@ let g:indent_guides_start_level = 2
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=236
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 " }}}
-"" Airline {{{
-"Plug 'bling/vim-airline'
-""let g:airline_section_b = '%{getcwd()}'
-""let g:airline_section_c = '%t'
-"let g:airline#extensions#branch#displayed_head_limit = 15
-"let g:airline#extensions#tabline#fnamemod = ':p:.'
-"" }}}
+" Airline {{{
+Plug 'bling/vim-airline'
+let g:airline_section_b = '%{getcwd()}'
+let g:airline_section_c = '%t'
+let g:airline#extensions#branch#displayed_head_limit = 15
+let g:airline#extensions#tabline#fnamemod = ':p:.'
+" }}}
 "" Mkdir {{{
 "Plug 'pbrisbin/vim-mkdir'
 "" }}}
@@ -283,6 +284,10 @@ Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
 " }}}
 " Autocompletion {{{
 Plug 'slashmili/alchemist.vim'
+let g:alchemist#extended_autocomplete = 1
+"optional if you want to close the preview window automatically
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " }}}
 " }}}
 "" Golang {{{
