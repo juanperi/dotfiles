@@ -1,6 +1,6 @@
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
-plugins=(git z vi-mode)
+plugins=(git z vi-mode docker)
 
 function load_source(){
   [[ -s "$1" ]] && source "$1"
