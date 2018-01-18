@@ -62,6 +62,7 @@ nnoremap <c-x> <c-w>x
 set pastetoggle=<F3> " Make pasting done without any indentation break.
 set number
 set relativenumber
+set mouse=a
 
 "Faster save
 noremap <leader>s :w<cr>
@@ -207,11 +208,11 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=236
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 " }}}
 " Airline {{{
-Plug 'bling/vim-airline'
-let g:airline_section_b = '%{getcwd()}'
-let g:airline_section_c = '%t'
-let g:airline#extensions#branch#displayed_head_limit = 15
-let g:airline#extensions#tabline#fnamemod = ':p:.'
+"Plug 'bling/vim-airline'
+"let g:airline_section_b = '%{getcwd()}'
+"let g:airline_section_c = '%t'
+"let g:airline#extensions#branch#displayed_head_limit = 15
+"let g:airline#extensions#tabline#fnamemod = ':p:.'
 " }}}
 "" Mkdir {{{
 "Plug 'pbrisbin/vim-mkdir'
