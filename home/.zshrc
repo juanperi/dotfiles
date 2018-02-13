@@ -7,7 +7,7 @@ function load_source(){
 }
 
 load_source $ZSH/oh-my-zsh.sh
-load_source "$HOME/.tmux/tmuxinator.zsh"
+load_source "$HOME/.bin/tmuxinator.zsh"
 load_source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 # OSX check
@@ -55,9 +55,15 @@ export KEYTIMEOUT=1
 
 # Add node_modules to path
 export PATH=$PATH:node_modules/.bin
+# add sbin to path, as brew installs stuff there
+export PATH="/usr/local/sbin:$PATH"
 
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
 
 # load fzf config if it exists
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if type "rbenv" > /dev/null; then
+  eval "$(rbenv init -)"
+fi

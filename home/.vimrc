@@ -61,7 +61,7 @@ nnoremap <c-x> <c-w>x
 " Vim Editing {{{
 set pastetoggle=<F3> " Make pasting done without any indentation break.
 set number
-set relativenumber
+set norelativenumber
 set mouse=a
 
 "Faster save
@@ -235,6 +235,8 @@ Plug 'stephpy/vim-yaml'
 " }}}
 " Open In Browser {{{
 Plug 'tyru/open-browser.vim' "Open URI with your favorite browser
+nmap <leader>ob <Plug>(openbrowser-open)
+vmap <leader>ob <Plug>(openbrowser-open)
 " }}}
 "" Javascript Syntax {{{
 "Plug 'jelera/vim-javascript-syntax'
@@ -255,15 +257,15 @@ Plug '2072/PHP-Indenting-for-VIm', { 'for': 'php' }
 "Plug 'vim-php/vim-php-refactoring'
 "let g:php_refactor_command='php /usr/local/bin/refactor.phar'
 "" }}}
-" Vdebug {{{
-Plug 'joonty/vdebug', { 'for': 'php' }
-if !exists("g:vdebug_options")
-    let g:vdebug_options={}
-endif
-let g:vdebug_options['break_on_open'] = 0
-let g:vdebug_options['timeout'] = 40
-let g:vdebug_options['server'] = "0.0.0.0"
-" }}}
+"" Vdebug {{{
+"Plug 'joonty/vdebug', { 'for': 'php' }
+"if !exists("g:vdebug_options")
+    "let g:vdebug_options={}
+"endif
+"let g:vdebug_options['break_on_open'] = 0
+"let g:vdebug_options['timeout'] = 40
+"let g:vdebug_options['server'] = "0.0.0.0"
+"" }}}
 " }}}
 " Ruby {{{
 " Sintax {{{
@@ -338,6 +340,9 @@ Plug 'unblevable/quick-scope'
 "Plug 'vim-scripts/SQLUtilities'
 "Plug 'vim-scripts/Align'
 "" }}}
+" Base64 encode/decode {{{
+Plug 'christianrondeau/vim-base64'
+" }}}
 
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
