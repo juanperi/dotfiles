@@ -1,0 +1,11 @@
+name: showoff
+root: ~/
+on_project_start: "if [ ! -f genact-osx ]; then wget https://github.com/svenstaro/genact/releases/download/0.4.0/genact-osx ; chmod +x genact-osx ; fi"
+
+windows:
+  - main:
+      panes:
+        - ./genact-osx
+        - ./genact-osx
+        - ./genact-osx
+        - ./genact-osx
