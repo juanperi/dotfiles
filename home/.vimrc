@@ -170,11 +170,17 @@ nnoremap <leader>u :UndotreeToggle<cr>
 " NerdCommenter {{{
 Plug 'scrooloose/nerdcommenter'
 "" }}}
-" Neomake {{{
-if has('nvim')
-  Plug 'benekastah/neomake'
-  autocmd! BufWritePost * Neomake
-endif
+" ALE {{{
+Plug 'w0rp/ale'
+let g:ale_linters = {
+\ 'elixir': ['mix', 'credo']
+\ }
+" }}}
+"" Neomake {{{
+"if has('nvim')
+  "Plug 'benekastah/neomake'
+  "autocmd! BufWritePost * Neomake
+"endif
 " }}}
 "" Tagbar {{{
 "Plug 'majutsushi/tagbar'

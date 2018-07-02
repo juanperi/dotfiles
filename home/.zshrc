@@ -41,7 +41,7 @@ if hash nvim 2>/dev/null; then
   alias vim='nvim'
 fi
 
-export TERM=xterm-256color
+export TERM=screen-256color
 export EDITOR='nvim'
 
 # Golang configurations
