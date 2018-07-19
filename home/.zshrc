@@ -67,3 +67,6 @@ load_source "$HOME/.zshrc.local"
 if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
 fi
+
+load_source "/usr/local/opt/asdf/asdf.sh"
+load_source "/usr/local/opt/asdf/asdf.bash"
