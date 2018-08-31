@@ -102,6 +102,10 @@ set iskeyword+=-
 " Allows you to easily change the current word and all occurrences to something else.
 nnoremap <Leader>cw :%s/\<<C-r><C-w>\>/<C-r><C-w>
 vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
+
+" Inserts date or datetime
+nnoremap <Leader>id "=strftime("%Y-%m-%d")<CR>P
+nnoremap <Leader>idt "=strftime("%Y-%m-%d %H:%M:%S")<CR>P
 " }}}
 
 " Autocomplete {{{
