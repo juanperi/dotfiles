@@ -2,6 +2,9 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
 plugins=(git z vi-mode docker)
 
+# remove ruby version from the prompt
+RPROMPT=''
+
 function load_source(){
   [[ -s "$1" ]] && source "$1"
 }
@@ -26,14 +29,6 @@ alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
 # ssh to vagrant
 alias v="vagrant ssh"
-
-# Bunch of ruby aliases
-alias rake='noglob bundle exec rake'
-alias foreman='bundle exec foreman'
-alias rails='bundle exec rails'
-alias unicorn='bundle exec unicorn'
-alias thin='bundle exec thin'
-alias cap='bundle exec cap'
 
 alias pushn="git symbolic-ref --short -q HEAD | xargs git push -u origin"
 
@@ -70,3 +65,5 @@ fi
 
 load_source "/usr/local/opt/asdf/asdf.sh"
 load_source "/usr/local/opt/asdf/asdf.bash"
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
