@@ -1,6 +1,7 @@
 [user]
   name = Juan Peri
   email = eternoperegrino@gmail.com
+	signingkey = 37D50ECCF189A98F
 [core]
   excludesfile = ~/.gitignore.global
   editor = nvim
@@ -12,7 +13,7 @@
   lol = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
   co = checkout
   st = status -sb
-  dlog = log --pretty=format:'%Cred%h%Creset (%C(bold blue)<%an>%Creset) %s' --graph master...develop
+  dlog = log --pretty=format:'%Cred%h%Creset (%C(bold blue)<%an>%Creset) %s' --graph origin/master...origin/develop
 [color]
   ui = true
 [branch]
@@ -23,3 +24,5 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[rerere]
+	enabled = true

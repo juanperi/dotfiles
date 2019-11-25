@@ -103,14 +103,25 @@ set iskeyword+=-
 nnoremap <Leader>cw :%s/\<<C-r><C-w>\>/<C-r><C-w>
 vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
 
-" Inserts date or datetime
+" Inserts date, time or datetime
 nnoremap <Leader>id "=strftime("%Y-%m-%d")<CR>P
 nnoremap <Leader>idt "=strftime("%Y-%m-%d %H:%M:%S")<CR>P
+nnoremap <Leader>it "=strftime("%H:%M:%S")<CR>P
 " }}}
 
 " Autocomplete {{{
 " autocomplete to longest common mantch and show even if there is only one option
-set completeopt=menuone,longest
+"set completeopt=menuone,longest
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
 
 " }}}
 
@@ -140,6 +151,9 @@ Plug 'vim-scripts/ReplaceWithRegister'
 " Toggle single line arguments to multiline {{{
 Plug 'FooSoft/vim-argwrap'
 nnoremap <leader>aw :ArgWrap<cr>
+" }}}
+" Surround. Manage surrownding of targets in pairs{{{
+Plug 'tpope/vim-surround'
 " }}}
 " fzf {{{
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
@@ -174,22 +188,12 @@ nnoremap <leader>u :UndotreeToggle<cr>
 " NerdCommenter {{{
 Plug 'scrooloose/nerdcommenter'
 "" }}}
-" ALE {{{
-Plug 'w0rp/ale'
-let g:ale_linters = {
-\ 'elixir': ['mix', 'credo']
-\ }
-" }}}
-"" Neomake {{{
-"if has('nvim')
-  "Plug 'benekastah/neomake'
-  "autocmd! BufWritePost * Neomake
-"endif
-" }}}
-"" Tagbar {{{
-"Plug 'majutsushi/tagbar'
-"nmap <leader>l <ESC>:TagbarToggle<cr>
+" Language Server Protocol WIP {{{
+Plug 'neoclide/coc.nvim', { 'tag': '*', 'do': { -> coc#util#install() } }
 "" }}}
+" Dispatch. Async dispatch used on fugitive {{{
+Plug 'tpope/vim-dispatch'
+" }}}
 " Fugitive {{{
 Plug 'tpope/vim-fugitive'
 nnoremap <leader>gs  :Gstatus<cr>
@@ -203,18 +207,13 @@ Plug 'airblade/vim-gitgutter'
 " Git Log {{{
 Plug 'junegunn/gv.vim'
 " }}}
-" Deoplete autocomplete {{{
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  let g:deoplete#enable_at_startup = 1
-endif
-" }}}
 " Indent guides {{{
 Plug 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_auto_colors = 0
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=236
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=None
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 " }}}
 " Airline {{{
@@ -224,13 +223,6 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
 "let g:airline#extensions#branch#displayed_head_limit = 15
 "let g:airline#extensions#tabline#fnamemod = ':p:.'
 " }}}
-"" Mkdir {{{
-"Plug 'pbrisbin/vim-mkdir'
-"" }}}
-"" CoffeeScript {{{
-"Plug 'kchmck/vim-coffee-script'
-"Plug 'mustache/vim-mustache-handlebars'
-"" }}}
 " Markdown {{{
 " Syntax {{{
 Plug 'tpope/vim-markdown'
@@ -248,9 +240,6 @@ Plug 'tyru/open-browser.vim' "Open URI with your favorite browser
 nmap <leader>ob <Plug>(openbrowser-open)
 vmap <leader>ob <Plug>(openbrowser-open)
 " }}}
-"" Javascript Syntax {{{
-"Plug 'jelera/vim-javascript-syntax'
-"" }}}
 " PHP {{{
 "" Namespaces {{{
 "Plug 'arnaud-lb/vim-php-namespace'
@@ -293,22 +282,35 @@ Plug 'kagux/vim-rubocop-autocorrect', { 'for': 'ruby' }
 " }}}
 " Elixir {{{
 " Syntax {{{
-Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
+Plug 'elixir-lang/vim-elixir'
 " }}}
 " Autocompletion {{{
-Plug 'slashmili/alchemist.vim'
-let g:alchemist#extended_autocomplete = 1
-"optional if you want to close the preview window automatically
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+let g:elixirls = {
+  \ 'path': printf('%s/%s', stdpath('config'), 'plugged/elixir-ls'),
+  \ }
+
+let g:elixirls.lsp = printf(
+  \ '%s/%s',
+  \ g:elixirls.path,
+  \ 'release/language_server.sh')
+
+function! g:elixirls.compile(...)
+  let l:commands = join([
+    \ 'mix local.hex --force',
+    \ 'mix local.rebar --force',
+    \ 'mix deps.get',
+    \ 'mix compile',
+    \ 'mix elixir_ls.release'
+    \ ], '&&')
+
+  echom '>>> Compiling elixirls'
+  silent call system(l:commands)
+  echom '>>> elixirls compiled'
+endfunction
+
+Plug 'JakeBecker/elixir-ls', { 'do': { -> g:elixirls.compile() } }
 " }}}
 " }}}
-"" Golang {{{
-"Plug 'fatih/vim-go'
-"" }}}
-"" Twig Templates {{{
-"Plug 'evidens/vim-twig'
-"" }}}
 " Tests Runner {{{
 Plug 'janko-m/vim-test'
 let g:test#strategy = 'vimux'
@@ -353,6 +355,9 @@ Plug 'unblevable/quick-scope'
 " Base64 encode/decode {{{
 Plug 'christianrondeau/vim-base64'
 " }}}
+"" language server protocol {{{
+"Plug 'prabirshrestha/vim-lsp'
+"" }}}
 
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
@@ -361,6 +366,13 @@ call plug#end()
 " }}}
 
 " StartUp {{{
+call coc#config('languageserver', {
+  \ 'elixir': {
+  \   'command': g:elixirls.lsp,
+  \   'trace.server': 'verbose',
+  \   'filetypes': ['elixir', 'eelixir']
+  \ }
+  \})
 " FileTypes Config {{{
 " Generic {{{
 set tabstop=2
@@ -374,6 +386,7 @@ if !has("gui_running")
 endif
 set background=dark
 silent! colorscheme gruvbox
+highlight Normal ctermbg=None
 " }}}
 " }}}
 

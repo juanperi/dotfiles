@@ -63,6 +63,8 @@ if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
 fi
 
+eval "$(direnv hook zsh)"
+
 load_source "/usr/local/opt/asdf/asdf.sh"
 load_source "/usr/local/opt/asdf/asdf.bash"
 
