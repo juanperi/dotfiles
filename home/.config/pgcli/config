@@ -1,0 +1,37 @@
+# vi: ft=dosini
+[main]
+
+# log_file location.
+# In Unix/Linux: ~/.config/pgcli/log
+# In Windows: %USERPROFILE%\AppData\Local\dbcli\pgcli\log
+# %USERPROFILE% is typically C:\Users\{username}
+log_file = ./tmp/pgcli/logs.txt
+
+# history_file location.
+# In Unix/Linux: ~/.config/pgcli/history
+# In Windows: %USERPROFILE%\AppData\Local\dbcli\pgcli\history
+# %USERPROFILE% is typically C:\Users\{username}
+history_file= ./tmp/pgcli/history.txt
+
+# Enables context sensitive auto-completion. If this is disabled the all
+# possible completions will be listed.
+smart_completion = True
+
+# Syntax Style. Possible values: manni, igor, xcode, vim, autumn, vs, rrt,
+# native, perldoc, borland, tango, emacs, friendly, monokai, paraiso-dark,
+# colorful, murphy, bw, pastie, paraiso-light, trac, default, fruity
+syntax_style = vim
+
+# Keybindings:
+# When Vi mode is enabled you can use modal editing features offered by Vi in the REPL.
+# When Vi mode is disabled emacs keybindings such as Ctrl-A for home and Ctrl-E
+# for end are available in the REPL.
+vi = True
+
+# Number of lines to reserve for the suggestion menu
+min_num_menu_lines = 10
+
+# Default pager.
+# By default 'PAGER' environment variable is used
+pager = less -RXF
+
