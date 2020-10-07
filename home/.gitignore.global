@@ -1,4 +1,5 @@
 /.vagrant-ssh.local
 /local_notes.md
+/local_notes_*.md
 /.lvimrc
 /.elixir_ls

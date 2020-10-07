@@ -86,6 +86,9 @@ set synmaxcol=200 " do not syntax highlight lines longer than 200 chars
 "" Long lines in diff mode also handled nicely
 "autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
+" remove trailing whitespaces when saving
+autocmd BufWritePre * :%s/\s\+$//e
+
 " To  show special characters in Vim
 set listchars=tab:▸-
 set list!
@@ -102,6 +105,8 @@ set iskeyword+=-
 " Allows you to easily change the current word and all occurrences to something else.
 nnoremap <Leader>cw :%s/\<<C-r><C-w>\>/<C-r><C-w>
 vnoremap <Leader>cw y:%s/<C-r>"/<C-r>"
+" search for selected text in visual mode
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
 " Inserts date, time or datetime
 nnoremap <Leader>id "=strftime("%Y-%m-%d")<CR>P
@@ -110,22 +115,8 @@ nnoremap <Leader>it "=strftime("%H:%M:%S")<CR>P
 " }}}
 
 " Autocomplete {{{
-" autocomplete to longest common mantch and show even if there is only one option
-"set completeopt=menuone,longest
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-
 " }}}
 
-" }}}
 " Plugins {{{
 " Start Setup Plugins {{{
 call plug#begin('~/.vim/plugged')
@@ -135,15 +126,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-sensible'
 " }}}
 " show ansi colors {{{
-Plug 'powerman/vim-plugin-AnsiEsc'
-" }}}
-" highlight tabs and trailing spaces {{{
-Plug 'jpalardy/spacehi.vim'
-" }}}
-" Lint Trailing Whitespace {{{
-Plug 'ntpeters/vim-better-whitespace'
-",W Command to remove white space from a file.
-nnoremap <leader>W :StripWhitespace<CR>
+"Plug 'powerman/vim-plugin-AnsiEsc'
 " }}}
 " Replace text without overwriting register {{{
 Plug 'vim-scripts/ReplaceWithRegister'
@@ -153,7 +136,12 @@ Plug 'FooSoft/vim-argwrap'
 nnoremap <leader>aw :ArgWrap<cr>
 " }}}
 " Surround. Manage surrownding of targets in pairs{{{
-Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-surround'
+" }}}
+" Surround. Manage surrownding of targets in pairs{{{
+let g:VimTodoListsDatesEnabled = 1
+let g:VimTodoListsDatesFormat = "%Y-%m-%d %H:%M"
+Plug 'aserebryakov/vim-todo-lists'
 " }}}
 " fzf {{{
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
@@ -188,9 +176,6 @@ nnoremap <leader>u :UndotreeToggle<cr>
 " NerdCommenter {{{
 Plug 'scrooloose/nerdcommenter'
 "" }}}
-" Language Server Protocol WIP {{{
-Plug 'neoclide/coc.nvim', { 'tag': '*', 'do': { -> coc#util#install() } }
-"" }}}
 " Dispatch. Async dispatch used on fugitive {{{
 Plug 'tpope/vim-dispatch'
 " }}}
@@ -207,15 +192,15 @@ Plug 'airblade/vim-gitgutter'
 " Git Log {{{
 Plug 'junegunn/gv.vim'
 " }}}
-" Indent guides {{{
-Plug 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors = 1
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 2
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=None
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
-" }}}
+"" Indent guides {{{
+"Plug 'nathanaelkane/vim-indent-guides'
+"let g:indent_guides_enable_on_vim_startup = 1
+"let g:indent_guides_auto_colors = 1
+"let g:indent_guides_guide_size = 1
+"let g:indent_guides_start_level = 2
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=None
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
+"" }}}
 " Airline {{{
 "Plug 'bling/vim-airline'
 "let g:airline_section_b = '%{getcwd()}'
@@ -282,33 +267,33 @@ Plug 'kagux/vim-rubocop-autocorrect', { 'for': 'ruby' }
 " }}}
 " Elixir {{{
 " Syntax {{{
-Plug 'elixir-lang/vim-elixir'
+Plug 'elixir-editors/vim-elixir'
 " }}}
 " Autocompletion {{{
-let g:elixirls = {
-  \ 'path': printf('%s/%s', stdpath('config'), 'plugged/elixir-ls'),
-  \ }
+"let g:elixirls = {
+  "\ 'path': printf('%s/%s', stdpath('config'), 'plugged/elixir-ls'),
+  "\ }
 
-let g:elixirls.lsp = printf(
-  \ '%s/%s',
-  \ g:elixirls.path,
-  \ 'release/language_server.sh')
+"let g:elixirls.lsp = printf(
+  "\ '%s/%s',
+  "\ g:elixirls.path,
+  "\ 'release/language_server.sh')
 
-function! g:elixirls.compile(...)
-  let l:commands = join([
-    \ 'mix local.hex --force',
-    \ 'mix local.rebar --force',
-    \ 'mix deps.get',
-    \ 'mix compile',
-    \ 'mix elixir_ls.release'
-    \ ], '&&')
+"function! g:elixirls.compile(...)
+  "let l:commands = join([
+    "\ 'mix local.hex --force',
+    "\ 'mix local.rebar --force',
+    "\ 'mix deps.get',
+    "\ 'mix compile',
+    "\ 'mix elixir_ls.release'
+    "\ ], '&&')
 
-  echom '>>> Compiling elixirls'
-  silent call system(l:commands)
-  echom '>>> elixirls compiled'
-endfunction
+  "echom '>>> Compiling elixirls'
+  "silent call system(l:commands)
+  "echom '>>> elixirls compiled'
+"endfunction
 
-Plug 'JakeBecker/elixir-ls', { 'do': { -> g:elixirls.compile() } }
+"Plug 'elixir-lsp/elixir-ls', { 'do': { -> g:elixirls.compile() } }
 " }}}
 " }}}
 " Tests Runner {{{
@@ -346,7 +331,7 @@ Plug 'tpope/vim-abolish'
 Plug 'djoshea/vim-autoread'
 " }}}
 " highlight movement targets on line {{{
-Plug 'unblevable/quick-scope'
+"Plug 'unblevable/quick-scope'
 " }}}
 "" Format SQL {{{
 "Plug 'vim-scripts/SQLUtilities'
@@ -366,13 +351,6 @@ call plug#end()
 " }}}
 
 " StartUp {{{
-call coc#config('languageserver', {
-  \ 'elixir': {
-  \   'command': g:elixirls.lsp,
-  \   'trace.server': 'verbose',
-  \   'filetypes': ['elixir', 'eelixir']
-  \ }
-  \})
 " FileTypes Config {{{
 " Generic {{{
 set tabstop=2

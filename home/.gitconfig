@@ -10,10 +10,11 @@
 [push]
   default = simple
 [alias]
-  lol = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+  lol = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit --all
   co = checkout
   st = status -sb
   dlog = log --pretty=format:'%Cred%h%Creset (%C(bold blue)<%an>%Creset) %s' --graph origin/master...origin/develop
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
 [color]
   ui = true
 [branch]
