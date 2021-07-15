@@ -144,7 +144,7 @@ let g:VimTodoListsDatesFormat = "%Y-%m-%d %H:%M"
 Plug 'aserebryakov/vim-todo-lists'
 " }}}
 " fzf {{{
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'fzf#install()' }
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_COMMAND= 'ag -g ""'
 let g:fzf_action = {
@@ -181,9 +181,9 @@ Plug 'tpope/vim-dispatch'
 " }}}
 " Fugitive {{{
 Plug 'tpope/vim-fugitive'
-nnoremap <leader>gs  :Gstatus<cr>
+nnoremap <leader>gs  :Git<cr>
 nnoremap <leader>gc  :Gcommit --verbose<cr>
-nnoremap <leader>gp  :Gpush<cr>
+nnoremap <leader>gp  :Git push<cr>
 autocmd BufReadPost fugitive://* set bufhidden=delete
 " }}}
 " Git Gutter {{{
@@ -224,6 +224,10 @@ Plug 'stephpy/vim-yaml'
 Plug 'tyru/open-browser.vim' "Open URI with your favorite browser
 nmap <leader>ob <Plug>(openbrowser-open)
 vmap <leader>ob <Plug>(openbrowser-open)
+" }}}
+" Language Server {{{
+Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
 " }}}
 " PHP {{{
 "" Namespaces {{{
@@ -268,32 +272,6 @@ Plug 'kagux/vim-rubocop-autocorrect', { 'for': 'ruby' }
 " Elixir {{{
 " Syntax {{{
 Plug 'elixir-editors/vim-elixir'
-" }}}
-" Autocompletion {{{
-"let g:elixirls = {
-  "\ 'path': printf('%s/%s', stdpath('config'), 'plugged/elixir-ls'),
-  "\ }
-
-"let g:elixirls.lsp = printf(
-  "\ '%s/%s',
-  "\ g:elixirls.path,
-  "\ 'release/language_server.sh')
-
-"function! g:elixirls.compile(...)
-  "let l:commands = join([
-    "\ 'mix local.hex --force',
-    "\ 'mix local.rebar --force',
-    "\ 'mix deps.get',
-    "\ 'mix compile',
-    "\ 'mix elixir_ls.release'
-    "\ ], '&&')
-
-  "echom '>>> Compiling elixirls'
-  "silent call system(l:commands)
-  "echom '>>> elixirls compiled'
-"endfunction
-
-"Plug 'elixir-lsp/elixir-ls', { 'do': { -> g:elixirls.compile() } }
 " }}}
 " }}}
 " Tests Runner {{{
@@ -340,10 +318,6 @@ Plug 'djoshea/vim-autoread'
 " Base64 encode/decode {{{
 Plug 'christianrondeau/vim-base64'
 " }}}
-"" language server protocol {{{
-"Plug 'prabirshrestha/vim-lsp'
-"" }}}
-
 " End Setup Plugins {{{
 " Add plugins to &runtimepath
 call plug#end()
@@ -365,6 +339,62 @@ endif
 set background=dark
 silent! colorscheme gruvbox
 highlight Normal ctermbg=None
+" }}}
+" }}}
+" Language Server {{{
+" Mappings {{{
+lua << EOF
+local nvim_lsp = require('lspconfig')
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+  if client.resolved_capabilities.document_formatting then
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  end
+  if client.resolved_capabilities.document_range_formatting then
+    buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+  end
+
+end
+
+-- lsp-install
+local lsp_installer = require("nvim-lsp-installer")
+
+-- Register a handler that will be called for all installed servers.
+-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+lsp_installer.on_server_ready(function(server)
+    local opts = {on_attach = on_attach}
+
+    -- (optional) Customize the options passed to the server
+    -- if server.name == "tsserver" then
+    --     opts.root_dir = function() ... end
+    -- end
+
+    -- This setup() function is exactly the same as lspconfig's setup function.
+    -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+    server:setup(opts)
+end)
+EOF
+
 " }}}
 " }}}
 
