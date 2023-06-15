@@ -38,6 +38,8 @@ fi
 
 export TERM=screen-256color
 export EDITOR='nvim'
+# To be able to open vim for current command. Check https://github.com/ohmyzsh/ohmyzsh/issues/9588
+export KEYTIMEOUT=15
 
 # Golang configurations
 export GOPATH="$HOME/workspace/go"
@@ -56,6 +58,8 @@ export PATH="/usr/local/sbin:$PATH"
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
 
+export ERL_AFLAGS="-kernel shell_history enabled"
+
 # load fzf config if it exists
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -69,3 +73,9 @@ load_source "/usr/local/opt/asdf/asdf.sh"
 load_source "/usr/local/opt/asdf/asdf.bash"
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# The next line updates PATH for the Google Cloud SDK.
+load_source "/Users/jperi/google-cloud-sdk/path.zsh.inc"
+
+# The next line enables shell command completion for gcloud.
+load_source "/Users/jperi/google-cloud-sdk/completion.zsh.inc"
