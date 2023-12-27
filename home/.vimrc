@@ -115,6 +115,10 @@ nnoremap <Leader>id "=strftime("%Y-%m-%d")<CR>P
 nnoremap <Leader>idt "=strftime("%Y-%m-%d %H:%M:%S")<CR>P
 nnoremap <Leader>it "=strftime("%H:%M:%S")<CR>P
 
+
+" Format json
+nnoremap <leader>fj :%!python -m json.tool<CR>
+
 " do not fold anything when reading a file
 au BufRead * normal zR
 " }}}
@@ -286,10 +290,15 @@ Plug 'elixir-editors/vim-elixir'
 " Tests Runner {{{
 Plug 'janko-m/vim-test'
 let g:test#strategy = 'vimux'
-nmap <silent> <leader>tt :w<CR>:TestNearest<CR>
-nmap <silent> <leader>tT :w<CR>:TestFile<CR>
-nmap <silent> <leader>ta :w<CR>:TestSuite<CR>
-nmap <silent> <leader>tl :w<CR>:TestLast<CR>
+nnoremap <silent> <leader>tt :w<CR>:TestNearest<CR>
+nnoremap <silent> <leader>tT :w<CR>:TestFile<CR>
+nnoremap <silent> <leader>ta :w<CR>:TestSuite<CR>
+nnoremap <silent> <leader>tl :w<CR>:TestLast<CR>
+nnoremap <silent> <leader>tf :w<CR>:TestSuite --failed<CR>
+nnoremap <silent> <leader>rc :w<cr>:VimuxRunCommand("")<left><left>
+nnoremap <silent> <leader>rc :w<cr>:VimuxRunCommand("")<left><left>
+nnoremap <silent> <leader>rl :w<cr>:VimuxRunCommand("Up")<cr>
+nnoremap <silent> <leader>rm :w<cr>:VimuxRunCommand("mix ")<left><left>
 " }}}
 " BufOnly {{{
 Plug 'duff/vim-bufonly'
