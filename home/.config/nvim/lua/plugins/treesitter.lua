@@ -20,7 +20,7 @@ local M = {
         autopairs = { enable = true },
         autotag = { enable = true },
         indent = { enable = true },
-        ensure_installed = {"elixir", "heex", "erlang", "dockerfile", "json", "make", "markdown", "regex", "scss", "vim", "python"},
+        ensure_installed = {"elixir", "heex", "erlang", "dockerfile", "json", "make", "markdown", "regex", "scss", "vim", "python", "lua", "c", "vim", "vimdoc"},
         sync_install = true,
         ignore_install = {}, -- List of parsers to ignore installation
         refactor = {
