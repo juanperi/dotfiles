@@ -1,3 +1,5 @@
+vim.env['FZF_DEFAULT_COMMAND'] = 'ag -g ""'
+
 local FZF = {
   "junegunn/fzf",
   dir = "~/.fzf",
