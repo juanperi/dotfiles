@@ -1,10 +1,12 @@
 local M = {
-  "ellisonleao/gruvbox.nvim",
+  "morhetz/gruvbox",
   priority = 1000,
   config = true,
   lazy = false,
   config = function()
-     vim.cmd([[colorscheme gruvbox]])
+    vim.o.termguicolors = true
+    vim.o.background = "dark"
+    vim.cmd([[colorscheme gruvbox]])
   end,
 }
 
