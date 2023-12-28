@@ -1,6 +1,8 @@
+#PS4="+%D{%s.%.}> "
+#set -o xtrace
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
-plugins=(git z vi-mode docker)
+plugins=(git z vi-mode asdf)
 
 # remove ruby version from the prompt
 RPROMPT=''
@@ -8,6 +10,8 @@ RPROMPT=''
 function load_source(){
   [[ -s "$1" ]] && source "$1"
 }
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 load_source $ZSH/oh-my-zsh.sh
 load_source "$HOME/.bin/tmuxinator.zsh"
@@ -47,8 +51,6 @@ export PATH="$PATH:$GOPATH/bin"
 
 # Vi mode.
 bindkey "^R" history-incremental-search-backward
-# Set the transition time between normal and input mode to 0.1
-export KEYTIMEOUT=1
 
 # Add node_modules to path
 export PATH=$PATH:node_modules/.bin
@@ -61,7 +63,7 @@ load_source "$HOME/.zshrc.local"
 export ERL_AFLAGS="-kernel shell_history enabled"
 
 # load fzf config if it exists
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+load_source ~/.fzf.zsh
 
 if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
@@ -69,8 +71,7 @@ fi
 
 eval "$(direnv hook zsh)"
 
-load_source "/usr/local/opt/asdf/asdf.sh"
-load_source "/usr/local/opt/asdf/asdf.bash"
+load_source /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
@@ -79,3 +80,4 @@ load_source "/Users/jperi/google-cloud-sdk/path.zsh.inc"
 
 # The next line enables shell command completion for gcloud.
 load_source "/Users/jperi/google-cloud-sdk/completion.zsh.inc"
+
