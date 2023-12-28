@@ -9,7 +9,6 @@ local M = {
     },
     opts = function()
         local cmp = require("cmp")
-        local lsp_kinds = require("utils").lsp_kinds
 
         local has_words_before = function()
             if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
@@ -20,21 +19,6 @@ local M = {
         end
 
         return {
-            formatting = {
-                format = function(entry, vim_item)
-                    if vim.tbl_contains({ "path" }, entry.source.name) then
-                        local icon, hl_group = require("nvim-web-devicons").get_icon(entry:get_completion_item().label)
-                        if icon then
-                            vim_item.kind = icon
-                            vim_item.kind_hl_group = hl_group
-                            return vim_item
-                        end
-                    end
-                    vim_item.kind = (lsp_kinds[vim_item.kind] or "") .. " " .. vim_item.kind
-
-                    return vim_item
-                end,
-            },
             mapping = cmp.mapping.preset.insert({
                 ["<C-p>"] = cmp.mapping.select_prev_item(),
                 ["<C-n>"] = cmp.mapping.select_next_item(),
