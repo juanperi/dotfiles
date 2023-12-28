@@ -38,16 +38,6 @@ spoon.SpoonInstall:andUse("MicMute", {
     latch_timeout = 0.75
   }
 })
-spoon.SpoonInstall:andUse("MiroWindowsManager", {
-  hotkeys = {
-    up = {hyper, "up"},
-    right = {hyper, "right"},
-    down = {hyper, "down"},
-    left = {hyper, "left"},
-    fullscreen = {hyper, "f"},
-    nextscreen = {hyper, "n"}
-  }
-})
 
 ---
 
