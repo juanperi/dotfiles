@@ -9,8 +9,8 @@ vim.opt.smartcase = true
 --vim.opt.showmatch = true
 
 --vim.opt.clipboard = "unnamedplus"
---vim.opt.undofile = true
---vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
 
 --vim.opt.pumheight = 10 -- pop up menu height
 --vim.opt.swapfile = false
