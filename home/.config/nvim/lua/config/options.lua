@@ -13,8 +13,8 @@ vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
 
 --vim.opt.pumheight = 10 -- pop up menu height
---vim.opt.swapfile = false
---vim.opt.smartindent = true
+vim.opt.swapfile = false
+vim.opt.smartindent = true
 --vim.opt.showmode = false -- we don't need to see things like -- INSERT -- anymore
 --vim.opt.sidescrolloff = 5 -- how many lines to scroll when using the scrollbar
 --vim.opt.autoindent = true

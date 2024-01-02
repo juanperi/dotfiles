@@ -11,7 +11,7 @@ M.lsp_servers = {
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 M.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
@@ -48,7 +48,8 @@ M.setup = function()
   vim.keymap.set("n", 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', bufopts)
   vim.keymap.set("n", 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', bufopts)
   vim.keymap.set("n", 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', bufopts)
-  vim.keymap.set("n", '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', bufopts)
+  vim.keymap.set("n", '<leader>ff', '<cmd>lua vim.lsp.buf.format()<CR>', bufopts)
+  vim.keymap.set("n", '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', bufopts)
 end
 
 M.on_attach = function(client, bufnr)
