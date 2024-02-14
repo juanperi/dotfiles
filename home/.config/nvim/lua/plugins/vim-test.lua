@@ -2,6 +2,7 @@ vim.g['test#strategy'] = "vimux"
 
 return {
   "janko-m/vim-test",
+  lazy = false,
   keys = {
     { "<leader>tt", ":w<CR>:TestNearest<CR>" },
     { "<leader>tT", ":w<CR>:TestFile<CR>" },

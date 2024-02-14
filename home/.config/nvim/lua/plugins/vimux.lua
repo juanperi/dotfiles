@@ -4,6 +4,7 @@ vim.g.VimuxHeight = 30
 
 return {
   "preservim/vimux",
+  lazy = false,
   keys = {
     { "<leader>rl", ":w<CR>:VimuxRunLastCommand<CR>" }
   }

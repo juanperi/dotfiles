@@ -4,7 +4,7 @@ vim.g.mapleader = " "
 ---- Searching and Moving
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
---vim.opt.gdefault = true
+vim.opt.gdefault = true
 --vim.opt.incsearch = true
 --vim.opt.showmatch = true
 
