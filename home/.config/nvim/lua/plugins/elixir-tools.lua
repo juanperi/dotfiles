@@ -6,9 +6,12 @@ return {
     local elixirls = require("elixir.elixirls")
 
     elixir.setup {
-      nextls = {enable = false},
+      nextls = {
+        enable = true,
+        cmd = "nextls" -- I'm managing nextl through brew
+      },
       credo = {enable = true},
-      elixirls = {enable = true}
+      elixirls = {enable = false}
     }
   end,
   dependencies = {
