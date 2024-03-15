@@ -14,9 +14,24 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup("plugins", {
   install = { colorscheme = { "gruvbox" } },
   defaults = { lazy = false },
-  ui = {
-    border = "rounded",
-  },
   checker = { enabled = true },
   debug = false,
+  ui = {
+    border = "rounded",
+    icons = {
+      cmd = '⌘',
+      config = '🛠',
+      event = '📅',
+      ft = '📂',
+      init = '⚙',
+      keys = '🗝',
+      plugin = '🔌',
+      runtime = '💻',
+      require = '🌙',
+      source = '📄',
+      start = '🚀',
+      task = '📌',
+      lazy = '💤 ',
+    }
+  }
 })
