@@ -16,5 +16,6 @@ return {
   end,
   dependencies = {
     "nvim-lua/plenary.nvim",
+    "elixir-editors/vim-elixir",
   },
 }
