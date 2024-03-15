@@ -10,8 +10,8 @@ return {
         enable = true,
         cmd = "nextls" -- I'm managing nextl through brew
       },
-      credo = {enable = true},
-      elixirls = {enable = false}
+      credo = { enable = true },
+      elixirls = { enable = false }
     }
   end,
   dependencies = {

@@ -3,11 +3,11 @@ local M = {}
 M.lsp_signs = { Error = "✖ ", Warn = "! ", Hint = "󰌶 ", Info = " " }
 
 M.mason_packages = {
-    "html-lsp"
+  "html-lsp"
 }
 
 M.lsp_servers = {
-    "html"
+  "html"
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()

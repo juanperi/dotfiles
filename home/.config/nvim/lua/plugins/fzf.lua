@@ -8,8 +8,8 @@ local FZF = {
 local FZFVIM = {
   "junegunn/fzf.vim",
   keys = {
-    {"<c-p>", ":FZF<CR>"}
+    { "<c-p>", ":FZF<CR>" }
   }
 }
 
-return {FZF, FZFVIM}
+return { FZF, FZFVIM }
