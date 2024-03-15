@@ -3,8 +3,10 @@ return {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "williamboman/mason-lspconfig.nvim",
+      { "hrsh7th/cmp-nvim-lsp",              opts = {} },
+      { "williamboman/mason-lspconfig.nvim", opts = {} },
+      { "j-hui/fidget.nvim",                 opts = {} },
+      { "folke/neodev.nvim",                 opts = {} }
     },
     config = function(_, _)
       local mason_lspconfig = require("mason-lspconfig")
