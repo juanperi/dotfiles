@@ -16,7 +16,7 @@ vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
 vim.opt.swapfile = false
 vim.opt.smartindent = true
 --vim.opt.showmode = false -- we don't need to see things like -- INSERT -- anymore
---vim.opt.sidescrolloff = 5 -- how many lines to scroll when using the scrollbar
+vim.opt.sidescrolloff = 10 -- how many lines to scroll when using the scrollbar
 --vim.opt.autoindent = true
 --vim.opt.signcolumn = "yes"
 --vim.opt.sessionoptions = "buffers,curdir,folds,help,tabpages,terminal,globals"
@@ -31,6 +31,7 @@ vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 --vim.opt.cmdheight = 0
 vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 --vim.opt.splitkeep = "screen"
 ---- vim.opt.syntax = "on"
 --vim.opt.spelloptions = "camel,noplainbuffer"
@@ -41,12 +42,12 @@ vim.opt.list = true
 --vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 --vim.opt.foldenable = true
 --vim.opt.fillchars = {
-  --foldopen = "",
-  --foldclose = "",
-  --fold = " ",
-  --foldsep = " ",
-  --diff = "/",
-  --eob = " ",
+--  foldopen = "",
+--  foldclose = "",
+--  fold = " ",
+--  foldsep = " ",
+--  diff = "/",
+--  eob = " ",
 --}
 --vim.opt.mousemoveevent = true
 
