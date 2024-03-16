@@ -98,6 +98,9 @@ return {
           --  Format the current file
           map('ff', vim.lsp.buf.format, '[F]ormat [F]ile')
 
+          --  Format the current file
+          map('<leader>e', vim.diagnostic.open_float, 'Show diagnostic [E]rrors')
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
