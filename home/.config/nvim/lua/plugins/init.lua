@@ -1,4 +1,4 @@
 return {
   { "tpope/vim-sensible" },
-  { "airblade/vim-gitgutter" },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} }
 }
