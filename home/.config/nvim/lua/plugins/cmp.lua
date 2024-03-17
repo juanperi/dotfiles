@@ -34,6 +34,7 @@ return {
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
     },
     config = function()
       -- See `:help cmp`
@@ -97,6 +98,7 @@ return {
         },
         sources = {
           { name = 'nvim_lsp' },
+          { name = 'buffer' },
           { name = 'luasnip' },
           { name = 'path' },
         },
