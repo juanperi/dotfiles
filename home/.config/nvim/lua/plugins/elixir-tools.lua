@@ -8,14 +8,21 @@ return {
 
     elixir.setup {
       nextls = {
-        enable = false,
-        cmd = "nextls" -- managed by brew
+        enable = true,
+        cmd = "nextls", -- managed by brew
+        init_options = {
+          experimental = {
+            completions = {
+              enable = true -- control if completions are enabled. defaults to false
+            }
+          }
+        },
       },
       credo = {
         enable = false,
       },
       elixirls = {
-        enable = true,
+        enable = false,
         -- Compiled manually with:
         -- mix deps.get
         -- MIX_ENV=prod mix compile
