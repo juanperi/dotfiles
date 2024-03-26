@@ -14,6 +14,12 @@ return {
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
       { 'folke/neodev.nvim', opts = {} },
+      {
+        "zbirenbaum/copilot-cmp",
+        config = function()
+          require("copilot_cmp").setup()
+        end
+      },
     },
     config = function()
       -- Brief Aside: **What is LSP?**
@@ -198,4 +204,3 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et

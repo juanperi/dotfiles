@@ -97,6 +97,7 @@ return {
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
+          { name = "copilot", group_index = 2 },
           { name = 'nvim_lsp' },
           { name = 'buffer' },
           { name = 'luasnip' },
@@ -106,4 +107,3 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et
