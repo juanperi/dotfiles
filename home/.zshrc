@@ -11,10 +11,17 @@ function load_source(){
   [[ -s "$1" ]] && source "$1"
 }
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if type "brew" > /dev/null; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  load_source /opt/homebrew/opt/asdf/libexec/asdf.sh
+fi
 
 load_source $ZSH/oh-my-zsh.sh
-load_source "$HOME/.bin/tmuxinator.zsh"
+
+if type "tmux" > /dev/null; then
+  load_source "$HOME/.bin/tmuxinator.zsh"
+fi
+
 load_source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 # OSX check
@@ -31,14 +38,13 @@ alias tmux='tmux -2'
 # kill all the tmux sessions
 alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
-# ssh to vagrant
-alias v="vagrant ssh"
-
 alias pushn="git symbolic-ref --short -q HEAD | xargs git push -u origin"
 
-if hash nvim 2>/dev/null; then
+if type nvim > /dev/null; then
   alias vim='nvim'
 fi
+
+alias notifyDone='tput bel; terminal-notifier -title "Terminal" -message "Done with task! Exit status: $?" --sound default' -activate com.apple.Terminal
 
 export TERM=screen-256color
 export EDITOR='nvim'
@@ -69,9 +75,9 @@ if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
 fi
 
-eval "$(direnv hook zsh)"
-
-load_source /opt/homebrew/opt/asdf/libexec/asdf.sh
+if type "direnv" > /dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
