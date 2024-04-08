@@ -69,7 +69,9 @@ load_source "$HOME/.zshrc.local"
 export ERL_AFLAGS="-kernel shell_history enabled"
 
 # load fzf config if it exists
-load_source ~/.fzf.zsh
+if type "fzf" > /dev/null; then
+  load_source ~/.fzf.zsh
+fi
 
 if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
