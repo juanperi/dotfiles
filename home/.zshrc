@@ -24,13 +24,6 @@ fi
 
 load_source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-# OSX check
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  load_source "/Users/jperi/.vim/plugged/gruvbox/gruvbox_256palette_osx.sh"
-else
-  load_source "/Users/jperi/.vim/plugged/gruvbox/gruvbox_256palette.sh"
-fi
-
 # sudo previous command
 alias fuck='sudo $(fc -ln -1)'
 # setting tmux in 265 colors
