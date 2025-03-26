@@ -2,7 +2,7 @@
 #set -o xtrace
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
-plugins=(git z vi-mode asdf)
+plugins=(git z vi-mode)
 
 # remove ruby version from the prompt
 RPROMPT=''
@@ -11,7 +11,37 @@ function load_source(){
   [[ -s "$1" ]] && source "$1"
 }
 
-if type "brew" > /dev/null; then
+# Convert a datetime in the format 2024-01-01T00:00:00.000Z to a timestamp with precision
+function to_ts(){
+  precision=${2:-ms}
+  case "${precision}" in
+    ms)
+      padding="%3N"
+      ;;
+    s)
+      padding=""
+      ;;
+  esac
+
+  gdate --date="$1" +"%s$padding"
+}
+
+function from_ts(){
+  ts=$1
+  precision=${2:-ms}
+  case "${precision}" in
+    ms)
+      ms=".${ts:10}"
+      ;;
+    s)
+      ms=""
+      ;;
+  esac
+
+  echo $(gdate -d @${ts:0:10} --utc --iso=s | cut -d '+' -f 1)$ms
+}
+
+if type "/opt/homebrew/bin/brew" > /dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
   load_source /opt/homebrew/opt/asdf/libexec/asdf.sh
 fi
@@ -33,7 +63,7 @@ alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
 alias pushn="git symbolic-ref --short -q HEAD | xargs git push -u origin"
 
-if type nvim > /dev/null; then
+if type "nvim" > /dev/null; then
   alias vim='nvim'
 fi
 
@@ -41,6 +71,7 @@ alias notifyDone='tput bel; terminal-notifier -title "Terminal" -message "Done w
 
 export TERM=screen-256color
 export EDITOR='nvim'
+export VISUAL='nvim'
 # To be able to open vim for current command. Check https://github.com/ohmyzsh/ohmyzsh/issues/9588
 export KEYTIMEOUT=15
 
@@ -81,4 +112,3 @@ load_source "/Users/jperi/google-cloud-sdk/path.zsh.inc"
 
 # The next line enables shell command completion for gcloud.
 load_source "/Users/jperi/google-cloud-sdk/completion.zsh.inc"
-

@@ -29,7 +29,7 @@ vim.keymap.set("v", "<leader>cw", "y:%s/<C-r>\"/<C-r>\"")
 vim.keymap.set("v", "//", "y/<C-R>=escape(@\",'/')<CR><CR>")
 
 -- Format json
-vim.keymap.set("n", "fj", ":%!python -m json.tool<CR>")
+vim.keymap.set("n", "fj", ":%!jq .<CR>")
 
 -- remove highlight
 vim.keymap.set("n", "<leader><space>", ":nohlsearch<CR>")
