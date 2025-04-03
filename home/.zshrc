@@ -61,6 +61,8 @@ alias tmux='tmux -2'
 # kill all the tmux sessions
 alias kill-tmux="tmux ls | cut -d ':' -f 1 | xargs -I% tmux kill-session -t % "
 
+alias moto='fortune | cowsay -r'
+
 alias pushn="git symbolic-ref --short -q HEAD | xargs git push -u origin"
 
 if type "nvim" > /dev/null; then
