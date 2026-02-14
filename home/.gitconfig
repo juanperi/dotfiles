@@ -11,12 +11,12 @@
   default = simple
 [alias]
   lol = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit --all
-  lom = log --graph --pretty='%Cred%h%Creset %Cgreen(%ci)%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit origin/master
+  lom = "!f() { local defaultBranch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo 'master'); git log --graph --pretty='%Cred%h%Creset %Cgreen(%ci)%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit origin/$defaultBranch; }; f"
   co = checkout
   st = status -sb
-  dlog = log --pretty=format:'%Cred%h%Creset (%C(bold blue)<%an>%Creset) %s' --graph origin/master...origin/develop
+  dlog = "!f() { local defaultBranch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo 'master'); git log --pretty=format:'%Cred%h%Creset (%C(bold blue)<%an>%Creset) %s' --graph origin/$defaultBranch...origin/develop; }; f"
   ignored = !git ls-files -v | grep "^[[:lower:]]"
-	delete-squashed = "!f() { local targetBranch=${1:-master} && git checkout -q $targetBranch && git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d && git for-each-ref refs/heads/ \"--format=%(refname:short)\" | while read branch; do mergeBase=$(git merge-base $targetBranch $branch) && [[ $(git cherry $targetBranch $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _)) == \"-\"* ]] && git branch -D $branch; done; }; f"
+delete-squash = "!f() { local defaultBranch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo 'master'); local targetBranch=${1:-$defaultBranch} && echo \"Using target branch: $targetBranch\" && git checkout -q $targetBranch && echo \"Deleting normally merged branches...\" && git branch --merged | grep -v \"\\*\" | while read branch; do if git branch -d \"$branch\" 2>/dev/null; then echo \"Deleted merged branch: $branch\"; else echo \"Error: Failed to delete merged branch: $branch\" >&2; fi; done && echo \"Checking for squash-merged branches...\" && git for-each-ref refs/heads/ \"--format=%(refname:short)\" | while read branch; do if [ \"$branch\" != \"$targetBranch\" ]; then echo \"Checking branch: $branch\"; mergeBase=$(git merge-base $targetBranch $branch 2>/dev/null); if [ $? -ne 0 ]; then echo \"Error: Could not find merge-base for $branch\" >&2; continue; fi; if [ -z \"$mergeBase\" ]; then echo \"Error: Empty merge-base for $branch\" >&2; continue; fi; tempCommit=$(git commit-tree $(git rev-parse $branch^{tree} 2>/dev/null) -p $mergeBase -m _ 2>/dev/null); if [ $? -ne 0 ]; then echo \"Error: Could not create temp commit for $branch\" >&2; continue; fi; cherryResult=$(git cherry $targetBranch $tempCommit 2>/dev/null); if [ $? -ne 0 ]; then echo \"Error: Cherry command failed for $branch\" >&2; continue; fi; if [[ $cherryResult == \"-\"* ]]; then echo \"Deleting squash-merged branch: $branch\"; if git branch -D $branch 2>/dev/null; then echo \"Successfully deleted: $branch\"; else echo \"Error: Failed to delete squash-merged branch: $branch\" >&2; fi; fi; fi; done; }; f"
 [color]
   ui = true
 [branch]
@@ -32,3 +32,9 @@
 	enabled = true
 [init]
 	defaultBranch = main
+[url "git@github.com-gartner:gartner-digital-markets/"]
+	insteadOf = git@github.com:gartner-digital-markets/
+[url "git@github.com-gartner:capterra/"]
+	insteadOf = git@github.com:capterra/
+[url "git@github.com-gartner:software-advice/"]
+	insteadOf = git@github.com:software-advice/

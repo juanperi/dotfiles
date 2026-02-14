@@ -4,6 +4,11 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
 plugins=(git z vi-mode)
 
+# Speed up compinit
+ZSH_DISABLE_COMPFIX=true
+# Fix oh-my-zsh bug #12952: deduplicate fpath so compinit cache works
+fpath=(${(uo)fpath})
+
 # remove ruby version from the prompt
 RPROMPT=''
 
@@ -41,14 +46,20 @@ function from_ts(){
   echo $(gdate -d @${ts:0:10} --utc --iso=s | cut -d '+' -f 1)$ms
 }
 
-if type "/opt/homebrew/bin/brew" > /dev/null; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+# Inline brew shellenv (faster than eval subshell)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
   load_source /opt/homebrew/opt/asdf/libexec/asdf.sh
 fi
 
 load_source $ZSH/oh-my-zsh.sh
 
-if type "tmux" > /dev/null; then
+if (( $+commands[tmux] )); then
   load_source "$HOME/.bin/tmuxinator.zsh"
 fi
 
@@ -65,7 +76,7 @@ alias moto='fortune | cowsay -r'
 
 alias pushn="git symbolic-ref --short -q HEAD | xargs git push -u origin"
 
-if type "nvim" > /dev/null; then
+if (( $+commands[nvim] )); then
   alias vim='nvim'
 fi
 
@@ -95,15 +106,12 @@ load_source "$HOME/.zshrc.local"
 export ERL_AFLAGS="-kernel shell_history enabled"
 
 # load fzf config if it exists
-if type "fzf" > /dev/null; then
+if (( $+commands[fzf] )); then
   load_source ~/.fzf.zsh
 fi
 
-if type "rbenv" > /dev/null; then
-  eval "$(rbenv init -)"
-fi
-
-if type "direnv" > /dev/null; then
+# direnv hook
+if (( $+commands[direnv] )); then
   eval "$(direnv hook zsh)"
 fi
 
@@ -114,3 +122,8 @@ load_source "/Users/jperi/google-cloud-sdk/path.zsh.inc"
 
 # The next line enables shell command completion for gcloud.
 load_source "/Users/jperi/google-cloud-sdk/completion.zsh.inc"
+
+# The next line loads java's home if the plubin is installed
+load_source "~/.asdf/plugins/java/set-java-home.zsh"
+# Created by `pipx` on 2025-04-01 07:38:56
+export PATH="$PATH:/Users/jperi/.local/bin"

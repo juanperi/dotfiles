@@ -40,15 +40,29 @@ map(
 -- Base64 encode/decode selection
 map(
   "v",
-  "<leader>64e",
+  "<leader>e64",
   [[c<C-r>=substitute(system('base64 --wrap=0', @"), '\n\+$', '', '')<cr><esc>]],
-  { silent = true, desc = "Base64 encode" }
+  { silent = true, desc = "[E]ncode Base[64]" }
 )
 map(
   "v",
-  "<leader>64d",
+  "<leader>d64",
   [[c<C-r>=substitute(system('base64 --wrap=0 --decode', @"), '\n\+$', '', '')<cr><esc>]],
-  { silent = true, desc = "Base64 decode" }
+  { silent = true, desc = "[D]ecode Base[64]" }
+)
+
+-- URL encode/decode selection
+map(
+  "v",
+  "<leader>eu",
+  [[c<C-r>=system('python3 -c "import sys,urllib.parse;print(urllib.parse.quote(sys.stdin.read(),safe=\"\"),end=\"\")"', @")<cr><esc>]],
+  { silent = true, desc = "[E]ncode [U]RL" }
+)
+map(
+  "v",
+  "<leader>du",
+  [[c<C-r>=system('python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.stdin.read()),end=\"\")"', @")<cr><esc>]],
+  { silent = true, desc = "[D]ecode [U]RL" }
 )
 
 -- Search for selected text in visual mode

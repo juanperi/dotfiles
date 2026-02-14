@@ -3,3 +3,4 @@
 /local_notes_*.md
 /.lvimrc
 /.elixir_ls
+__pycache__

@@ -1,29 +1,54 @@
+---@module "snacks"
+---@module "opencode"
+
 return {
   "NickvanDyke/opencode.nvim",
   dependencies = {
     -- Recommended for `ask()` and `select()`.
-    -- Required for `snacks` provider.
-    ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
-    { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+    -- Required for the `snacks` provider.
+    {
+      "folke/snacks.nvim",
+      opts = {
+        input = {},
+        picker = {},
+        terminal = {},
+      },
+    },
   },
   config = function()
-    ---@type opencode.Opts
-    vim.g.opencode_opts = {
-      -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition".
-    }
-
     -- Required for `opts.events.reload`.
     vim.o.autoread = true
 
+    vim.g.opencode_opts = {
+      -- Your configuration, if any; see `lua/opencode/config.lua` (or goto definition).
+    }
+
+    local opencode = require("opencode")
+    local map = vim.keymap.set
+
     -- Recommended/example keymaps.
-    vim.keymap.set({ "n", "x" }, "<C-a>", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
-    vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
-    vim.keymap.set({ "n", "x" },    "ga", function() require("opencode").prompt("@this") end,                   { desc = "Add to opencode" })
-    vim.keymap.set({ "n", "t" }, "<C-.>", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
-    vim.keymap.set("n",        "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
-    vim.keymap.set("n",        "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
-    -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o".
-    vim.keymap.set('n', '+', '<C-a>', { desc = 'Increment', noremap = true })
-    vim.keymap.set('n', '-', '<C-x>', { desc = 'Decrement', noremap = true })
+    map({ "n", "x" }, "<leader>oq", function()
+      opencode.ask("@this: ", { submit = true })
+    end, { desc = "[o]pencode [q]uestion" })
+
+    map({ "n", "x" }, "<leader>ox", function()
+      opencode.select()
+    end, { desc = "[o]pencode e[x]ecute action" })
+
+    map({ "n", "x" }, "<leader>oa", function()
+      opencode.prompt("@this")
+    end, { desc = "[o]pencode [a]dd" })
+
+    map({ "n", "t" }, "<leader>ot", function()
+      opencode.toggle()
+    end, { desc = "[o]pencode [t]oggle" })
+
+    map("n", "<leader>ou", function()
+      opencode.command("session.half.page.up")
+    end, { desc = "[o]pencode page [u]p" })
+
+    map("n", "<leader>od", function()
+      opencode.command("session.half.page.down")
+    end, { desc = "[o]pencode page [d]own" })
   end,
 }
