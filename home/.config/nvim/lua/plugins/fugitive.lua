@@ -1,6 +1,6 @@
 local M = {
   "tpope/vim-fugitive",
-  lazy = false,
+  cmd = { "Git", "G", "GBrowse", "Gcommit", "Gvdiffsplit" },
   keys = {
     { "<leader>gs", ":Git<CR>", desc="[g]it [s]tatus" },
     { "<leader>gc", ":Gcommit --verbose<CR>", desc="[g]it [c]ommit" },
