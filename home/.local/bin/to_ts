@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Convert a date string to a unix timestamp.
+#
+# Usage: to_ts <date> [precision]
+#
+#   date        Date string accepted by gdate (e.g. "2024-01-15 10:30:00")
+#   precision   "ms" (default) or "s"
+#
+# Examples:
+#   to_ts "2024-01-15 10:30:00"       # 1705311000000
+#   to_ts "2024-01-15 10:30:00" s     # 1705311000
+
+if [[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]]; then
+  grep '^#' "$0" | tail -n +2 | sed 's/^# \{0,1\}//'
+  exit 0
+fi
+
+precision=${2:-ms}
+case "${precision}" in
+  ms) padding="%3N" ;;
+  s)  padding="" ;;
+esac
+
+gdate --date="$1" +"%s$padding"

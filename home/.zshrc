@@ -17,34 +17,6 @@ function load_source(){
 }
 
 # Convert a datetime in the format 2024-01-01T00:00:00.000Z to a timestamp with precision
-function to_ts(){
-  precision=${2:-ms}
-  case "${precision}" in
-    ms)
-      padding="%3N"
-      ;;
-    s)
-      padding=""
-      ;;
-  esac
-
-  gdate --date="$1" +"%s$padding"
-}
-
-function from_ts(){
-  ts=$1
-  precision=${2:-ms}
-  case "${precision}" in
-    ms)
-      ms=".${ts:10}"
-      ;;
-    s)
-      ms=""
-      ;;
-  esac
-
-  echo $(gdate -d @${ts:0:10} --utc --iso=s | cut -d '+' -f 1)$ms
-}
 
 # Inline brew shellenv (faster than eval subshell)
 if [[ -x /opt/homebrew/bin/brew ]]; then

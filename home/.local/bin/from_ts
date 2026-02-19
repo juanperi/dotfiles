@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Convert a unix timestamp to an ISO 8601 date string (UTC).
+#
+# Usage: from_ts <timestamp> [precision]
+#
+#   timestamp   Unix timestamp in seconds or milliseconds
+#   precision   "ms" (default) or "s"
+#
+# Examples:
+#   from_ts 1705311000000             # 2024-01-15T10:30:00.000
+#   from_ts 1705311000 s              # 2024-01-15T10:30:00
+
+if [[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]]; then
+  grep '^#' "$0" | tail -n +2 | sed 's/^# \{0,1\}//'
+  exit 0
+fi
+
+ts=$1
+precision=${2:-ms}
+case "${precision}" in
+  ms) ms=".${ts:10}" ;;
+  s)  ms="" ;;
+esac
+
+echo "$(gdate -d @"${ts:0:10}" --utc --iso=s | cut -d '+' -f 1)$ms"
