@@ -24,7 +24,7 @@ return {
           map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('K', function() vim.lsp.buf.hover({ max_width = 80, max_height = 30 }) end, 'Hover Documentation')
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
           map('ff', vim.lsp.buf.format, '[F]ormat [F]ile')
           map('<leader>e', vim.diagnostic.open_float, 'Show diagnostic [E]rrors')
