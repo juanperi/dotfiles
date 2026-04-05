@@ -1,0 +1,507 @@
+#!/bin/bash
+#===============================================================================
+# awshelp.sh - AWS Utility for Database and Kubernetes Management
+#===============================================================================
+#
+# A CLI tool to simplify AWS SSO authentication, Aurora PostgreSQL connections,
+# and EKS cluster access via k9s. Uses a JSON configuration file to manage
+# multiple environment aliases.
+#
+# Version: 1.0.0
+#
+# USAGE:
+#   awshelp.sh [-h|-v|-d] <command> [options]
+#
+# COMMANDS:
+#   list [filter]            List configured aliases (optionally filter by keyword)
+#   database <alias> [opts]     Connect to Aurora database (extra opts passed to psql)
+#   login <alias>            Authenticate with AWS SSO for the given alias
+#   kube <alias>             Connect to EKS cluster using k9s
+#   profile <alias>          Display the AWS profile name for an alias
+#
+# OPTIONS:
+#   -h, --help      Show this help message
+#   -v, --verbose   Enable verbose output for debugging
+#   -d, --debug     Enable bash debug mode (set -x)
+#
+# EXAMPLES:
+#   awshelp.sh list                           # Show all configured aliases
+#   awshelp.sh list prod                      # Show aliases containing "prod"
+#   awshelp.sh login dev                      # Authenticate with AWS SSO
+#   awshelp.sh database prod                  # Interactive database session (pgcli)
+#   awshelp.sh database prod -c "SELECT 1"    # Execute inline SQL query
+#   awshelp.sh database prod -f query.sql     # Execute SQL file
+#   awshelp.sh database prod --csv -c "SELECT 1"  # CSV output for inline query
+#   awshelp.sh kube dev                       # Launch k9s for dev cluster
+#   awshelp.sh profile prod                   # Get profile name
+#
+#===============================================================================
+# DEPENDENCIES
+#===============================================================================
+#
+# Required tools:
+#   - AWS CLI v2 (with SSO configured)
+#   - jq (JSON processor)
+#
+# Optional tools:
+#   - pgcli (enhanced PostgreSQL client)
+#   - k9s (Kubernetes TUI)
+#
+# Install dependencies:
+#   brew install awscli jq k9s
+#
+#===============================================================================
+# INSTALLATION
+#===============================================================================
+#
+# 1. Save this script to a location in your PATH (e.g., ~/.local/bin/awshelp)
+# 2. Make it executable:
+#    chmod +x ~/.local/bin/awshelp
+#
+# 3. Download the AWS RDS SSL certificate bundle:
+#    curl -o ~/.aws/us-east-1-bundle.pem \
+#      https://truststore.pki.rds.amazonaws.com/us-east-1/us-east-1-bundle.pem
+#
+# 4. Create your configuration file:
+#    See CONFIGURATION section below
+#
+#===============================================================================
+# QUICK START
+#===============================================================================
+#
+# 1. Configure your ~/.aws/config with SSO profiles:
+#    [profile myapp-dev]
+#    sso_session = my-sso
+#    sso_account_id = 123456789012
+#    sso_role_name = DeveloperRole
+#    region = us-east-1
+#    output = json
+#
+# 2. Create ~/.aws/awshelp-config.json (see CONFIGURATION below)
+#
+# 3. Test the connection:
+#    awshelp list
+#    awshelp login myapp-dev
+#
+#===============================================================================
+# CONFIGURATION
+#===============================================================================
+#
+# Create ~/.aws/awshelp-config.json with your environment aliases:
+#
+# {
+#   "myapp-dev": {
+#     "profile": "myapp-dev",
+#     "database": {
+#       "name": "myapp_development",
+#       "schema": "public",
+#       "host": "myapp-dev.cluster-xyz.us-east-1.rds.amazonaws.com",
+#       "port": 5432,
+#       "region": "us-east-1"
+#     },
+#     "eks": {
+#       "cluster": "myapp-dev-eks",
+#       "region": "us-east-1",
+#       "namespace": "default"
+#     }
+#   },
+#   "myapp-prod": {
+#     "profile": "myapp-prod",
+#     "database": {
+#       "name": "myapp_production",
+#       "host": "myapp-prod.cluster-xyz.us-east-1.rds.amazonaws.com",
+#       "region": "us-east-1"
+#     },
+#     "eks": {
+#       "cluster": "myapp-prod-eks",
+#       "region": "us-east-1"
+#     }
+#   }
+# }
+#
+# Note: The "eks" and "database" sections are optional. Include only what you need.
+#===============================================================================
+
+# BASH SETTINGS:
+# ==============
+set -e -o pipefail
+trap "_exit" INT TERM EXIT
+
+# CONSTANTS:
+# ==========
+declare -r PROGNAME="${0##*/}"
+declare -r VERSION="1.0.0"
+
+# GLOBALS:
+# ========
+ARGS=("$@")
+VERBOSE=false
+
+# SSL certificate path for secure database connections
+declare sslRootCert="$HOME/.aws/us-east-1-bundle.pem"
+# Configuration file containing alias to profiles mappings
+declare configFile="$HOME/.aws/awshelp-config.json"
+
+setx=_exit
+#==============================
+_exit() {
+  exit_code=$?
+  [[ $VERBOSE == true ]] && echo ':: Exiting...'
+  exit $exit_code
+} # _exit
+
+setx=_usage
+#==============================
+_usage() {
+  cat << EOF
+${PROGNAME} v${VERSION} - AWS Utility for Database and Kubernetes Management
+
+Usage: ${PROGNAME} [-h|-v|-d] <command> [options]
+
+Commands:
+  list [filter]            List configured aliases (optionally filter by keyword)
+  database <alias> [opts]     Connect to Aurora database (opts forwarded to psql)
+  login <alias>            Authenticate with AWS SSO
+  kube <alias>             Connect to EKS cluster using k9s
+  profile <alias>          Display AWS profile for alias
+
+Options:
+  -h, --help      Show this help message
+  -v, --verbose   Enable verbose output
+  -d, --debug     Enable debug mode
+
+Examples:
+  ${PROGNAME} list
+  ${PROGNAME} list locals
+  ${PROGNAME} list prod
+  ${PROGNAME} login dev
+  ${PROGNAME} database prod
+  ${PROGNAME} database prod -c "SELECT count(*) FROM users"
+  ${PROGNAME} database prod -f query.sql
+  ${PROGNAME} kube dev
+
+For full documentation, see the header comments in this script.
+
+EOF
+  exit 1
+} # _usage
+
+setx=_aws_clean_env
+#==============================
+_aws_clean_env() {
+    local aws_profile="$1"
+    shift
+    env -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN \
+        -u AWS_DEFAULT_PROFILE -u AWS_PROFILE -u AWS_DEFAULT_REGION \
+        AWS_PROFILE="$aws_profile" "$@"
+} # _aws_clean_env
+
+setx=_log
+#==============================
+_log() {
+  [[ $VERBOSE == true ]] && echo ":: $1" || true
+} # _log
+
+setx=_validate_script_dependencies
+#==============================
+_validate_script_dependencies() {
+    if [[ ! -f "$configFile" ]]; then
+        echo "Configuration file not found: $configFile" >&2
+        return 1
+    fi
+
+    if ! command -v jq &> /dev/null; then
+        echo "jq is required but not installed" >&2
+        return 1
+    fi
+} # _validate_script_dependencies
+
+setx=_get_config_value
+#==============================
+_get_config_value() {
+    local alias_name=$1
+    local field=$2
+    jq -r ".\"$alias_name\".$field // empty" "$configFile"
+} # _get_config_value
+
+setx=_aws_get_profile
+#==============================
+_aws_get_profile() {
+    local alias_name=$1
+
+    local profile=$(_get_config_value "$alias_name" "profile")
+
+    if [[ -z "$profile" ]]; then
+        echo "Unknown project alias: $alias_name" >&2
+        echo "Use '$PROGNAME list' to see all the available" >&2
+        return 1
+    fi
+
+    echo "$profile"
+} # _aws_get_profile
+
+setx=_aws_login
+#==============================
+_aws_login() {
+    local alias_name=$1
+    local aws_profile=$(_aws_get_profile "$alias_name") || return 1
+
+    _log "Checking AWS credentials for profile: $aws_profile"
+
+    if ! (_aws_clean_env "$aws_profile" aws sts get-caller-identity &> /dev/null); then
+        _log "AWS credentials expired, refreshing..."
+        if _aws_clean_env "$aws_profile" aws sso login; then
+            _log "Successfully refreshed AWS credentials"
+        else
+            echo "Failed to refresh AWS credentials" >&2
+            return 1
+        fi
+    else
+        _log "AWS credentials are valid"
+    fi
+} # _aws_login
+
+setx=_connect_to_aurora_db
+#==============================
+_connect_to_aurora_db() {
+    local alias_name=$1
+    shift
+    local extra_args=("$@")
+
+    local use_ssl=false
+    if [[ -f "$sslRootCert" ]]; then
+        use_ssl=true
+    else
+        _log "Warning: SSL Cert not found: $sslRootCert - connecting without SSL verification"
+    fi
+
+    local rdshost=$(_get_config_value "$alias_name" "database.host")
+    local database=$(_get_config_value "$alias_name" "database.name")
+    local schema_name=$(_get_config_value "$alias_name" "database.schema")
+
+    if [[ -z "$rdshost" ]]; then
+        echo "'database.host' not configured for alias: $alias_name" >&2
+        echo "Add the entry to the $configFile for alias $alias_name" >&2
+        return 1
+    fi
+    if [[ -z "$database" ]]; then
+        echo "'database.name' not configured for alias: $alias_name" >&2
+        echo "Add the entry to the $configFile for alias $alias_name" >&2
+        return 1
+    fi
+
+    _aws_login "$alias_name" || return 1
+    local aws_profile=$(_aws_get_profile "$alias_name") || return 1
+
+    # Generate auth token and connect
+    _log "Generating auth token for $rdshost"
+    local pgpassword="$(_aws_clean_env "$aws_profile" aws rds generate-db-auth-token --hostname $rdshost --port 13254 --region us-east-1 --username $USER)"
+
+    _log "Connecting to $rdshost with database $database"
+    [[ -n "$schema_name" ]] && _log "Using default schema: $schema_name"
+
+    # Build connection string with optional SSL and schema
+    local conn_string="host=$rdshost port=13254 dbname=$database user=$USER password=$pgpassword"
+    if [[ "$use_ssl" == true ]]; then
+        conn_string="$conn_string sslmode=verify-full sslrootcert=$sslRootCert"
+    else
+        conn_string="$conn_string sslmode=prefer"
+    fi
+    [[ -n "$schema_name" ]] && conn_string="$conn_string options=--search_path=$schema_name"
+
+    if [[ ${#extra_args[@]} -gt 0 ]]; then
+        _log "Executing with extra args: ${extra_args[*]}"
+        psql "$conn_string" "${extra_args[@]}"
+    else
+        _log "Starting interactive database session..."
+        if command -v pgcli &> /dev/null; then
+            pgcli --single-connection "$conn_string"
+        else
+            _log "pgcli not found, falling back to psql"
+            psql "$conn_string"
+        fi
+    fi
+} # _connect_to_aurora_db
+
+setx=_eks_get_cluster_name
+#==============================
+_eks_get_cluster_name() {
+    local alias_name=$1
+
+    local cluster_name=$(_get_config_value "$alias_name" "eks.cluster")
+
+    if [[ -z "$cluster_name" ]]; then
+        echo "EKS cluster name not configured for alias: $alias_name" >&2
+        echo "Add 'eks.cluster' to $configFile for alias $alias_name" >&2
+        return 1
+    fi
+
+    echo "$cluster_name"
+} # _eks_get_cluster_name
+
+setx=_eks_get_region
+#==============================
+_eks_get_region() {
+    local alias_name=$1
+
+    local region=$(_get_config_value "$alias_name" "eks.region")
+    [[ -z "$region" ]] && region="us-east-1"
+
+    echo "$region"
+} # _eks_get_region
+
+setx=_connect_to_kubernetes
+#==============================
+_connect_to_kubernetes() {
+    local alias_name=$1
+
+    if ! command -v aws &> /dev/null; then
+        echo "aws CLI is required but not installed" >&2
+        return 1
+    fi
+    if ! command -v k9s &> /dev/null; then
+        echo "k9s is required but not installed" >&2
+        return 1
+    fi
+
+    local cluster_name=$(_eks_get_cluster_name "$alias_name") || return 1
+    local region=$(_eks_get_region "$alias_name")
+    local namespace=$(_get_config_value "$alias_name" "eks.namespace")
+
+    _aws_login "$alias_name" || return 1
+    local aws_profile=$(_aws_get_profile "$alias_name") || return 1
+
+    _log "Updating kubeconfig for cluster: $cluster_name (region: $region)"
+    _aws_clean_env "$aws_profile" aws eks update-kubeconfig --name "$cluster_name" --region "$region" --alias "$alias_name" >/dev/null
+
+    if [[ -n "$namespace" ]]; then
+        _log "Launching k9s (context: $alias_name, namespace: $namespace)"
+        _aws_clean_env "$aws_profile" k9s --context "$alias_name" --namespace "$namespace"
+    else
+        _log "Launching k9s (context: $alias_name)"
+        _aws_clean_env "$aws_profile" k9s --context "$alias_name"
+    fi
+} # _connect_to_kubernetes
+
+setx=_list_configurations
+#==============================
+_list_configurations() {
+    local filter="${1:-}"
+    local header
+    header=$(printf "%s\t%s\t%s\t%s\n" "ALIAS" "PROFILE" "DATABASE" "CLUSTER")
+
+    {
+        echo "$header"
+        echo "$header" | tr '[:print:]' '-'
+
+        jq -r --arg filter "$filter" '
+            to_entries | sort_by(.key) | .[] | select(($filter == "") or (.key | contains($filter))) | [
+                .key,
+                .value.profile,
+                (.value.database.name // "-"),
+                (.value.eks.cluster // "-")
+            ] | @tsv
+        ' "$configFile"
+    } | column -t -s $'\t'
+} # _list_configurations
+
+setx=_handle_command
+#==============================
+_handle_command() {
+    local command=$1
+    shift
+
+    case "$command" in
+    login)
+        local alias_name=$1
+        if [[ -z "$alias_name" ]]; then
+            echo "Error: alias required for login command" >&2
+            echo "Usage: $PROGNAME login <alias>" >&2
+            return 1
+        fi
+        _aws_login "$alias_name"
+        ;;
+    database)
+        local alias_name=$1
+        if [[ -z "$alias_name" ]]; then
+            echo "Error: alias required for database command" >&2
+            echo "Usage: $PROGNAME database <alias> [-- psql_options...]" >&2
+            return 1
+        fi
+        shift
+        _connect_to_aurora_db "$alias_name" "$@"
+        ;;
+    kube)
+        local alias_name=$1
+        if [[ -z "$alias_name" ]]; then
+            echo "Error: alias required for k9s command" >&2
+            echo "Usage: $PROGNAME kube <alias>" >&2
+            return 1
+        fi
+        _connect_to_kubernetes "$alias_name"
+        ;;
+    profile)
+        local alias_name=$1
+        if [[ -z "$alias_name" ]]; then
+            echo "Error: alias required for profile command" >&2
+            echo "Usage: $PROGNAME profile <alias>" >&2
+            return 1
+        fi
+        _aws_get_profile "$alias_name"
+        ;;
+    list)
+        _list_configurations "$1"
+        ;;
+    *)
+        echo "Unknown command: $command" >&2
+        _usage
+        ;;
+    esac
+} # _handle_command
+
+setx=_readCmdLineParameters
+#==============================
+_readCmdLineParameters() {
+    local command=""
+
+    while [ $# -gt 0 ]; do
+        case "$1" in
+        -d | --debug)
+            set -x
+            shift
+            ;;
+        -h | --help)
+            _usage
+            ;;
+        -v | --verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            _usage
+            ;;
+        *)
+            command="$1"
+            shift
+            _handle_command "$command" "$@"
+            return $?
+            ;;
+        esac
+    done
+
+    if [[ -z "$command" ]]; then
+        _usage
+    fi
+} # _readCmdLineParameters
+
+#==============================
+# MAIN SHELL BODY
+#==============================
+setx=main
+main() {
+    _validate_script_dependencies || exit 1
+    _readCmdLineParameters "${ARGS[@]}"
+} # main
+
+main
