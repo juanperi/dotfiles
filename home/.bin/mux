@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+# mux — lightweight tmux session manager
+# Usage:
+#   mux                 fzf picker over running sessions + defined configs
+#   mux <name>          attach to/create named session (config or workspace fallback)
+#   mux -l / --list     list defined configs and running sessions
+#   mux -k <name>       kill a session by name
+
+set -euo pipefail
+
+MUX_CONFIG_DIR="${MUX_CONFIG_DIR:-$HOME/.config/mux}"
+WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/workspace}"
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+die()  { echo "mux: $*" >&2; exit 1; }
+
+session_exists() { tmux has-session -t "$1" 2>/dev/null; }
+
+attach() {
+  local name="$1"
+  if [ -n "${TMUX:-}" ]; then
+    tmux switch-client -t "$name"
+  else
+    tmux attach-session -t "$name"
+  fi
+}
+
+# ── default workspace layout ─────────────────────────────────────────────────
+# Left pane: vim  |  Right top: terminal  |  Right bottom: opencode
+#
+#  ┌─────────────┬────────────┐
+#  │             │  terminal  │
+#  │    vim      ├────────────┤
+#  │             │  opencode  │
+#  └─────────────┴────────────┘
+
+default_workspace_layout() {
+  local name="$1"
+  local root="$2"
+
+  tmux new-session -d -s "$name" -c "$root"
+
+  # Split right vertical (left = vim, right = shell)
+  tmux split-window -h -t "${name}:1" -c "$root"
+
+  # Split right pane horizontally (top = terminal, bottom = opencode)
+  tmux split-window -v -t "${name}:1.2" -c "$root"
+
+  # Start vim in left pane
+  tmux send-keys -t "${name}:1.1" "nvim" Enter
+
+  # Leave terminal pane (1.2) blank
+
+  # Start opencode in bottom-right pane
+  tmux send-keys -t "${name}:1.3" "opencode" Enter
+
+  # Focus the vim pane
+  tmux select-pane -t "${name}:1.1"
+}
+
+# ── run a config file ─────────────────────────────────────────────────────────
+# Config files are plain bash scripts sourced with these variables pre-set:
+#   SESSION_NAME  — the session name
+# They should call tmux directly to build the layout.
+
+run_config() {
+  local name="$1"
+  local config_file="$MUX_CONFIG_DIR/${name}.sh"
+  SESSION_NAME="$name" bash "$config_file"
+}
+
+# ── list ──────────────────────────────────────────────────────────────────────
+
+cmd_list() {
+  echo "=== running sessions ==="
+  tmux ls 2>/dev/null || echo "(none)"
+  echo ""
+  echo "=== defined configs ==="
+  if [ -d "$MUX_CONFIG_DIR" ]; then
+    for f in "$MUX_CONFIG_DIR"/*.sh; do
+      [ -e "$f" ] || continue
+      echo "  $(basename "$f" .sh)"
+    done
+  else
+    echo "(no config dir at $MUX_CONFIG_DIR)"
+  fi
+}
+
+# ── kill ──────────────────────────────────────────────────────────────────────
+
+cmd_kill() {
+  local name="${1:-}"
+  [ -z "$name" ] && die "usage: mux -k <session-name>"
+  tmux kill-session -t "$name" && echo "mux: killed session '$name'"
+}
+
+# ── open (main logic) ─────────────────────────────────────────────────────────
+
+cmd_open() {
+  local name="${1:-}"
+
+  # If already attached, just switch
+  if session_exists "$name"; then
+    attach "$name"
+    return
+  fi
+
+  # Check for explicit config
+  local config_file="$MUX_CONFIG_DIR/${name}.sh"
+  if [ -f "$config_file" ]; then
+    run_config "$name"
+    attach "$name"
+    return
+  fi
+
+  # Fallback: look for matching dir in ~/workspace
+  local workspace_path="$WORKSPACE_DIR/$name"
+  if [ -d "$workspace_path" ]; then
+    default_workspace_layout "$name" "$workspace_path"
+    attach "$name"
+    return
+  fi
+
+  # Nothing found — create a bare session in cwd
+  echo "mux: no config or workspace dir found for '$name', creating bare session"
+  tmux new-session -d -s "$name" -c "$PWD"
+  attach "$name"
+}
+
+# ── fzf picker ────────────────────────────────────────────────────────────────
+
+cmd_pick() {
+  local choices=()
+
+  # Running sessions
+  while IFS= read -r line; do
+    choices+=("session: $line")
+  done < <(tmux ls -F '#{session_name}' 2>/dev/null || true)
+
+  # Defined configs (not already running)
+  if [ -d "$MUX_CONFIG_DIR" ]; then
+    for f in "$MUX_CONFIG_DIR"/*.sh; do
+      [ -e "$f" ] || continue
+      local cname
+      cname="$(basename "$f" .sh)"
+      if ! tmux has-session -t "$cname" 2>/dev/null; then
+        choices+=("config:  $cname")
+      fi
+    done
+  fi
+
+  # Workspace dirs (not already running, no explicit config)
+  if [ -d "$WORKSPACE_DIR" ]; then
+    for d in "$WORKSPACE_DIR"/*/; do
+      [ -d "$d" ] || continue
+      local dname
+      dname="$(basename "$d")"
+      if ! tmux has-session -t "$dname" 2>/dev/null && [ ! -f "$MUX_CONFIG_DIR/${dname}.sh" ]; then
+        choices+=("workspace: $dname")
+      fi
+    done
+  fi
+
+  [ ${#choices[@]} -eq 0 ] && die "nothing to open"
+
+  local chosen
+  if command -v fzf >/dev/null 2>&1; then
+    chosen="$(printf '%s\n' "${choices[@]}" | fzf --prompt='mux> ' --height=40%)"
+  else
+    printf '%s\n' "${choices[@]}"
+    printf 'pick: '
+    read -r chosen
+  fi
+
+  [ -z "$chosen" ] && exit 0
+
+  # Strip prefix (e.g. "session: foo" → "foo")
+  local picked_name
+  picked_name="$(echo "$chosen" | sed 's/^[^:]*:[[:space:]]*//')"
+  cmd_open "$picked_name"
+}
+
+# ── entry point ───────────────────────────────────────────────────────────────
+
+case "${1:-}" in
+  -l|--list)        cmd_list ;;
+  -k|--kill)        cmd_kill "${2:-}" ;;
+  -h|--help)
+    cat <<'EOF'
+mux — lightweight tmux session manager
+
+Usage:
+  mux                   fzf picker (sessions + configs + workspace dirs)
+  mux <name>            open or attach to named session
+  mux -l                list running sessions and defined configs
+  mux -k <name>         kill a session
+  mux -h                this help
+
+Config files: ~/.config/mux/<name>.sh
+Workspace dir: ~/workspace  (auto default layout if no config)
+EOF
+    ;;
+  "")               cmd_pick ;;
+  *)                cmd_open "$1" ;;
+esac

@@ -32,7 +32,7 @@ fi
 load_source $ZSH/oh-my-zsh.sh
 
 if (( $+commands[tmux] )); then
-  load_source "$HOME/.bin/tmuxinator.zsh"
+  load_source "$HOME/.bin/mux.zsh"
 fi
 
 load_source "$HOME/.homesick/repos/homeshick/homeshick.sh"
