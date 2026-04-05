@@ -7,7 +7,15 @@ return {
       { 'williamboman/mason-lspconfig.nvim', lazy = true },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
-      { 'folke/neodev.nvim', opts = {} },
+      {
+        'folke/lazydev.nvim',
+        ft = 'lua',
+        opts = {
+          library = {
+            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+          },
+        },
+      },
     },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
