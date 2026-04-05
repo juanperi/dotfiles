@@ -15,7 +15,7 @@ map("n", "<S-l>", "gt", { silent = true, desc = "Tab: next" })
 map("n", "<S-h>", "gT", { silent = true, desc = "Tab: prev" })
 
 -- Faster save
-map("n", "<leader>s", "<cmd>write<cr>", { silent = true, desc = "Save" })
+map("n", "<C-s>", "<cmd>write<cr>", { silent = true, desc = "Save" })
 
 -- escape insert mode
 map("i", "jj", "<ESC>", { desc = "Escape" })
@@ -70,6 +70,9 @@ map("v", "//", [[y/<C-R>=escape(@", '/\\')<CR><CR>]], { desc = "Search selection
 
 -- Format json
 map("n", "fj", "<cmd>%!jq .<cr>", { silent = true, desc = "Format JSON (jq)" })
+
+-- Close all buffers except current
+map("n", "<leader>bo", "<cmd>%bd|e#<cr>", { silent = true, desc = "[B]uffer: [O]nly" })
 
 -- remove highlight
 map("n", "<leader><space>", "<cmd>nohlsearch<cr>", { silent = true, desc = "Clear search highlight" })
