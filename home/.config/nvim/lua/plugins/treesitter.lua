@@ -28,6 +28,7 @@ local M = {
       "json",
       "make",
       "markdown",
+      "markdown_inline",
       "regex",
       "scss",
       "vim",
