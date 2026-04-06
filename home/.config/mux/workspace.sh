@@ -4,5 +4,8 @@
 # │    vim      ├────────────┤
 # │             │  opencode  │
 # └─────────────┴────────────┘
-mux_editor_window "$HOME/workspace"
-tmux send-keys -t "${SESSION_NAME}:1.3" "opencode" Enter
+ROOT="$HOME/workspace"
+
+w=$(mux_new_session "$ROOT")
+mux_split_editor "$w" "$ROOT"
+tmux send-keys -t "${SESSION_NAME}:${w}.3" "opencode" Enter
