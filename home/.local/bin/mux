@@ -40,9 +40,9 @@
 #%
 #% Default workspace layout (dirs without a config):
 #%   ┌───────────────────┬──────────┐
-#%   │                   │ terminal │
-#%   │       vim (75%)   ├──────────┤
 #%   │                   │ opencode │
+#%   │       vim (75%)   ├──────────┤
+#%   │                   │ terminal │
 #%   └───────────────────┴──────────┘
 #%
 #% Environment:
@@ -143,6 +143,7 @@ default_workspace_layout() {
   SESSION_NAME="$name"
   w="$(mux_new_session "$root")"
   mux_split_editor "$w" "$root"
+  tmux send-keys -t "${name}:${w}.2" "opencode . --port" Enter
 }
 
 run_config() {
