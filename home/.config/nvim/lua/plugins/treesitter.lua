@@ -10,4 +10,24 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-return {}
+return {
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    build = function()
+      require("nvim-treesitter").install({ "all" }):wait()
+    end,
+    init = function()
+      local ok, ts = pcall(require, "nvim-treesitter")
+      if not ok then return end
+      local installed = require("nvim-treesitter.config").get_installed()
+      local ensure = { "json", "lua", "elixir", "heex", "javascript", "typescript", "markdown" }
+      local to_install = vim.tbl_filter(function(p)
+        return not vim.tbl_contains(installed, p)
+      end, ensure)
+      if #to_install > 0 then
+        ts.install(to_install)
+      end
+    end,
+  },
+}
