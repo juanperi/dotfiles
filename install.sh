@@ -32,16 +32,6 @@ else
 fi
 homeshick -f link dotfiles
 
-# Setup Vim
-mkdir -p ${XDG_CONFIG_HOME:=$HOME/.config}
-ln -fs ~/.vim $XDG_CONFIG_HOME/nvim
-ln -fs ~/.vimrc $XDG_CONFIG_HOME/nvim/init.vim
-if hash nvim 2>/dev/null; then
-  nvim +PlugUpgrade +PlugUpdate +qall
-elif hash vim 2>/dev/null; then
-  vim +PlugUpgrade +PlugUpdate +qall
-fi
-
 #Installing zsh
 ZSH_BIN=`which zsh`
 if [ -n $ZSH_BIN ]; then
@@ -57,8 +47,15 @@ if ! hash ag 2>/dev/null; then
   echo "Don't forget to install silversearcher-ag"
 fi
 
-if ! hash ctags 2>/dev/null; then
-  echo "Don't forget to install ctags"
+
+if ! hash gcc 2>/dev/null; then
+  echo "Don't forget to install gcc (needed for nvim-treesitter parser compilation)"
+fi
+
+if ! hash tree-sitter 2>/dev/null; then
+  echo "Don't forget to install the tree-sitter CLI (needed for nvim-treesitter parser compilation)"
+  echo "  macOS:  brew install tree-sitter"
+  echo "  Linux:  https://github.com/tree-sitter/tree-sitter/releases/latest"
 fi
 
 # back to the original directory
