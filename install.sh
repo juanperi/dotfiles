@@ -18,7 +18,7 @@ cd $HOME
 
 # Installing homeshick to manage dotfiles
 if [ ! -e $HOME/.homesick/repos/homeshick ]; then
-  git clone git@github.com:andsens/homeshick $HOME/.homesick/repos/homeshick
+  git clone https://github.com/andsens/homeshick $HOME/.homesick/repos/homeshick
 fi
 
 # Loading homeshick
@@ -26,7 +26,7 @@ source $HOME/.homesick/repos/homeshick/homeshick.sh
 
 # Getting the dotfiles
 if [ ! -e $HOME/.homesick/repos/dotfiles ]; then
-    homeshick clone git@github.com:epilgrim/dotfiles
+    homeshick clone https://github.com/juanperi/dotfiles
 else
     homeshick -f pull dotfiles
 fi
