@@ -123,7 +123,7 @@ Create `home/.config/nvim/lua/plugins/<plugin-name>.lua` returning a lazy.nvim s
 
 ```sh
 cd ~
-source <(curl -fsSL https://raw.githubusercontent.com/epilgrim/dotfiles/master/install.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/juanperi/dotfiles/master/install.sh)
 # Then install optional deps:
 brew install the_silver_searcher   # ag
 brew install ctags

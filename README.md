@@ -11,7 +11,7 @@ Install
 
     ```
     cd ~
-    source <(curl -fsSL https://raw.githubusercontent.com/epilgrim/dotfiles/master/install.sh)
+    source <(curl -fsSL https://raw.githubusercontent.com/juanperi/dotfiles/master/install.sh)
     ```
 
 1. Don't forget to install the following dependencies for extended
