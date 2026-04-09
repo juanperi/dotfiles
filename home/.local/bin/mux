@@ -107,7 +107,7 @@ mux_split_editor() {
   local t="${SESSION_NAME}:${win}"
   tmux split-window -h -p 25 -t "$t" -c "$root"
   tmux split-window -v -t "${t}.2" -c "$root"
-  tmux send-keys -t "${t}.1" "nvim" Enter
+  tmux send-keys -t "${t}.1" "cd ${root} && nvim" Enter
   tmux select-pane -t "${t}.1"
 }
 
