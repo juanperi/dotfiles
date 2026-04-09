@@ -75,7 +75,10 @@ return {
 
       require('mason').setup()
 
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local mason_servers = vim.tbl_keys(vim.tbl_filter(function(v)
+        return v.cmd == nil
+      end, servers))
+      local ensure_installed = mason_servers
       vim.list_extend(ensure_installed, {
         'stylua',
       })
