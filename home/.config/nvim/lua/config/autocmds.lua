@@ -8,6 +8,13 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.ex", "*.exs", "*.heex" },
+  callback = function()
+    vim.lsp.buf.format({ name = "dexter", timeout_ms = 1000 })
+  end,
+})
+
 -- Disable diagnostics in .env files, as every env var is reported as unused
 local group = vim.api.nvim_create_augroup("__env", { clear = true })
 vim.api.nvim_create_autocmd("BufEnter", {
