@@ -4,7 +4,6 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       { 'williamboman/mason.nvim', cmd = "Mason" },
-      { 'williamboman/mason-lspconfig.nvim', lazy = true },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
       {
@@ -55,44 +54,35 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      local servers = {
+      require('mason').setup()
+      require('mason-tool-installer').setup {
+        ensure_installed = { 'lua-language-server', 'stylua' },
+      }
 
-        lua_ls = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
+      vim.lsp.config('lua_ls', {
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = 'Replace',
             },
           },
         },
-        expert = {
-          cmd = { "/Users/jperi/.local/bin/expert" },
-          filetypes = { "elixir", "eelixir", "heex" },
-          root_dir = require('lspconfig').util.root_pattern("mix.exs", ".git"),
-        },
-      }
-
-      require('mason').setup()
-
-      local mason_servers = vim.tbl_keys(vim.tbl_filter(function(v)
-        return v.cmd == nil
-      end, servers))
-      local ensure_installed = mason_servers
-      vim.list_extend(ensure_installed, {
-        'stylua',
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      vim.lsp.enable('lua_ls')
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
+      vim.lsp.enable('expert', false)
+
+      vim.lsp.config('dexter', {
+        cmd = { 'dexter', 'lsp' },
+        root_markers = { '.dexter.db', '.git', 'mix.exs' },
+        filetypes = { 'elixir', 'eelixir', 'heex' },
+        capabilities = capabilities,
+        init_options = {
+          followDelegates = true,
         },
-      }
+      })
+      vim.lsp.enable('dexter')
     end,
   },
 }

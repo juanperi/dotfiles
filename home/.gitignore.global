@@ -3,4 +3,5 @@
 /local_notes_*.md
 /.lvimrc
 /.elixir_ls
+/.dexter.db*
 __pycache__
