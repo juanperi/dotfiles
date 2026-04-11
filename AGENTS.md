@@ -32,15 +32,29 @@ Do **not** edit files in `~/` directly — edit the source in `home/` and re-lin
 
 ## Adding or removing dotfiles
 
-**To track a new file** (e.g. `~/.foo`): homeshick moves it into the castle and symlinks it back.
+Two workflows depending on where you create the file:
+
+**Workflow A — File already exists in `~/`** (preferred):
 ```sh
 homeshick track dotfiles ~/.foo
-# ~/.foo is now home/.foo in this repo, and ~/.foo is a symlink
+# Moves ~/.foo → home/.foo, symlinks ~/.foo → castle, and git-adds it
 ```
 
-**To stop tracking a file**: remove it from `home/`, delete the symlink in `~/`, and restore the real file manually. homeshick has no `untrack` command.
+**Workflow B — Create directly in the castle**:
+```sh
+# 1. Create the file inside the castle
+vim ~/.homesick/repos/dotfiles/home/.foo
 
-**Never** create files directly inside `home/` without running `homeshick track` — the symlink in `~/` won't exist and the file won't be live.
+# 2. Stage it in git (REQUIRED — homeshick link ignores untracked files)
+git -C ~/.homesick/repos/dotfiles add home/.foo
+
+# 3. Create the symlink
+homeshick link dotfiles
+```
+
+> `homeshick link` uses `git ls-files` internally — files must be at least staged (`git add`) to be linked. Untracked files are invisible to it. Use `--force` to overwrite existing files in `~/` without prompting.
+
+**To stop tracking a file**: remove it from `home/`, delete the symlink in `~/`, and restore the real file manually. homeshick has no `untrack` command.
 
 ## Neovim
 
@@ -60,20 +74,22 @@ homeshick track dotfiles ~/.foo
 
 ## mux — tmux session manager
 
-Custom script at `~/.local/bin/mux`. Source loaded automatically in zsh if tmux is available.
+Custom script at `~/.local/bin/mux`. Zsh completions via `~/.local/bin/mux.zsh` (auto-sourced).
 
 ```sh
 mux                  # fzf picker (sessions + configs + workspace dirs)
 mux <name>           # attach or create session
-mux -l               # list sessions and configs
+mux -l               # list sessions, configs, and all workspace dirs
 mux -k <name>        # kill session
 ```
 
 Resolution order for `mux <name>`:
 1. Running tmux session → attach
 2. Config at `~/.config/mux/<name>.sh` → create from config
-3. Directory at `~/workspace/<name>` → default layout (nvim left 75% + 2 terminals right)
+3. First match across `WORKSPACE_DIRS` → default layout (nvim left 75% + opencode + terminal right)
 4. Fallback → bare session in cwd
+
+**`WORKSPACE_DIRS`** — colon-separated list of directories to scan (default: `~/workspace:~/spikes`). Each dir's basename is used as the fzf label, so typing `workspace` or `spikes` filters the picker.
 
 **Session config files** (`~/.config/mux/<name>.sh`) use exported helpers:
 ```bash
@@ -86,11 +102,23 @@ mux_focus_window "$w"
 
 Defined configs: `dotfiles`, `workspace`, `showoff`.
 
+## spike — dated scratch workspaces
+
+Script at `~/.local/bin/spike`. Creates `~/spikes/YYYY-MM-DD_description/` and opens it with `mux`.
+
+```sh
+spike                        # prompts for description
+spike "test redis caching"   # skip prompt
+```
+
+tmux hotkey: `prefix + N` — opens a popup that runs `spike`.
+
 ## Utility scripts in `~/.local/bin/`
 
 - `to_ts <date> [ms|s]` — date string → unix timestamp (requires GNU `gdate`)
 - `from_ts` — unix timestamp → date string
 - `mux` / `mux.zsh` — tmux session manager + zsh completions
+- `spike` — create dated scratch workspaces in `~/spikes/`
 
 ## Git config (non-obvious settings)
 
@@ -124,9 +152,75 @@ Create `home/.config/nvim/lua/plugins/<plugin-name>.lua` returning a lazy.nvim s
 ```sh
 cd ~
 source <(curl -fsSL https://raw.githubusercontent.com/juanperi/dotfiles/master/install.sh)
-# Then install optional deps:
-brew install the_silver_searcher   # ag
-brew install ctags
 ```
 
-Dependencies checked by install.sh: `git`, `curl` (hard required); `ag`, `ctags` (warnings only).
+install.sh auto-installs: homeshick, oh-my-zsh. It warns about missing optional tools.
+
+### Dependencies
+
+**Hard required** (bootstrap won't work without):
+- `git`, `curl` — checked by install.sh
+- `zsh` — primary shell
+- `tmux` — session management, mux
+- `nvim` (neovim) — editor
+
+**Core tools** (things break without these):
+- `fzf` — mux picker, telescope, shell history
+- `rg` (ripgrep) — telescope live grep (hardcoded in vimgrep_arguments)
+- `make` — telescope-fzf-native build, LuaSnip build
+- `gcc` or `clang` — treesitter parser compilation
+- `tree-sitter` — treesitter parser compilation
+- `node` — copilot.lua, markdown-preview
+
+**Utility tools** (used by scripts and keymaps):
+- `gdate` (GNU coreutils) — `to_ts` / `from_ts` scripts (`brew install coreutils`)
+- `jq` — nvim `fj` keymap (format JSON), awshelp script
+- `python3` — nvim URL encode/decode keymaps
+- `base64` — nvim base64 encode/decode keymaps (ships with macOS)
+- `ag` (silver searcher) — code search
+- `git-lfs` — configured in .gitconfig
+- `opencode` — launched by mux default layout and keymaps
+
+**Optional (conditional in .zshrc)**:
+- `direnv` — auto-loads `.envrc` files if installed
+- `asdf` — version manager, loaded from `/opt/homebrew/opt/asdf/libexec/asdf.sh`
+- `gcloud` SDK — loaded if present at `~/google-cloud-sdk/`
+
+**macOS-specific**:
+- `Homebrew` — path setup in .zshrc for `/opt/homebrew`
+- `Hammerspoon` — for `.hammerspoon/init.lua` (hyper keys, mic mute, VimMode)
+- `Alacritty` — terminal emulator config provided
+- `Hack Nerd Font Mono` — font for Alacritty and nvim-web-devicons
+- `terminal-notifier` — `notifyDone` alias
+
+**Work tools** (for awshelp script):
+- `aws` CLI v2 — SSO auth, RDS token generation
+- `psql` — database connections (fallback)
+- `pgcli` — enhanced PostgreSQL client (preferred over psql)
+- `k9s` — Kubernetes TUI
+
+**Neovim LSPs** (auto-installed by mason):
+- `lua-language-server`, `stylua` — via mason-tool-installer
+- `expert`, `dexter` — Elixir LSPs, custom binaries (must install manually)
+
+**tmux plugins** (auto-installed by tpm on first run):
+- tmux-yank, tmux-sessionist, tmux-copycat, tmux-logging, vim-tmux-navigator
+
+### Quick brew install
+
+```sh
+# Core
+brew install tmux neovim fzf ripgrep make gcc tree-sitter node
+
+# Utilities
+brew install coreutils jq python3 the_silver_searcher git-lfs
+
+# Optional
+brew install direnv asdf pgcli k9s
+
+# Font
+brew install --cask font-hack-nerd-font
+
+# macOS apps
+brew install --cask hammerspoon alacritty
+```
