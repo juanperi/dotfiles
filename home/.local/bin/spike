@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#%
+#% spike — create a dated scratch workspace and open it with mux
+#%
+#% usage: spike [description]
+#%
+#%   If no description is given, you are prompted for one.
+#%   Creates ~/spikes/YYYY-MM-DD_description/ and opens a mux
+#%   session with the default workspace layout (vim + opencode + shell).
+#%
+#% Examples:
+#%   spike                        prompt for description
+#%   spike "test redis caching"   skip prompt
+#%
+#% Environment:
+#%   SPIKES_DIR   root directory  (default: ~/spikes)
+#%
+
+set -euo pipefail
+
+SPIKES_DIR="${SPIKES_DIR:-$HOME/spikes}"
+
+die() { echo "spike: $*" >&2; exit 1; }
+
+slugify() {
+  echo "$1" \
+    | tr '[:upper:]' '[:lower:]' \
+    | tr -cs '[:alnum:]' '-' \
+    | sed 's/^-//;s/-$//'
+}
+
+# ── gather description ───────────────────────────────────────────────────────
+
+desc="${*}"
+if [[ -z "$desc" ]]; then
+  printf 'spike description: '
+  read -r desc
+  [[ -z "$desc" ]] && die "description required"
+fi
+
+slug="$(slugify "$desc")"
+datestamp="$(date +%Y-%m-%d)"
+dirname="${datestamp}_${slug}"
+fullpath="${SPIKES_DIR}/${dirname}"
+
+if [[ -d "$fullpath" ]]; then
+  echo "spike: folder already exists, opening it"
+else
+  mkdir -p "$fullpath"
+  echo "spike: created $fullpath"
+fi
+
+# ── open with mux (default workspace layout) ────────────────────────────────
+
+exec mux "$dirname"

@@ -1,11 +1,17 @@
 # zsh completion for mux
 _mux() {
   local MUX_CONFIG_DIR="${MUX_CONFIG_DIR:-$HOME/.config/mux}"
+  local WORKSPACE_DIRS="${WORKSPACE_DIRS:-$HOME/workspace:$HOME/spikes}"
 
-  local -a sessions configs
+  local -a sessions configs dirs
 
   sessions=(${(f)"$(tmux ls -F '#{session_name}' 2>/dev/null)"})
   [[ -d "$MUX_CONFIG_DIR" ]] && configs=(${MUX_CONFIG_DIR}/*.sh(N:t:r))
+
+  local wdir
+  for wdir in ${(s.:.)WORKSPACE_DIRS}; do
+    [[ -d "$wdir" ]] && dirs+=(${wdir}/*(N/:t))
+  done
 
   case $CURRENT in
     2)
@@ -14,7 +20,8 @@ _mux() {
       else
         _alternative \
           'sessions:running session:($sessions)' \
-          'configs:config:($configs)'
+          'configs:config:($configs)' \
+          'dirs:directory:($dirs)'
       fi
       ;;
     3)

@@ -7,14 +7,14 @@
 #% Commands:
 #%   mux                   fzf picker (sessions + configs + workspace dirs)
 #%   mux <name>            open or attach to named session
-#%   mux -l, --list        list running sessions and defined configs
+#%   mux -l, --list        list running sessions, configs, and workspace dirs
 #%   mux -k, --kill <name> kill a session
 #%   mux -h, --help        show this help
 #%
 #% Resolution order for `mux <name>`:
 #%   1. Running session with that name     → attach
 #%   2. Config ~/.config/mux/<name>.sh     → create from config, attach
-#%   3. Directory ~/workspace/<name>       → default layout, attach
+#%   3. First match in WORKSPACE_DIRS      → default layout, attach
 #%   4. None of the above                  → bare session in cwd
 #%
 #% Config files:
@@ -45,9 +45,14 @@
 #%   │                   │ terminal │
 #%   └───────────────────┴──────────┘
 #%
+#% Picker labels:
+#%   Each workspace dir uses its basename as the fzf label.
+#%   Type the label (e.g. "workspace" or "spikes") to filter.
+#%
 #% Environment:
 #%   MUX_CONFIG_DIR    config directory   (default: ~/.config/mux)
-#%   WORKSPACE_DIR     workspace root     (default: ~/workspace)
+#%   WORKSPACE_DIRS    colon-separated workspace roots
+#%                     (default: ~/workspace:~/spikes)
 #%
 #% Requires: bash 4.2+, tmux with base-index/pane-base-index 1
 #%
@@ -55,7 +60,7 @@
 set -euo pipefail
 
 MUX_CONFIG_DIR="${MUX_CONFIG_DIR:-$HOME/.config/mux}"
-WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/workspace}"
+WORKSPACE_DIRS="${WORKSPACE_DIRS:-$HOME/workspace:$HOME/spikes}"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -72,6 +77,13 @@ _load_sessions() {
 }
 
 _sanitize_name() { echo "${1//[.:]/_}"; }
+
+# Split WORKSPACE_DIRS into an array
+_workspace_dirs() {
+  local IFS=':'
+  read -ra _dirs <<< "$WORKSPACE_DIRS"
+  printf '%s\n' "${_dirs[@]}"
+}
 
 attach() {
   local name="$1"
@@ -172,6 +184,18 @@ cmd_list() {
   else
     echo "(no config dir at $MUX_CONFIG_DIR)"
   fi
+
+  while IFS= read -r wdir; do
+    [[ -d "$wdir" ]] || continue
+    local label="${wdir##*/}"
+    echo ""
+    echo "=== ${label} ==="
+    for d in "$wdir"/*/; do
+      [ -d "$d" ] || continue
+      local dname="${d%/}"; dname="${dname##*/}"
+      echo "  $dname"
+    done
+  done < <(_workspace_dirs)
 }
 
 # ── kill ──────────────────────────────────────────────────────────────────────
@@ -203,14 +227,16 @@ cmd_open() {
     return
   fi
 
-  local workspace_path="$WORKSPACE_DIR/$raw_name"
-  if [ -d "$workspace_path" ]; then
-    default_workspace_layout "$name" "$workspace_path"
-    attach "$name"
-    return
-  fi
+  while IFS= read -r wdir; do
+    local wpath="$wdir/$raw_name"
+    if [ -d "$wpath" ]; then
+      default_workspace_layout "$name" "$wpath"
+      attach "$name"
+      return
+    fi
+  done < <(_workspace_dirs)
 
-  echo "mux: no config or workspace dir found for '$raw_name', creating bare session"
+  echo "mux: no config or directory found for '$raw_name', creating bare session"
   tmux new-session -d -s "$name" -c "$PWD"
   attach "$name"
 }
@@ -234,16 +260,20 @@ cmd_pick() {
     done
   fi
 
-  if [ -d "$WORKSPACE_DIR" ]; then
-    for d in "$WORKSPACE_DIR"/*/; do
+  while IFS= read -r wdir; do
+    [[ -d "$wdir" ]] || continue
+    local label="${wdir##*/}"
+    for d in "$wdir"/*/; do
       [ -d "$d" ] || continue
       local dname="${d%/}"
       dname="${dname##*/}"
-      if ! session_exists "$dname" && [ ! -f "$MUX_CONFIG_DIR/${dname}.sh" ]; then
-        choices+=("workspace: $dname")
+      local sanitized
+      sanitized="$(_sanitize_name "$dname")"
+      if ! session_exists "$sanitized" && [ ! -f "$MUX_CONFIG_DIR/${dname}.sh" ]; then
+        choices+=("${label}: $dname")
       fi
     done
-  fi
+  done < <(_workspace_dirs)
 
   [ ${#choices[@]} -eq 0 ] && die "nothing to open"
 
