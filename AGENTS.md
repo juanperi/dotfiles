@@ -86,19 +86,24 @@ mux -k <name>        # kill session
 Resolution order for `mux <name>`:
 1. Running tmux session → attach
 2. Config at `~/.config/mux/<name>.sh` → create from config
-3. First match across `WORKSPACE_DIRS` → default layout (nvim left 75% + opencode + terminal right)
+3. First match across `WORKSPACE_DIRS`:
+   - If git worktree with parent config → inherit parent config (session-per-worktree)
+   - Otherwise → default layout (nvim left 75% + opencode + terminal right)
 4. Fallback → bare session in cwd
 
 **`WORKSPACE_DIRS`** — colon-separated list of directories to scan (default: `~/workspace:~/spikes`). Each dir's basename is used as the fzf label, so typing `workspace` or `spikes` filters the picker.
 
 **Session config files** (`~/.config/mux/<name>.sh`) use exported helpers:
 ```bash
+ROOT="${MUX_ROOT:-$HOME/workspace/myproject}"  # supports worktree inheritance
 w=$(mux_new_session "$ROOT")     # create session, returns window index
 mux_split_editor "$w" "$ROOT"    # vim (75%) + 2 terminals
 mux_split_tiled "$w" "$ROOT"     # 2×2 tiled shells
 tw=$(mux_new_window "$ROOT" name)
 mux_focus_window "$w"
 ```
+
+**Worktree inheritance**: if a directory is a git worktree and its parent repo has a mux config, the config is reused with `MUX_ROOT` pointing to the worktree. All configs must use `ROOT="${MUX_ROOT:-...}"` to support this. Example: `mux martech-traffic_analytics` runs `martech.sh` but rooted at the worktree path.
 
 Defined configs: `dotfiles`, `workspace`, `showoff`.
 

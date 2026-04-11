@@ -14,8 +14,15 @@
 #% Resolution order for `mux <name>`:
 #%   1. Running session with that name     → attach
 #%   2. Config ~/.config/mux/<name>.sh     → create from config, attach
-#%   3. First match in WORKSPACE_DIRS      → default layout, attach
+#%   3. First match in WORKSPACE_DIRS:
+#%      a. Git worktree with parent config → inherit parent config, attach
+#%      b. Otherwise                       → default layout, attach
 #%   4. None of the above                  → bare session in cwd
+#%
+#% Worktree inheritance:
+#%   If a directory is a git worktree and its parent repo has a mux config,
+#%   the parent config is reused with MUX_ROOT set to the worktree path.
+#%   Configs should use: ROOT="${MUX_ROOT:-$HOME/workspace/myproject}"
 #%
 #% Config files:
 #%   Plain bash scripts in ~/.config/mux/<name>.sh
@@ -83,6 +90,30 @@ _workspace_dirs() {
   local IFS=':'
   read -ra _dirs <<< "$WORKSPACE_DIRS"
   printf '%s\n' "${_dirs[@]}"
+}
+
+# If $1 is a git worktree, print the parent repo's directory name.
+# Returns 1 if not a worktree.
+_worktree_parent() {
+  local dir="$1"
+  local gitfile="$dir/.git"
+
+  # Worktree checkouts have a .git *file* (not directory) pointing to the parent
+  [[ -f "$gitfile" ]] || return 1
+
+  local gitdir
+  gitdir="$(sed -n 's/^gitdir: //p' "$gitfile")"
+  [[ -n "$gitdir" ]] || return 1
+
+  # Resolve to absolute path
+  [[ "$gitdir" = /* ]] || gitdir="$dir/$gitdir"
+
+  # Walk up from .git/worktrees/<name> to .git, then to the repo root
+  local parent_git="${gitdir%/worktrees/*}"
+  [[ "$parent_git" != "$gitdir" ]] || return 1
+
+  local parent_repo="${parent_git%/.git}"
+  echo "${parent_repo##*/}"
 }
 
 attach() {
@@ -160,9 +191,11 @@ default_workspace_layout() {
 
 run_config() {
   local name="$1"
-  local config_file="$MUX_CONFIG_DIR/${name}.sh"
+  local config_name="${2:-$name}"
+  local root_override="${3:-}"
+  local config_file="$MUX_CONFIG_DIR/${config_name}.sh"
   export -f mux_new_session mux_new_window mux_split_editor mux_split_tiled mux_focus_window
-  if ! SESSION_NAME="$name" bash -e "$config_file"; then
+  if ! SESSION_NAME="$name" MUX_ROOT="$root_override" bash -e "$config_file"; then
     tmux kill-session -t "$name" 2>/dev/null || true
     die "config '${config_file##*/}' failed — session cleaned up"
   fi
@@ -230,7 +263,14 @@ cmd_open() {
   while IFS= read -r wdir; do
     local wpath="$wdir/$raw_name"
     if [ -d "$wpath" ]; then
-      default_workspace_layout "$name" "$wpath"
+      # Check if this is a git worktree with a parent that has a config
+      local parent
+      if parent="$(_worktree_parent "$wpath")" \
+         && [ -f "$MUX_CONFIG_DIR/${parent}.sh" ]; then
+        run_config "$name" "$parent" "$wpath"
+      else
+        default_workspace_layout "$name" "$wpath"
+      fi
       attach "$name"
       return
     fi
