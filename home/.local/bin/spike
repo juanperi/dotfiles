@@ -2,15 +2,27 @@
 #%
 #% spike — create a dated scratch workspace and open it with mux
 #%
-#% usage: spike [description]
+#% usage: spike [clean [-f]] [description]
+#%
+#% Commands:
+#%   spike [description]   create (or re-open) a spike workspace
+#%   spike clean           remove empty spikes with no active session
+#%   spike clean -f        same, without confirmation prompts
 #%
 #%   If no description is given, you are prompted for one.
 #%   Creates ~/spikes/YYYY-MM-DD_description/ and opens a mux
 #%   session with the default workspace layout (vim + opencode + shell).
 #%
+#% A spike is considered "in use" if:
+#%   - the folder is non-empty
+#%   - a tmux session exists whose name matches the folder name
+#%   - any tmux pane has its cwd inside the folder
+#%
 #% Examples:
 #%   spike                        prompt for description
 #%   spike "test redis caching"   skip prompt
+#%   spike clean                  interactively remove empty unused spikes
+#%   spike clean -f               force-remove without prompting
 #%
 #% Environment:
 #%   SPIKES_DIR   root directory  (default: ~/spikes)
@@ -29,7 +41,91 @@ slugify() {
     | sed 's/^-//;s/-$//'
 }
 
+# ── clean subcommand ─────────────────────────────────────────────────────────
+
+cmd_clean() {
+  local force=0
+  [[ "${1:-}" == "-f" || "${1:-}" == "--force" ]] && force=1
+
+  [[ -d "$SPIKES_DIR" ]] || die "spikes dir not found: $SPIKES_DIR"
+
+  # Collect active tmux session names and pane cwd paths (best-effort)
+  local active_sessions=()
+  local active_cwds=()
+  if command -v tmux >/dev/null 2>&1; then
+    while IFS= read -r s; do
+      [[ -n "$s" ]] && active_sessions+=("$s")
+    done < <(tmux ls -F '#{session_name}' 2>/dev/null || true)
+
+    while IFS= read -r p; do
+      [[ -n "$p" ]] && active_cwds+=("$p")
+    done < <(tmux list-panes -a -F '#{pane_current_path}' 2>/dev/null || true)
+  fi
+
+  local removed=0 skipped=0
+
+  for d in "$SPIKES_DIR"/*/; do
+    [[ -d "$d" ]] || continue
+    local name="${d%/}"
+    name="${name##*/}"
+
+    # Skip non-empty folders
+    if [[ -n "$(ls -A "$d" 2>/dev/null)" ]]; then
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    # Skip if a tmux session exists for this spike
+    local has_session=0
+    for s in "${active_sessions[@]+"${active_sessions[@]}"}"; do
+      if [[ "$s" == "$name" ]]; then
+        has_session=1
+        break
+      fi
+    done
+    if [[ $has_session -eq 1 ]]; then
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    # Skip if any pane is running inside this spike folder
+    local has_pane=0
+    for p in "${active_cwds[@]+"${active_cwds[@]}"}"; do
+      if [[ "$p" == "$d"* || "$p" == "${d%/}" ]]; then
+        has_pane=1
+        break
+      fi
+    done
+    if [[ $has_pane -eq 1 ]]; then
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    # Candidate for removal
+    if [[ $force -eq 1 ]]; then
+      rm -rf "$d"
+      echo "spike: removed $d"
+      removed=$((removed + 1))
+    else
+      printf 'remove %s? [y/N] ' "$d"
+      local answer
+      read -r answer
+      if [[ "$answer" =~ ^[Yy]$ ]]; then
+        rm -rf "$d"
+        echo "spike: removed $d"
+        removed=$((removed + 1))
+      fi
+    fi
+  done
+
+  echo "spike clean: removed $removed, skipped $skipped (non-empty or active)"
+}
+
 # ── gather description ───────────────────────────────────────────────────────
+
+case "${1:-}" in
+  clean) shift; cmd_clean "${@}"; exit 0 ;;
+esac
 
 desc="${*}"
 if [[ -z "$desc" ]]; then
