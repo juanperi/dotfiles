@@ -20,7 +20,13 @@ return {
     vim.o.autoread = true
 
     vim.g.opencode_opts = {
-      -- Your configuration, if any; see `lua/opencode/config.lua` (or goto definition).
+      -- Point at the shared `opencode serve` run by `oc` / `mux_opencode`.
+      -- Keep this port in sync with $OPENCODE_BASE in ~/.local/bin/_opencode_common.sh.
+      -- See ~/spikes/2026-04-19_create-my-own-orchestrator/INTEGRATION.md § nvim.
+      server = {
+        port = 4096,
+        start = false, -- don't auto-spawn another opencode; use the shared one
+      },
     }
 
     local opencode = require("opencode")

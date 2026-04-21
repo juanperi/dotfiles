@@ -34,6 +34,10 @@ SPIKES_DIR="${SPIKES_DIR:-$HOME/spikes}"
 
 die() { echo "spike: $*" >&2; exit 1; }
 
+usage() {
+  sed -n 's/^#% \{0,1\}//p' "$0"
+}
+
 slugify() {
   echo "$1" \
     | tr '[:upper:]' '[:lower:]' \
@@ -124,6 +128,7 @@ cmd_clean() {
 # ── gather description ───────────────────────────────────────────────────────
 
 case "${1:-}" in
+  -h|--help) usage; exit 0 ;;
   clean) shift; cmd_clean "${@}"; exit 0 ;;
 esac
 

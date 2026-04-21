@@ -2,5 +2,5 @@
 ROOT="$HOME/.homesick/repos"
 
 w=$(mux_new_session "$ROOT")
-tw=$(mux_split_editor "$w" "$ROOT")
-tmux send-keys -t "${SESSION_NAME}:${tw}.2" "opencode . --port" Enter
+mux_split_editor "$w" "$ROOT"
+mux_opencode "${SESSION_NAME}:${w}.2" "$ROOT"

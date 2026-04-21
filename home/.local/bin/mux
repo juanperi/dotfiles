@@ -11,6 +11,8 @@
 #%   mux -k, --kill <name> kill a session
 #%   mux -h, --help        show this help
 #%
+#% (For listing opencode TUIs: use `oc tuis`.)
+#%
 #% Resolution order for `mux <name>`:
 #%   1. Running session with that name     → attach
 #%   2. Config ~/.config/mux/<name>.sh     → create from config, attach
@@ -68,6 +70,10 @@ set -euo pipefail
 
 MUX_CONFIG_DIR="${MUX_CONFIG_DIR:-$HOME/.config/mux}"
 WORKSPACE_DIRS="${WORKSPACE_DIRS:-$HOME/workspace:$HOME/spikes}"
+
+# Shared helpers for the opencode shared-server integration.
+# shellcheck source=/dev/null
+. "$(dirname "$(readlink -f "$0")")/_opencode_common.sh"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -171,6 +177,21 @@ mux_split_tiled() {
 
 mux_focus_window() { tmux select-window -t "${SESSION_NAME}:${1}"; }
 
+# Launch opencode in a pane, attached to the shared server with a fresh session
+# pinned to a directory. Usage: mux_opencode <pane-target> <repo-dir>
+# Example: mux_opencode "${SESSION_NAME}:${w}.2" "$ROOT"
+mux_opencode() {
+  local pane="$1" dir="$2"
+  local sid
+  if sid=$(_opencode_create_session "$dir"); then
+    tmux send-keys -t "$pane" \
+      "$OPENCODE_REAL attach $OPENCODE_BASE --session $sid --dir $dir" Enter
+  else
+    echo "mux_opencode: session create failed on $OPENCODE_BASE; using integrated mode" >&2
+    tmux send-keys -t "$pane" "$OPENCODE_REAL $dir" Enter
+  fi
+}
+
 # ── default workspace layout ─────────────────────────────────────────────────
 #  ┌─────────────┬────────────┐
 #  │             │  terminal  │
@@ -186,7 +207,7 @@ default_workspace_layout() {
   SESSION_NAME="$name"
   w="$(mux_new_session "$root")"
   mux_split_editor "$w" "$root"
-  tmux send-keys -t "${name}:${w}.2" "opencode . --port" Enter
+  mux_opencode "${name}:${w}.2" "$root"
 }
 
 run_config() {
@@ -194,7 +215,9 @@ run_config() {
   local config_name="${2:-$name}"
   local root_override="${3:-}"
   local config_file="$MUX_CONFIG_DIR/${config_name}.sh"
-  export -f mux_new_session mux_new_window mux_split_editor mux_split_tiled mux_focus_window
+  export -f mux_new_session mux_new_window mux_split_editor mux_split_tiled \
+            mux_focus_window mux_opencode _opencode_create_session _opencode_server_healthy
+  export OPENCODE_BASE OPENCODE_REAL
   if ! SESSION_NAME="$name" MUX_ROOT="$root_override" bash -e "$config_file"; then
     tmux kill-session -t "$name" 2>/dev/null || true
     die "config '${config_file##*/}' failed — session cleaned up"
@@ -252,6 +275,9 @@ cmd_open() {
     attach "$name"
     return
   fi
+
+  # About to create new tmux content — make sure the shared opencode server is up.
+  _ensure_opencode_server || true   # best-effort; mux_opencode has its own fallback
 
   local config_file="$MUX_CONFIG_DIR/${raw_name}.sh"
   if [ -f "$config_file" ]; then
