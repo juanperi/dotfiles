@@ -6,6 +6,7 @@
 #%   oc [<dir>]                     launch a TUI (attached to shared server) in <dir> (default: $PWD)
 #%
 #%   oc tuis                        list running attach-mode TUIs (aliases: ls, list)
+#%   oc status [--stale DAYS]       dashboard of tmux sessions + opencode state
 #%   oc history [--dir <d>] [-n N]  list past sessions known to the server (default 20)
 #%
 #%   oc send <sid> "<text>"         send a prompt to a session; print reply
@@ -314,11 +315,264 @@ cmd_server() {
   esac
 }
 
+# ── status (dashboard of tmux + opencode per-session state) ──────────────────
+
+cmd_status() {
+  _require_healthy || return 1
+
+  local stale_days=3
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --stale) stale_days="$2"; shift 2 ;;
+      -h|--help)
+        cat <<EOF
+oc status — dashboard of tmux sessions + opencode state
+
+Options:
+  --stale DAYS   mark sessions idle longer than DAYS as 'stale' (default: 3)
+
+State legend:
+  working    opencode is generating (last message assistant, not completed)
+  waiting    you posted a prompt; server hasn't replied yet
+  idle       last reply completed; ready for you
+  fresh      opencode session has no messages yet
+  no-oc      tmux session exists but no attach-mode TUI
+  stale      idle and the tmux session hasn't been touched in --stale days
+EOF
+        return 0 ;;
+      *) _die "status: unknown arg $1" ;;
+    esac
+  done
+
+  # Collect tmux sessions with created/activity timestamps
+  local tmux_data
+  tmux_data=$(tmux list-sessions -F "#{session_name}|#{session_created}|#{session_activity}|#{session_attached}" 2>/dev/null) || {
+    echo "oc status: no tmux sessions"; return 0
+  }
+
+  # Collect live TUIs (name → sid, dir)
+  local tuis_json
+  tuis_json=$(curl -s -m 3 "${OPENCODE_BASE}/session?limit=500" 2>/dev/null) || tuis_json='[]'
+
+  # Hand everything off to python3 for parsing + HTTP fan-out.
+  # Python reads stdin lines of tmux data, plus env vars for base URL and spike/workspace dirs.
+  OPENCODE_BASE="$OPENCODE_BASE" \
+  STALE_DAYS="$stale_days" \
+  TMUX_DATA="$tmux_data" \
+    /usr/bin/env python3 - <<'PY'
+import json, os, subprocess, sys, time, urllib.request, urllib.error
+from pathlib import Path
+
+BASE = os.environ["OPENCODE_BASE"]
+STALE_DAYS = int(os.environ["STALE_DAYS"])
+TMUX_DATA = os.environ["TMUX_DATA"]
+HOME = Path.home()
+NOW = time.time()
+
+def http_get_json(url, timeout=3):
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as r:
+            return json.loads(r.read())
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return None
+
+# --- live TUI discovery via ps (same logic as cmd_tuis) ---------------------
+def live_tuis():
+    """Return {directory: {"sid": ..., "pid": ...}} for running attach TUIs."""
+    out = {}
+    try:
+        ps = subprocess.run(["ps", "auxww"], capture_output=True, text=True, timeout=3)
+    except Exception:
+        return out
+    for line in ps.stdout.splitlines():
+        if "opencode" not in line or "attach" not in line:
+            continue
+        if " awk " in line or " grep " in line:
+            continue
+        toks = line.split()
+        sid = ""
+        d = ""
+        for i, t in enumerate(toks):
+            if t.startswith("ses_"):
+                sid = t
+            elif t == "--dir" and i + 1 < len(toks):
+                d = toks[i + 1]
+        if sid and d:
+            out[d] = {"sid": sid, "pid": toks[1]}
+    return out
+
+# --- directory inference for a tmux session --------------------------------
+def guess_dir_for_session(name):
+    # First: ask tmux for the first pane's current_path.
+    try:
+        r = subprocess.run(
+            ["tmux", "list-panes", "-t", name, "-F", "#{pane_current_path}"],
+            capture_output=True, text=True, timeout=2,
+        )
+        if r.returncode == 0 and r.stdout.strip():
+            # Prefer a path that lives under ~/workspace or ~/spikes
+            paths = [p for p in r.stdout.splitlines() if p.strip()]
+            scored = []
+            for p in paths:
+                if str(HOME / "workspace") in p or str(HOME / "spikes") in p:
+                    scored.append((2, p))
+                elif p.startswith(str(HOME)):
+                    scored.append((1, p))
+                else:
+                    scored.append((0, p))
+            scored.sort(reverse=True)
+            if scored:
+                return scored[0][1]
+    except Exception:
+        pass
+    # Fallback: match name against ~/workspace/<name> or ~/spikes/<name>
+    for root in (HOME / "workspace", HOME / "spikes"):
+        cand = root / name
+        if cand.is_dir():
+            return str(cand)
+    return None
+
+# --- classify opencode session state --------------------------------------
+def classify(sid):
+    msgs = http_get_json(f"{BASE}/session/{sid}/message", timeout=5)
+    if msgs is None:
+        return "unknown", None, None
+    if not msgs:
+        return "fresh", None, None
+    last = msgs[-1]
+    info = last.get("info", {})
+    role = info.get("role")
+    t = info.get("time", {})
+    # Find a preview: last non-empty text part from the last message,
+    # or fall back to the previous user message.
+    def text_of(m):
+        parts = m.get("parts", [])
+        chunks = [p.get("text", "") for p in parts if p.get("type") == "text"]
+        txt = " ".join(c for c in chunks if c).strip()
+        return txt
+    preview = text_of(last) or (text_of(msgs[-2]) if len(msgs) >= 2 else "")
+    preview = " ".join(preview.split())[:70]
+
+    completed_ts = t.get("completed")
+    if role == "assistant" and completed_ts is None:
+        return "working", preview, None
+    if role == "user":
+        return "waiting", preview, None
+    if role == "assistant" and completed_ts is not None:
+        age_s = NOW - completed_ts / 1000
+        return "idle", preview, age_s
+    return "unknown", preview, None
+
+# --- format helpers --------------------------------------------------------
+def fmt_age(seconds):
+    if seconds is None:
+        return "—"
+    if seconds < 60:
+        return f"{int(seconds)}s"
+    if seconds < 3600:
+        return f"{int(seconds/60)}m"
+    if seconds < 86400:
+        return f"{int(seconds/3600)}h"
+    return f"{int(seconds/86400)}d"
+
+def short_dir(d):
+    if not d:
+        return "—"
+    return d.replace(str(HOME), "~", 1)
+
+COLORS = {
+    "working": "\033[33m",   # yellow
+    "waiting": "\033[36m",   # cyan
+    "idle":    "\033[32m",   # green
+    "fresh":   "\033[37m",   # grey
+    "no-oc":   "\033[90m",   # dim
+    "stale":   "\033[31m",   # red
+    "unknown": "\033[35m",   # magenta
+}
+RESET = "\033[0m"
+def c(state, text=None):
+    if not sys.stdout.isatty():
+        return text if text is not None else state
+    return f"{COLORS.get(state, '')}{text if text is not None else state}{RESET}"
+
+# --- main ------------------------------------------------------------------
+tuis_by_dir = live_tuis()
+rows = []
+for line in TMUX_DATA.strip().splitlines():
+    parts = line.split("|")
+    if len(parts) < 4:
+        continue
+    name, created_s, activity_s, attached_s = parts[:4]
+    activity = int(activity_s)
+    attached = attached_s == "1"
+    tmux_idle_s = NOW - activity
+    directory = guess_dir_for_session(name)
+    tui = tuis_by_dir.get(directory) if directory else None
+
+    if tui is None:
+        state = "no-oc"
+        preview = ""
+        work_age = None
+    else:
+        state, preview, work_age = classify(tui["sid"])
+
+    # Stale flag overrides idle/no-oc when tmux hasn't been touched in a while
+    if state in ("idle", "no-oc", "fresh") and tmux_idle_s > STALE_DAYS * 86400:
+        state = "stale"
+
+    rows.append({
+        "name": name,
+        "attached": attached,
+        "tmux_idle": tmux_idle_s,
+        "work_age": work_age,
+        "dir": directory,
+        "state": state,
+        "preview": preview,
+        "sid": tui["sid"] if tui else "",
+    })
+
+# Sort: attached first, then working, waiting, idle, fresh, no-oc, stale
+ORDER = {"working": 0, "waiting": 1, "idle": 2, "fresh": 3, "no-oc": 4, "stale": 5, "unknown": 6}
+rows.sort(key=lambda r: (not r["attached"], ORDER.get(r["state"], 99), r["tmux_idle"]))
+
+# Render
+H = f"{'STATE':<9} {'SESSION':<42} {'LAST':>5}  PREVIEW"
+print(H)
+print("─" * min(120, len(H) + 40))
+for r in rows:
+    attached_mark = "●" if r["attached"] else " "
+    # "LAST" shows work_age for opencode states, tmux_idle for no-oc/stale
+    age = r["work_age"] if r["work_age"] is not None else r["tmux_idle"]
+    print(
+        f"{c(r['state'], r['state'].ljust(9))} "
+        f"{attached_mark} {r['name']:<40.40} "
+        f"{fmt_age(age):>5}  "
+        f"{r['preview']}"
+    )
+
+print()
+# Footer: summary counts + orphan TUIs (attached to dirs with no tmux session)
+counts = {}
+for r in rows:
+    counts[r["state"]] = counts.get(r["state"], 0) + 1
+summary = "  ".join(f"{c(s, s)}:{n}" for s, n in sorted(counts.items(), key=lambda x: ORDER.get(x[0], 99)))
+print(f"  {summary}")
+
+tmux_dirs = {r["dir"] for r in rows if r["dir"]}
+orphans = [(d, t) for d, t in tuis_by_dir.items() if d not in tmux_dirs]
+if orphans:
+    print(f"\n  {c('unknown', 'orphan TUIs')} (no matching tmux session):")
+    for d, t in orphans:
+        print(f"    {t['sid']}  {short_dir(d)}")
+PY
+}
+
 # ── dispatch ─────────────────────────────────────────────────────────────────
 
 case "${1:-}" in
   -h|--help|help)   _usage ;;
   tuis|ls|list)     shift; cmd_tuis "$@" ;;
+  status)           shift; cmd_status "$@" ;;
   history)          shift; cmd_history "$@" ;;
   send)             shift; cmd_send "$@" ;;
   show)             shift; cmd_show "$@" ;;
