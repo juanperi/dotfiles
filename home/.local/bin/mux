@@ -60,7 +60,9 @@
 #%
 #% Environment:
 #%   MUX_CONFIG_DIR    config directory   (default: ~/.config/mux)
-#%   WORKSPACE_DIRS    colon-separated workspace roots
+#%   WORKSPACE_DIRS    colon-separated workspace roots. Each entry may be a
+#%                     plain path or a glob; globs expand to every matching
+#%                     directory (e.g. "~/code/work/*" makes each org a root).
 #%                     (default: ~/workspace:~/spikes)
 #%
 #% Requires: bash 4.2+, tmux with base-index/pane-base-index 1
@@ -91,11 +93,22 @@ _load_sessions() {
 
 _sanitize_name() { echo "${1//[.:]/_}"; }
 
-# Split WORKSPACE_DIRS into an array
+# Split WORKSPACE_DIRS into an array, expanding any globs.
+# Entries may contain shell globs (e.g. "$HOME/code/work/*") — each match
+# that resolves to a directory becomes a workspace root. Plain paths pass
+# through unchanged. Order is preserved; non-existent paths are dropped.
 _workspace_dirs() {
   local IFS=':'
-  read -ra _dirs <<< "$WORKSPACE_DIRS"
-  printf '%s\n' "${_dirs[@]}"
+  read -ra _entries <<< "$WORKSPACE_DIRS"
+  local entry d
+  for entry in "${_entries[@]}"; do
+    # Intentional unquoted expansion so globs resolve. If no match, the
+    # literal pattern is returned (nullglob is not set globally), so we
+    # guard with [[ -d ]] below.
+    for d in $entry; do
+      [[ -d "$d" ]] && printf '%s\n' "$d"
+    done
+  done
 }
 
 # If $1 is a git worktree, print the parent repo's directory name.
