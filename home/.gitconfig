@@ -32,9 +32,9 @@ delete-squash = "!f() { local defaultBranch=$(git symbolic-ref refs/remotes/orig
 	enabled = true
 [init]
 	defaultBranch = main
-[url "git@github.com-gartner:gartner-digital-markets/"]
+[url "git@github.com-g2:gartner-digital-markets/"]
 	insteadOf = git@github.com:gartner-digital-markets/
-[url "git@github.com-gartner:capterra/"]
+[url "git@github.com-g2:capterra/"]
 	insteadOf = git@github.com:capterra/
 [url "git@github.com-g2:jperi-g2/"]
 	insteadOf = git@github.com:jperi-g2/
