@@ -4,7 +4,7 @@ return {
     "Xuyuanp/nerdtree-git-plugin",
   },
   keys = {
-    { "<leader>n",  "<ESC>:NERDTreeToggle<cr>" },
+    { "<leader>nt",  "<ESC>:NERDTreeToggle<cr>" },
     { "<leader>nf", "<ESC>:NERDTreeFind<cr>" },
   }
 }

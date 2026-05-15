@@ -1,0 +1,1 @@
+../../../../../../dotfiles-mac-work/home/.config/opencode/skills/awshelp/skill.md
