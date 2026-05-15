@@ -26,7 +26,11 @@ if [[ -x /opt/homebrew/bin/brew ]]; then
   export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
   export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
   export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
-  load_source /opt/homebrew/opt/asdf/libexec/asdf.sh
+  # asdf 0.16+ (Go rewrite): no asdf.sh, just put shims on PATH.
+  # Plugins still install to $ASDF_DATA_DIR/plugins.
+  export ASDF_DATA_DIR="${ASDF_DATA_DIR:-$HOME/.asdf}"
+  export PATH="$ASDF_DATA_DIR/shims:$PATH"
+  fpath=("$ASDF_DATA_DIR/completions" $fpath)
 fi
 
 load_source $ZSH/oh-my-zsh.sh
