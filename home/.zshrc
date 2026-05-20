@@ -1,5 +1,10 @@
 #PS4="+%D{%s.%.}> "
 #set -o xtrace
+
+# Env vars and PATH live in ~/.zshenv (sourced earlier by zsh, including
+# from non-interactive subshells spawned by agents and editors).
+# This file is for interactive ergonomics: prompt, plugins, aliases, keys.
+
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="amuse"
 plugins=(git z vi-mode)
@@ -16,20 +21,8 @@ function load_source(){
   [[ -s "$1" ]] && source "$1"
 }
 
-# Convert a datetime in the format 2024-01-01T00:00:00.000Z to a timestamp with precision
-
-# Inline brew shellenv (faster than eval subshell)
+# asdf completions (data dir was exported in .zshenv)
 if [[ -x /opt/homebrew/bin/brew ]]; then
-  export HOMEBREW_PREFIX="/opt/homebrew"
-  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-  export HOMEBREW_REPOSITORY="/opt/homebrew"
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
-  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
-  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
-  # asdf 0.16+ (Go rewrite): no asdf.sh, just put shims on PATH.
-  # Plugins still install to $ASDF_DATA_DIR/plugins.
-  export ASDF_DATA_DIR="${ASDF_DATA_DIR:-$HOME/.asdf}"
-  export PATH="$ASDF_DATA_DIR/shims:$PATH"
   fpath=("$ASDF_DATA_DIR/completions" $fpath)
 fi
 
@@ -58,28 +51,11 @@ fi
 
 alias notifyDone='tput bel; terminal-notifier -title "Terminal" -message "Done with task! Exit status: $?" --sound default' -activate com.apple.Terminal
 
-export TERM=screen-256color
-export EDITOR='nvim'
-export VISUAL='nvim'
-# To be able to open vim for current command. Check https://github.com/ohmyzsh/ohmyzsh/issues/9588
-export KEYTIMEOUT=15
-
-# Golang configurations
-export GOPATH="$HOME/workspace/go"
-export PATH="$PATH:$GOPATH/bin"
-
 # Vi mode.
 bindkey "^R" history-incremental-search-backward
 
-# Add node_modules to path
-export PATH=$PATH:node_modules/.bin
-# add sbin to path, as brew installs stuff there
-export PATH="/usr/local/sbin:$PATH"
-
 # Allow to extend in a local basis
 load_source "$HOME/.zshrc.local"
-
-export ERL_AFLAGS="-kernel shell_history enabled"
 
 # load fzf config if it exists
 if (( $+commands[fzf] )); then
@@ -91,15 +67,8 @@ if (( $+commands[direnv] )); then
   eval "$(direnv hook zsh)"
 fi
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+# gcloud shell command completion (path moved to .zshenv)
+load_source "$HOME/google-cloud-sdk/completion.zsh.inc"
 
-# The next line updates PATH for the Google Cloud SDK.
-load_source "/Users/jperi/google-cloud-sdk/path.zsh.inc"
-
-# The next line enables shell command completion for gcloud.
-load_source "/Users/jperi/google-cloud-sdk/completion.zsh.inc"
-
-# The next line loads java's home if the plubin is installed
-load_source "~/.asdf/plugins/java/set-java-home.zsh"
-# Created by `pipx` on 2025-04-01 07:38:56
-export PATH="$PATH:/Users/jperi/.local/bin"
+# Java home plugin (if asdf java plugin installed)
+load_source "$HOME/.asdf/plugins/java/set-java-home.zsh"
