@@ -1,4 +1,23 @@
 #!/usr/bin/env bash
+# Re-exec under a modern bash if we landed on macOS's frozen 3.2 (or any < 4).
+# mux uses associative arrays / `declare -gA`, which need bash 4+. This keeps the
+# portable `env bash` shebang while never silently failing on an old interpreter.
+if [ -z "${BASH_VERSINFO:-}" ] || [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
+  for _b in \
+    "$(command -v bash 2>/dev/null)" \
+    /opt/homebrew/bin/bash \
+    /usr/local/bin/bash \
+    "$HOMEBREW_PREFIX/bin/bash"; do
+    if [ -n "$_b" ] && [ -x "$_b" ]; then
+      _v="$("$_b" -c 'echo "${BASH_VERSINFO[0]}"' 2>/dev/null)"
+      if [ -n "$_v" ] && [ "$_v" -ge 4 ]; then
+        exec "$_b" "$0" "$@"
+      fi
+    fi
+  done
+  echo "mux: requires bash 4+ (found ${BASH_VERSION:-unknown}); install a newer bash (e.g. 'brew install bash')." >&2
+  exit 1
+fi
 #%
 #% mux — lightweight tmux session manager
 #%
@@ -89,6 +108,7 @@ _load_sessions() {
   while IFS= read -r s; do
     [[ -n "$s" ]] && _MUX_SESSIONS["$s"]=1
   done < <(tmux ls -F '#{session_name}' 2>/dev/null || true)
+  _MUX_SESSIONS_LOADED=1
 }
 
 _sanitize_name() { echo "${1//[.:]/_}"; }
@@ -282,7 +302,7 @@ cmd_open() {
   local name
   name="$(_sanitize_name "$raw_name")"
 
-  [[ -v _MUX_SESSIONS ]] || _load_sessions
+  [[ -n "${_MUX_SESSIONS_LOADED:-}" ]] || _load_sessions
 
   if session_exists "$name"; then
     attach "$name"
