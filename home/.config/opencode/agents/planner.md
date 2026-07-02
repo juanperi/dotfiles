@@ -1,6 +1,7 @@
 ---
 description: Produces a well-scoped, verifiable plan for a goal. Read-only; may write plan documents to .opencode/plans/ only. Returns the plan in its final message.
 mode: subagent
+model: litellm/anthropic/claude-sonnet-4-6
 temperature: 0.2
 permission:
   edit:

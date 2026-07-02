@@ -1,6 +1,7 @@
 ---
 description: Independently verifies that a completed task meets its acceptance criteria. Read-only plus bash for running tests/builds/lints; no edits. Returns a verdict (pass/partial/fail) with evidence.
 mode: subagent
+model: litellm/anthropic/claude-sonnet-4-6
 temperature: 0.1
 permission:
   edit: deny

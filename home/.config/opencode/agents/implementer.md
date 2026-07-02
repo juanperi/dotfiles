@@ -1,6 +1,7 @@
 ---
 description: Executes a single well-scoped sub-task from a briefing. Full edit/write/bash access. Expects goal, scope, constraints, and acceptance criteria in the prompt; reports back what was changed and how to verify.
 mode: subagent
+model: litellm/anthropic/claude-sonnet-4-6
 temperature: 0.1
 permission:
   edit: allow
