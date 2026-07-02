@@ -23,7 +23,11 @@ _OPENCODE_LOG=/tmp/opencode-server.log
 
 _opencode_server_pid() {
   local port="${OPENCODE_BASE##*:}"
-  lsof -t -iTCP:"$port" -sTCP:LISTEN -nP 2>/dev/null | head -1
+  # NB: when nothing is listening, lsof exits non-zero. Under a caller running
+  # `set -euo pipefail` (e.g. `oc`), that non-zero pipe status would abort the
+  # caller at `pid=$(_opencode_server_pid)`. Swallow it so "no listener" is a
+  # normal empty-string result, not a fatal error.
+  { lsof -t -iTCP:"$port" -sTCP:LISTEN -nP 2>/dev/null | head -1; } || true
 }
 
 _opencode_port_owner_is_us() {
@@ -68,13 +72,16 @@ _ensure_opencode_server() {
     fi
   fi
 
+  # Port-scoped log so a restart on one port never truncates another port's
+  # server log (each shared server holds its own file open). Falls back to the
+  # legacy shared path only if the port can't be determined.
+  local logfile="/tmp/opencode-server-${port}.log"
+  [[ -n "$port" ]] || logfile="$_OPENCODE_LOG"
+
   echo "opencode: starting shared server on ${OPENCODE_BASE}" >&2
-  (
-    cd "$HOME" && \
-    nohup "$OPENCODE_REAL" serve --port "$port" --hostname 127.0.0.1 \
-      >"$_OPENCODE_LOG" 2>&1 &
-  )
-  disown 2>/dev/null || true
+  (cd "$HOME" && exec nohup "$OPENCODE_REAL" serve --port "$port" --hostname 127.0.0.1 \
+    >"$logfile" 2>&1) &
+  disown $! 2>/dev/null || true
 
   local i
   for i in 1 2 3 4 5 6 7 8 9 10; do
@@ -82,7 +89,7 @@ _ensure_opencode_server() {
     sleep 0.5
   done
 
-  echo "opencode: WARNING server didn't come up in 5s — check $_OPENCODE_LOG" >&2
+  echo "opencode: WARNING server didn't come up in 5s — check $logfile" >&2
   return 1
 }
 
